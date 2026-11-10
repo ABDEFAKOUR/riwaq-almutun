@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173d32">
+  <meta name="description" content="رِواق المتون: مساحة مجانية لحفظ المتون العلمية ومراجعتها دون اتصال بالإنترنت.">
+  <title>رِواق المتون | احفظ، افهم، راجع</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="رواق المتون - الرئيسية">
+      <span class="brand-mark">رواق المتون</span>
+      <span><strong>رِواق المتون</strong><small>رفيقك في حفظ العلم</small></span>
+    </a>
+    <div class="top-actions">
+      <span id="offline-status" class="status"><i></i> جارٍ التحقق...</span>
+      <button id="install-btn" class="button button-outline hidden" type="button">تثبيت التطبيق</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow">مكتبتك العلمية في كل مكان</span>
+        <h1>خطوة ثابتة،<br><em>وحفظٌ متقَن.</em></h1>
+        <p>نظّم حفظك، اختبر استحضارك، وراجع محفوظاتك. يعمل رِواق المتون دون اتصال بعد فتحه وتحميل ملفاته أول مرة.</p>
+        <a class="button button-light" href="#library">ابدأ الحفظ <span aria-hidden="true">←</span></a>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="arch arch-back"></div><div class="arch arch-front"></div>
+        <div class="book"><span>طَلَبُ العِلْم</span><b>رِواق</b></div>
+        <span class="star star-one">✳</span><span class="star star-two">✧</span>
+      </div>
+    </section>
+
+    <section class="stats-grid" aria-label="إحصائيات الحفظ">
+      <article class="stat-card"><span class="stat-icon">▤</span><div><strong id="saved-count">0</strong><small>مقاطع أتقنتها</small></div></article>
+      <article class="stat-card"><span class="stat-icon">◷</span><div><strong id="review-count">0</strong><small>مقاطع للمراجعة</small></div></article>
+      <article class="stat-card"><span class="stat-icon">✦</span><div><strong id="streak-count">0</strong><small>جلسات هذا الأسبوع</small></div></article>
+    </section>
+
+    <section id="library" class="section">
+      <div class="section-heading">
+        <div><span class="eyebrow">ابدأ من حيث تشاء</span><h2>مكتبة المتون</h2></div>
+        <label class="search-box"><span aria-hidden="true">⌕</span><input id="search-input" type="search" placeholder="ابحث عن متن أو علم..." aria-label="ابحث عن متن أو علم"></label>
+      </div>
+      <div id="subject-filters" class="filters" aria-label="تصفية حسب العلم"></div>
+      <div id="matn-grid" class="matn-grid"></div>
+    </section>
+
+    <section id="study-panel" class="study-panel hidden" aria-live="polite">
+      <div class="study-head">
+        <div><span class="eyebrow" id="study-subject">المتن</span><h2 id="study-title">عنوان المتن</h2></div>
+        <button id="close-study" class="icon-button" type="button" aria-label="إغلاق">×</button>
+      </div>
+      <div class="study-meta"><span id="item-counter">المقطع 1 من 1</span><span id="item-status" class="pill">جديد</span></div>
+      <article class="memorize-card">
+        <div class="card-topline"><span>مقطع الحفظ</span><span id="item-reference"></span></div>
+        <p id="item-text" class="matn-text"></p>
+        <p id="item-meaning" class="meaning hidden"></p>
+        <div class="card-actions">
+          <button id="reveal-btn" class="button button-outline" type="button">إظهار النص</button>
+          <button id="meaning-btn" class="button button-ghost" type="button">ملاحظة / شرح</button>
+        </div>
+      </article>
+      <div class="study-controls">
+        <button id="previous-btn" class="button button-ghost" type="button">السابق</button>
+        <div class="mastery-actions">
+          <button id="review-btn" class="button button-outline" type="button">أحتاج إلى مراجعة</button>
+          <button id="mastered-btn" class="button button-primary" type="button">أتقنت هذا المقطع ✓</button>
+        </div>
+        <button id="next-btn" class="button button-ghost" type="button">التالي</button>
+      </div>
+      <p class="study-tip">نصيحة: اقرأ المقطع، أخفِ النص، ثم استظهره بصوتك قبل كشف الإجابة.</p>
+    </section>
+
+    <section class="how-section">
+      <div><span class="eyebrow">طريقة بسيطة ونافعة</span><h2>اجعل للحفظ وِردًا</h2><p>اختر مقدارًا يسيرًا، وكرره، ثم راجعه في اليوم التالي. رِواق يساعدك على تنظيم ذلك دون تشتيت.</p></div>
+      <div class="steps"><div><b>01</b><span>اختر متنًا</span></div><div><b>02</b><span>احفظ مقطعًا</span></div><div><b>03</b><span>اختبر نفسك</span></div><div><b>04</b><span>راجع باستمرار</span></div></div>
+    </section>
+  </main>
+
+  <footer><strong>رِواق المتون</strong><span>نسخة أولية تجريبية · المحتوى قابل للمراجعة والإضافة</span><span>صُنع لخدمة طالب العلم</span></footer>
+  <script src="app.js" defer></script>
+</body>
+</html>
