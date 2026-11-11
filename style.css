@@ -30,3 +30,36 @@ main, .container {
 .status-dot, .dot {
   display: none !important;
 }
+
+
+/* --- Fix Mreba3 رواق sghiiir --- */
+.logo, .brand-logo, .logo-box, .logo-icon, .app-logo {
+  width: auto !important;
+  min-width: 60px !important;
+  height: 56px !important;
+  min-height: 56px !important;
+  padding: 0 12px !important;
+  font-size: 22px !important;
+  line-height: 56px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: visible !important;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+}
+
+/* --- Fix Header kamel --- */
+header, .header, .top-bar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  padding: 12px 16px !important;
+  overflow: visible !important;
+}
+
+/* --- Fix No9ta l-khdra --- */
+header span:first-child, .online-dot, .green-dot {
+  display: none !important;
+}
