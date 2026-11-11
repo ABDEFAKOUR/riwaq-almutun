@@ -1,5 +1,5 @@
 const STORAGE_KEY = "riwaq-progress-v1";
-const DATA_URL = "./data/mutun.json";
+const DATA_URL = "./mutun.json";
 let library = [];
 let selectedSubject = "الكل";
 let activeMatn = null;
