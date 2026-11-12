@@ -156,3 +156,18 @@ $("install-btn").addEventListener("click", async () => {
 });
 
 loadLibrary();
+
+function renderSimilar(matn) {
+  const hl = (t, d) => d.reduce(
+    (s, w) => s.split(w).join(`<mark>${w}</mark>`), t);
+  const box = document.querySelector('#similar');
+  box.innerHTML = (matn.similar || []).map(s => `
+    <div class="card">
+      ${s.refs.map(id => {
+        const v = matn.verses.find(x => x.id === id);
+        return v ? `<div class="v">${hl(v.sadr, s.diff)} ${hl(v.ajuz, s.diff)}</div>` : '';
+      }).join('')}
+      <p>${s.note || ''}</p>
+      <small>المصدر: ${s.source || ''}</small>
+    </div>`).join('') || '<p>لا توجد مواضع متشابهة في هذا المتن.</p>';
+}
