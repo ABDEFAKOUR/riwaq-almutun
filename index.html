@@ -17,6 +17,7 @@
       <span><strong>رِواق المتون</strong><small>رفيقك في حفظ العلم</small></span>
     </a>
     <div class="top-actions">
+      <button id="font-down" class="button button-outline small" type="button" aria-label="تصغير الخط">أ-</button><button id="font-up" class="button button-outline small" type="button" aria-label="تكبير الخط">أ+</button><button id="theme-btn" class="button button-outline small" type="button" aria-label="الوضع الليلي">◐</button>
       <span id="offline-status" class="status"><i></i> جارٍ التحقق...</span>
       <button id="install-btn" class="button button-outline hidden" type="button">تثبيت التطبيق</button>
     </div>
@@ -48,6 +49,7 @@
         <div><span class="eyebrow">ابدأ من حيث تشاء</span><h2>مكتبة المتون</h2></div>
         <label class="search-box"><span aria-hidden="true">⌕</span><input id="search-input" type="search" placeholder="ابحث عن متن أو علم..." aria-label="ابحث عن متن أو علم"></label>
       </div>
+      <div class="tools"><button id="export-btn" class="button button-outline small" type="button">تصدير التقدم</button><label class="button button-outline small">استيراد التقدم<input id="import-input" type="file" accept=".json" hidden></label></div>
       <div id="subject-filters" class="filters" aria-label="تصفية حسب العلم"></div>
       <div id="matn-grid" class="matn-grid"></div>
     </section>
@@ -58,6 +60,7 @@
         <button id="close-study" class="icon-button" type="button" aria-label="إغلاق">×</button>
       </div>
       <div class="study-meta"><span id="item-counter">المقطع 1 من 1</span><span id="item-status" class="pill">جديد</span></div>
+      <label class="jump">انتقل إلى: <select id="item-jump"></select></label>
       <article class="memorize-card">
         <div class="card-topline"><span>مقطع الحفظ</span><span id="item-reference"></span></div>
         <p id="item-text" class="matn-text"></p>
@@ -72,8 +75,9 @@
       <div class="study-controls">
         <button id="previous-btn" class="button button-ghost" type="button">السابق</button>
         <div class="mastery-actions">
-          <button id="review-btn" class="button button-outline" type="button">أحتاج إلى مراجعة</button>
-          <button id="mastered-btn" class="button button-primary" type="button">أتقنت هذا المقطع ✓</button>
+          <button id="review-btn" class="button button-outline" type="button">صعب</button>
+          <button id="good-btn" class="button button-outline" type="button">متوسط</button>
+          <button id="mastered-btn" class="button button-primary" type="button">سهل ✓</button>
         </div>
         <button id="next-btn" class="button button-ghost" type="button">التالي</button>
       </div>
