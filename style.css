@@ -117,3 +117,28 @@ footer{flex-wrap:wrap}}
 .hero-art{display:none}.hero-copy{max-width:100%}.matn-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:1fr}
 .stat-card{padding:10px 14px}.matn-text{font-size:23px}.study-panel{padding:17px}
 .mastery-actions{flex-direction:column}.mastery-actions button{width:100%}}
+
+/* أدوات وتفضيلات */
+.tools{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.small{padding:6px 12px;font-size:12px;display:inline-block}
+.jump{font-size:12px;color:var(--muted);display:block;margin:6px 0 12px}
+.jump select{font:inherit;border:1px solid var(--line);border-radius:8px;padding:4px 8px;background:var(--paper);color:var(--ink);max-width:100%}
+.matn-text{font-size:calc(27px*var(--fs,1))}
+.matn-text span.concealed{filter:blur(8px);user-select:none}
+.similar-item p{font-size:calc(22px*var(--fs,1))}
+.top-actions{gap:8px}
+@media(max-width:760px){.brand small{display:none}.top-actions .small{padding:5px 9px}}
+@media(max-width:430px){.matn-text{font-size:calc(23px*var(--fs,1))}}
+
+/* الوضع الليلي */
+[data-theme=dark]{--cream:#0f1915;--paper:#16231e;--ink:#e6ece8;--muted:#9fb0a8;--line:#2a3a33;--gold:#d2b46f;--shadow:none}
+[data-theme=dark] .topbar{background:rgba(22,35,30,.95)}
+[data-theme=dark] .brand,[data-theme=dark] .section-heading h2,[data-theme=dark] .study-head h2,[data-theme=dark] .how-section h2,[data-theme=dark] .matn-card h3,[data-theme=dark] .stat-card strong,[data-theme=dark] footer strong,[data-theme=dark] .button-outline{color:#8fcfb2}
+[data-theme=dark] .hero{background:#173d32}
+[data-theme=dark] .button-primary,[data-theme=dark] .filter.active{background:#245b49;border-color:#245b49;color:#fff}
+[data-theme=dark] .memorize-card{background:#1b2b25;border-color:var(--line)}
+[data-theme=dark] .stat-icon,[data-theme=dark] .tag,[data-theme=dark] .pill,[data-theme=dark] .icon-button{background:#21332c;color:#8fcfb2}
+[data-theme=dark] .matn-text,[data-theme=dark] .similar-item p{color:#dfe8e3}
+[data-theme=dark] .similar-group{background:#1b2b25}
+[data-theme=dark] mark{background:#5a4718;color:#fff}
+[data-theme=dark] footer{background:#101c17}
