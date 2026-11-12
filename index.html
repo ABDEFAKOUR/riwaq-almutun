@@ -13,7 +13,7 @@
 <body>
   <header class="topbar">
     <a class="brand" href="#" aria-label="رواق المتون - الرئيسية">
-      <span class="brand-mark">رِواق المتون</span>
+      <span class="brand-mark">رِ</span>
       <span><strong>رِواق المتون</strong><small>رفيقك في حفظ العلم</small></span>
     </a>
     <div class="top-actions">
@@ -62,9 +62,11 @@
         <div class="card-topline"><span>مقطع الحفظ</span><span id="item-reference"></span></div>
         <p id="item-text" class="matn-text"></p>
         <p id="item-meaning" class="meaning hidden"></p>
+        <div id="similar-box" class="similar-box hidden"></div>
         <div class="card-actions">
           <button id="reveal-btn" class="button button-outline" type="button">إظهار النص</button>
           <button id="meaning-btn" class="button button-ghost" type="button">ملاحظة / شرح</button>
+          <button id="similar-btn" class="button button-ghost hidden" type="button">كشف المتشابهات</button>
         </div>
       </article>
       <div class="study-controls">
@@ -86,8 +88,5 @@
 
   <footer><strong>رِواق المتون</strong><span>نسخة أولية تجريبية · المحتوى قابل للمراجعة والإضافة</span><span>صُنع لخدمة طالب العلم</span></footer>
   <script src="app.js" defer></script>
-  <button data-tab="similar">المتشابهات</button>
-...
-<section id="similar" hidden></section>
 </body>
 </html>
