@@ -1,4 +1,4 @@
-const CACHE = 'riwayq-v5';
+const CACHE = 'riwayq-v6';
 const FILES = ['./', 'index.html', 'style.css', 'app.js', 'mutun.json', 'manifest.webmanifest', 'icon.svg'];
 self.addEventListener('install', e => { self.skipWaiting(); e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES))); });
 self.addEventListener('activate', e => e.waitUntil(
