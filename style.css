@@ -63,3 +63,7 @@ header, .header, .top-bar {
 header span:first-child, .online-dot, .green-dot {
   display: none !important;
 }
+
+
+mark { background: #F6E3B4; border-radius: 4px; padding: 0 3px; }
+
