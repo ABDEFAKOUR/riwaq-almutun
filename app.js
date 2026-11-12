@@ -1,21 +1,29 @@
 const STORAGE_KEY = "riwaq-progress-v1";
 const DATA_URL = "mutun.json";
-const CACHE = 'riwayq-v2';
 let library = [];
 let selectedSubject = "الكل";
 let activeMatn = null;
 let activeIndex = 0;
 let revealed = true;
 let meaningVisible = false;
+let similarVisible = false;
 let deferredInstallPrompt = null;
 
 const $ = (id) => document.getElementById(id);
+const on = (id, ev, fn) => { const el = $(id); if (el) el.addEventListener(ev, fn); };
 const readProgress = () => {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
   catch { return {}; }
 };
 const writeProgress = (data) => localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 const progressKey = (matnId, itemId) => `${matnId}::${itemId}`;
+const resetItemView = () => { revealed = true; meaningVisible = false; similarVisible = false; };
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+}
 
 async function loadLibrary() {
   try {
@@ -26,7 +34,8 @@ async function loadLibrary() {
     renderLibrary();
     updateStats();
   } catch (error) {
-    $("matn-grid").innerHTML = '<div class="empty-state">تعذر تحميل بيانات المتون. تأكد من وجود ملف data/mutun.json ثم أعد تحميل الصفحة.</div>';
+    console.error(error);
+    $("matn-grid").innerHTML = '<div class="empty-state">تعذر تحميل بيانات المتون. تأكد من وجود ملف mutun.json بجانب index.html وأنه ملف JSON صالح، ثم أعد تحميل الصفحة.</div>';
   }
 }
 
@@ -45,6 +54,7 @@ function renderFilters() {
 
 function renderLibrary() {
   const query = $("search-input").value.trim().toLowerCase();
+  const progress = readProgress();
   const results = library.filter(matn => {
     const matchesSubject = selectedSubject === "الكل" || matn.subject === selectedSubject;
     const haystack = `${matn.title} ${matn.subject} ${matn.description}`.toLowerCase();
@@ -55,7 +65,6 @@ function renderLibrary() {
     return;
   }
   $("matn-grid").innerHTML = results.map(matn => {
-    const progress = readProgress();
     const mastered = matn.items.filter(item => progress[progressKey(matn.id, item.id)]?.status === "mastered").length;
     return `<article class="matn-card">
       <span class="tag">${escapeHTML(matn.subject)}</span>
@@ -65,12 +74,15 @@ function renderLibrary() {
         <button data-open="${escapeHTML(matn.id)}">ابدأ الدراسة ←</button></div>
     </article>`;
   }).join("");
-  $("matn-grid").querySelectorAll("[data-open]").forEach(button => button.addEventListener("click", () => openMatn(button.dataset.open)));
+  $("matn-grid").querySelectorAll("[data-open]").forEach(button =>
+    button.addEventListener("click", () => openMatn(button.dataset.open)));
 }
 
 function openMatn(id) {
   activeMatn = library.find(item => item.id === id);
+  if (!activeMatn) return;
   activeIndex = 0;
+  resetItemView();
   $("study-panel").classList.remove("hidden");
   $("study-title").textContent = activeMatn.title;
   $("study-subject").textContent = activeMatn.subject;
@@ -93,6 +105,39 @@ function renderStudyItem() {
   $("meaning-btn").textContent = meaningVisible ? "إخفاء الملاحظة" : "ملاحظة / شرح";
   $("previous-btn").disabled = activeIndex === 0;
   $("next-btn").disabled = activeIndex === activeMatn.items.length - 1;
+  renderSimilar();
+}
+
+/* ---------- كشف المتشابهات ---------- */
+function highlight(text, words) {
+  return words.reduce(
+    (html, w) => w ? html.split(escapeHTML(w)).join(`<mark>${escapeHTML(w)}</mark>`) : html,
+    escapeHTML(text)
+  );
+}
+
+function renderSimilar() {
+  const btn = $("similar-btn"), box = $("similar-box");
+  if (!btn || !box || !activeMatn) return;
+  const item = activeMatn.items[activeIndex];
+  const groups = (activeMatn.similar || []).filter(s => Array.isArray(s.refs) && s.refs.includes(item.id));
+  btn.classList.toggle("hidden", !groups.length);
+  btn.textContent = similarVisible ? "إخفاء المتشابهات" : `كشف المتشابهات (${groups.length})`;
+  box.classList.toggle("hidden", !similarVisible || !groups.length);
+  box.innerHTML = groups.map(s => `
+    <div class="similar-group">
+      ${s.refs.map(id => {
+        const it = activeMatn.items.find(x => x.id === id);
+        if (!it) return "";
+        const isCurrent = id === item.id;
+        return `<div class="similar-item ${isCurrent ? "current" : ""}">
+          <small>${escapeHTML(it.reference || "")}</small>
+          <p class="${isCurrent && !revealed ? "concealed" : ""}">${highlight(it.text, s.diff || [])}</p>
+        </div>`;
+      }).join("")}
+      ${s.note ? `<p class="similar-note">${escapeHTML(s.note)}</p>` : ""}
+      ${s.source ? `<small>المصدر: ${escapeHTML(s.source)}</small>` : ""}
+    </div>`).join("");
 }
 
 function setItemStatus(status) {
@@ -109,28 +154,33 @@ function updateStats() {
   const values = Object.values(readProgress());
   $("saved-count").textContent = values.filter(item => item.status === "mastered").length;
   $("review-count").textContent = values.filter(item => item.status === "review").length;
-  const sessions = new Set(values.filter(item => item.updatedAt).map(item => item.updatedAt.slice(0,10)));
+  const sessions = new Set(values.filter(item => item.updatedAt).map(item => item.updatedAt.slice(0, 10)));
   const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 7);
   $("streak-count").textContent = [...sessions].filter(day => new Date(day) >= weekAgo).length;
 }
 
-function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g, char => ({
-    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
-  }[char]));
+function go(step) {
+  if (!activeMatn) return;
+  const next = activeIndex + step;
+  if (next < 0 || next >= activeMatn.items.length) return;
+  activeIndex = next;
+  resetItemView();
+  renderStudyItem();
 }
 
-$("search-input").addEventListener("input", renderLibrary);
-$("reveal-btn").addEventListener("click", () => { revealed = !revealed; renderStudyItem(); });
-$("meaning-btn").addEventListener("click", () => { meaningVisible = !meaningVisible; renderStudyItem(); });
-$("mastered-btn").addEventListener("click", () => setItemStatus("mastered"));
-$("review-btn").addEventListener("click", () => setItemStatus("review"));
-$("previous-btn").addEventListener("click", () => { if (activeIndex > 0) { activeIndex--; revealed = true; meaningVisible = false; renderStudyItem(); } });
-$("next-btn").addEventListener("click", () => { if (activeMatn && activeIndex < activeMatn.items.length - 1) { activeIndex++; revealed = true; meaningVisible = false; renderStudyItem(); } });
-$("close-study").addEventListener("click", () => $("study-panel").classList.add("hidden"));
+on("search-input", "input", renderLibrary);
+on("reveal-btn", "click", () => { revealed = !revealed; renderStudyItem(); });
+on("meaning-btn", "click", () => { meaningVisible = !meaningVisible; renderStudyItem(); });
+on("similar-btn", "click", () => { similarVisible = !similarVisible; renderSimilar(); });
+on("mastered-btn", "click", () => setItemStatus("mastered"));
+on("review-btn", "click", () => setItemStatus("review"));
+on("previous-btn", "click", () => go(-1));
+on("next-btn", "click", () => go(1));
+on("close-study", "click", () => $("study-panel").classList.add("hidden"));
 
 function updateNetworkStatus() {
   const status = $("offline-status");
+  if (!status) return;
   const online = navigator.onLine;
   status.classList.toggle("online", online);
   status.classList.toggle("offline", !online);
@@ -146,9 +196,9 @@ if ("serviceWorker" in navigator) {
 window.addEventListener("beforeinstallprompt", event => {
   event.preventDefault();
   deferredInstallPrompt = event;
-  $("install-btn").classList.remove("hidden");
+  $("install-btn")?.classList.remove("hidden");
 });
-$("install-btn").addEventListener("click", async () => {
+on("install-btn", "click", async () => {
   if (!deferredInstallPrompt) return;
   deferredInstallPrompt.prompt();
   await deferredInstallPrompt.userChoice;
@@ -157,18 +207,3 @@ $("install-btn").addEventListener("click", async () => {
 });
 
 loadLibrary();
-
-function renderSimilar(matn) {
-  const hl = (t, d) => d.reduce(
-    (s, w) => s.split(w).join(`<mark>${w}</mark>`), t);
-  const box = document.querySelector('#similar');
-  box.innerHTML = (matn.similar || []).map(s => `
-    <div class="card">
-      ${s.refs.map(id => {
-        const v = matn.verses.find(x => x.id === id);
-        return v ? `<div class="v">${hl(v.sadr, s.diff)} ${hl(v.ajuz, s.diff)}</div>` : '';
-      }).join('')}
-      <p>${s.note || ''}</p>
-      <small>المصدر: ${s.source || ''}</small>
-    </div>`).join('') || '<p>لا توجد مواضع متشابهة في هذا المتن.</p>';
-}
