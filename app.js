@@ -109,6 +109,18 @@ function openMatn(id) {
   renderStudyItem();
   $("study-panel").scrollIntoView({ behavior: "smooth", block: "start" });
 }
+/* تقسيم المقطع للاختبار: صدر/عجز إن وُجدا، وإلا تقسيم تلقائي قرب المنتصف (يفضَّل عند علامة وقف) */
+function splitItem(item) {
+  if (item.sadr && item.ajuz) return [item.sadr, item.ajuz];
+  const w = item.text.split(/\s+/);
+  if (w.length < 6 || item.reference === "موضع تجريبي") return null;
+  const mid = Math.floor(w.length / 2), span = Math.floor(w.length * 0.3);
+  let cut = mid;
+  search: for (let d = 0; d <= span; d++)
+    for (const i of [mid + d, mid - d])
+      if (i > 2 && i < w.length - 1 && /[،:؛.]$/.test(w[i - 1])) { cut = i; break search; }
+  return [w.slice(0, cut).join(" "), w.slice(cut).join(" ")];
+}
 function renderStudyItem() {
   if (!activeMatn) return;
   const item = activeMatn.items[activeIndex], t = $("item-text");
@@ -116,11 +128,12 @@ function renderStudyItem() {
   $("item-counter").textContent = `المقطع ${activeIndex + 1} من ${activeMatn.items.length}`;
   $("item-reference").textContent = item.reference || "";
   $("item-status").textContent = statusOf(readProgress()[pk(activeMatn.id, item.id)]);
-  if (item.sadr && item.ajuz && !revealed) {      // اختبار: الصدر ظاهر والعجز مخفي
-    t.innerHTML = `${escapeHTML(item.sadr)} <span class="concealed">${escapeHTML(item.ajuz)}</span>`;
+  const sp = splitItem(item);
+  if (sp && !revealed) {      // اختبار: البداية ظاهرة والباقي مخفي
+    t.innerHTML = `${escapeHTML(sp[0])} <span class="concealed">${escapeHTML(sp[1])}</span>`;
     t.classList.remove("concealed");
   } else { t.textContent = item.text; t.classList.toggle("concealed", !revealed); }
-  $("reveal-btn").textContent = revealed ? (item.sadr ? "اختبر حفظي" : "إخفاء النص") : "إظهار النص";
+  $("reveal-btn").textContent = revealed ? (sp ? "اختبر حفظي" : "إخفاء النص") : "إظهار النص";
   $("item-meaning").textContent = item.note || "لا توجد ملاحظة مضافة لهذا المقطع بعد.";
   $("item-meaning").classList.toggle("hidden", !meaningVisible);
   $("meaning-btn").textContent = meaningVisible ? "إخفاء الملاحظة" : "ملاحظة / شرح";
