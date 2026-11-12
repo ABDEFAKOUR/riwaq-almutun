@@ -1,121 +1,137 @@
-const STORAGE_KEY = "riwaq-progress-v1";
-const DATA_URL = "mutun.json";
-let library = [];
-let selectedSubject = "الكل";
-let activeMatn = null;
-let activeIndex = 0;
-let revealed = true;
-let meaningVisible = false;
-let similarVisible = false;
-let deferredInstallPrompt = null;
+const KEY = "riwaq-progress-v2", OLD = "riwaq-progress-v1", LAST = "riwaq-last", PREFS = "riwaq-prefs";
+const DATA_URL = "mutun.json", DAY = 864e5;
+let library = [], selectedSubject = "الكل", activeMatn = null, activeIndex = 0;
+let revealed = true, meaningVisible = false, similarVisible = false, deferredInstallPrompt = null;
 
 const $ = (id) => document.getElementById(id);
 const on = (id, ev, fn) => { const el = $(id); if (el) el.addEventListener(ev, fn); };
-const readProgress = () => {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
-  catch { return {}; }
-};
-const writeProgress = (data) => localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-const progressKey = (matnId, itemId) => `${matnId}::${itemId}`;
+const J = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v === null ? d : v; } catch { return d; } };
+const S = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+const pk = (m, i) => `${m}::${i}`;
 const resetItemView = () => { revealed = true; meaningVisible = false; similarVisible = false; };
+const statusOf = (c) => !c ? "جديد" : c.due <= Date.now() ? "للمراجعة" : c.int >= 6 ? "متقَن" : "قيد الحفظ";
+const escapeHTML = (v) => String(v).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g, c => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-  }[c]));
+/* ---------- التقدم (SM-2) ---------- */
+function readProgress() {
+  const p = J(KEY, null);
+  if (p) return p;
+  const old = J(OLD, {}), n = {}, now = Date.now();
+  for (const [k, v] of Object.entries(old)) {
+    const last = Date.parse(v.updatedAt) || now;
+    n[k] = v.status === "mastered" ? { ef: 2.5, int: 6, rep: 2, due: now + 6 * DAY, last } : { ef: 2.5, int: 1, rep: 0, due: now, last };
+  }
+  S(KEY, n); return n;
+}
+function grade(q) {
+  if (!activeMatn) return;
+  const all = readProgress(), k = pk(activeMatn.id, activeMatn.items[activeIndex].id);
+  const c = all[k] || { ef: 2.5, int: 0, rep: 0 };
+  if (q < 3) { c.rep = 0; c.int = 1; }
+  else { c.int = c.rep === 0 ? 1 : c.rep === 1 ? 6 : Math.round(c.int * c.ef); c.rep++; }
+  c.ef = Math.max(1.3, c.ef + 0.1 - (5 - q) * (0.08 + (5 - q) * 0.02));
+  c.last = Date.now(); c.due = q < 3 ? c.last + 6e5 : c.last + c.int * DAY;
+  all[k] = c; S(KEY, all);
+  updateStats(); renderLibrary();
+  if (activeIndex < activeMatn.items.length - 1) go(1); else renderStudyItem();
+}
+function updateStats() {
+  const v = Object.values(readProgress()), now = Date.now();
+  $("saved-count").textContent = v.filter(c => c.int >= 6).length;
+  $("review-count").textContent = v.filter(c => c.due <= now).length;
+  $("streak-count").textContent = new Set(v.filter(c => c.last > now - 7 * DAY).map(c => new Date(c.last).toISOString().slice(0, 10))).size;
 }
 
+/* ---------- نسخة احتياطية ---------- */
+function exportData() {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify({ app: "riwayq", v: 2, progress: readProgress() })], { type: "application/json" }));
+  a.download = `riwayq-backup-${new Date().toISOString().slice(0, 10)}.json`;
+  a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+async function importData(file) {
+  if (!file) return;
+  try {
+    const o = JSON.parse(await file.text());
+    if (o.app !== "riwayq" || typeof o.progress !== "object") throw 0;
+    const cur = readProgress();
+    for (const [k, c] of Object.entries(o.progress)) if (!cur[k] || (c.last || 0) > (cur[k].last || 0)) cur[k] = c;
+    S(KEY, cur); updateStats(); renderLibrary(); renderStudyItem();
+    alert("تم استيراد النسخة الاحتياطية");
+  } catch { alert("ملف النسخة الاحتياطية غير صالح"); }
+}
+
+/* ---------- المكتبة ---------- */
 async function loadLibrary() {
   try {
-    const response = await fetch(DATA_URL);
-    if (!response.ok) throw new Error("تعذر تحميل المكتبة");
-    library = await response.json();
-    renderFilters();
-    renderLibrary();
-    updateStats();
-  } catch (error) {
-    console.error(error);
+    const r = await fetch(DATA_URL);
+    if (!r.ok) throw new Error("تعذر تحميل المكتبة");
+    library = await r.json();
+    renderFilters(); renderLibrary(); updateStats();
+  } catch (e) {
+    console.error(e);
     $("matn-grid").innerHTML = '<div class="empty-state">تعذر تحميل بيانات المتون. تأكد من وجود ملف mutun.json بجانب index.html وأنه ملف JSON صالح، ثم أعد تحميل الصفحة.</div>';
   }
 }
-
 function renderFilters() {
-  const subjects = ["الكل", ...new Set(library.map(item => item.subject))];
-  $("subject-filters").innerHTML = subjects.map(subject =>
-    `<button class="filter ${subject === selectedSubject ? "active" : ""}" data-subject="${escapeHTML(subject)}">${escapeHTML(subject)}</button>`
-  ).join("");
-  $("subject-filters").querySelectorAll("button").forEach(button => {
-    button.addEventListener("click", () => {
-      selectedSubject = button.dataset.subject;
-      renderFilters(); renderLibrary();
-    });
-  });
+  const subjects = ["الكل", ...new Set(library.map(i => i.subject))];
+  $("subject-filters").innerHTML = subjects.map(s =>
+    `<button class="filter ${s === selectedSubject ? "active" : ""}" data-subject="${escapeHTML(s)}">${escapeHTML(s)}</button>`).join("");
+  $("subject-filters").querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+    selectedSubject = b.dataset.subject; renderFilters(); renderLibrary();
+  }));
 }
-
 function renderLibrary() {
-  const query = $("search-input").value.trim().toLowerCase();
-  const progress = readProgress();
-  const results = library.filter(matn => {
-    const matchesSubject = selectedSubject === "الكل" || matn.subject === selectedSubject;
-    const haystack = `${matn.title} ${matn.subject} ${matn.description}`.toLowerCase();
-    return matchesSubject && haystack.includes(query);
-  });
-  if (!results.length) {
-    $("matn-grid").innerHTML = '<div class="empty-state">لا توجد نتائج مطابقة. جرّب كلمة أخرى.</div>';
-    return;
-  }
-  $("matn-grid").innerHTML = results.map(matn => {
-    const mastered = matn.items.filter(item => progress[progressKey(matn.id, item.id)]?.status === "mastered").length;
-    return `<article class="matn-card">
-      <span class="tag">${escapeHTML(matn.subject)}</span>
-      <h3>${escapeHTML(matn.title)}</h3>
-      <p>${escapeHTML(matn.description)}</p>
-      <div class="card-bottom"><span>${matn.items.length} مقاطع · ${mastered} متقنة</span>
-        <button data-open="${escapeHTML(matn.id)}">ابدأ الدراسة ←</button></div>
-    </article>`;
+  const q = $("search-input").value.trim().toLowerCase(), progress = readProgress();
+  const results = library.filter(m => (selectedSubject === "الكل" || m.subject === selectedSubject) &&
+    `${m.title} ${m.subject} ${m.description}`.toLowerCase().includes(q));
+  if (!results.length) { $("matn-grid").innerHTML = '<div class="empty-state">لا توجد نتائج مطابقة. جرّب كلمة أخرى.</div>'; return; }
+  $("matn-grid").innerHTML = results.map(m => {
+    const done = m.items.filter(i => (progress[pk(m.id, i.id)] || {}).int >= 6).length;
+    return `<article class="matn-card"><span class="tag">${escapeHTML(m.subject)}</span><h3>${escapeHTML(m.title)}</h3>
+      <p>${escapeHTML(m.description)}</p><div class="card-bottom"><span>${m.items.length} مقاطع · ${done} متقنة</span>
+      <button data-open="${escapeHTML(m.id)}">ابدأ الدراسة ←</button></div></article>`;
   }).join("");
-  $("matn-grid").querySelectorAll("[data-open]").forEach(button =>
-    button.addEventListener("click", () => openMatn(button.dataset.open)));
+  $("matn-grid").querySelectorAll("[data-open]").forEach(b => b.addEventListener("click", () => openMatn(b.dataset.open)));
 }
 
+/* ---------- الدراسة ---------- */
 function openMatn(id) {
-  activeMatn = library.find(item => item.id === id);
+  activeMatn = library.find(i => i.id === id);
   if (!activeMatn) return;
-  activeIndex = 0;
+  activeIndex = Math.min(J(LAST, {})[id] || 0, activeMatn.items.length - 1);
   resetItemView();
+  const sel = $("item-jump");
+  if (sel) sel.innerHTML = activeMatn.items.map((it, i) => `<option value="${i}">${i + 1}. ${escapeHTML(it.reference || "")}</option>`).join("");
   $("study-panel").classList.remove("hidden");
   $("study-title").textContent = activeMatn.title;
   $("study-subject").textContent = activeMatn.subject;
   renderStudyItem();
   $("study-panel").scrollIntoView({ behavior: "smooth", block: "start" });
 }
-
 function renderStudyItem() {
   if (!activeMatn) return;
-  const item = activeMatn.items[activeIndex];
-  const progress = readProgress()[progressKey(activeMatn.id, item.id)];
+  const item = activeMatn.items[activeIndex], t = $("item-text");
+  const last = J(LAST, {}); last[activeMatn.id] = activeIndex; S(LAST, last);
   $("item-counter").textContent = `المقطع ${activeIndex + 1} من ${activeMatn.items.length}`;
   $("item-reference").textContent = item.reference || "";
-  $("item-status").textContent = progress?.status === "mastered" ? "متقَن" : progress?.status === "review" ? "للمراجعة" : "جديد";
-  $("item-text").textContent = item.text;
-  $("item-text").classList.toggle("concealed", !revealed);
-  $("reveal-btn").textContent = revealed ? "إخفاء النص" : "إظهار النص";
+  $("item-status").textContent = statusOf(readProgress()[pk(activeMatn.id, item.id)]);
+  if (item.sadr && item.ajuz && !revealed) {      // اختبار: الصدر ظاهر والعجز مخفي
+    t.innerHTML = `${escapeHTML(item.sadr)} <span class="concealed">${escapeHTML(item.ajuz)}</span>`;
+    t.classList.remove("concealed");
+  } else { t.textContent = item.text; t.classList.toggle("concealed", !revealed); }
+  $("reveal-btn").textContent = revealed ? (item.sadr ? "اختبر حفظي" : "إخفاء النص") : "إظهار النص";
   $("item-meaning").textContent = item.note || "لا توجد ملاحظة مضافة لهذا المقطع بعد.";
   $("item-meaning").classList.toggle("hidden", !meaningVisible);
   $("meaning-btn").textContent = meaningVisible ? "إخفاء الملاحظة" : "ملاحظة / شرح";
   $("previous-btn").disabled = activeIndex === 0;
   $("next-btn").disabled = activeIndex === activeMatn.items.length - 1;
+  const sel = $("item-jump"); if (sel) sel.value = activeIndex;
   renderSimilar();
 }
-
-/* ---------- كشف المتشابهات ---------- */
 function highlight(text, words) {
-  return words.reduce(
-    (html, w) => w ? html.split(escapeHTML(w)).join(`<mark>${escapeHTML(w)}</mark>`) : html,
-    escapeHTML(text)
-  );
+  return words.reduce((h, w) => w ? h.split(escapeHTML(w)).join(`<mark>${escapeHTML(w)}</mark>`) : h, escapeHTML(text));
 }
-
 function renderSimilar() {
   const btn = $("similar-btn"), box = $("similar-box");
   if (!btn || !box || !activeMatn) return;
@@ -124,86 +140,62 @@ function renderSimilar() {
   btn.classList.toggle("hidden", !groups.length);
   btn.textContent = similarVisible ? "إخفاء المتشابهات" : `كشف المتشابهات (${groups.length})`;
   box.classList.toggle("hidden", !similarVisible || !groups.length);
-  box.innerHTML = groups.map(s => `
-    <div class="similar-group">
-      ${s.refs.map(id => {
-        const it = activeMatn.items.find(x => x.id === id);
-        if (!it) return "";
-        const isCurrent = id === item.id;
-        return `<div class="similar-item ${isCurrent ? "current" : ""}">
-          <small>${escapeHTML(it.reference || "")}</small>
-          <p class="${isCurrent && !revealed ? "concealed" : ""}">${highlight(it.text, s.diff || [])}</p>
-        </div>`;
-      }).join("")}
-      ${s.note ? `<p class="similar-note">${escapeHTML(s.note)}</p>` : ""}
-      ${s.source ? `<small>المصدر: ${escapeHTML(s.source)}</small>` : ""}
-    </div>`).join("");
+  box.innerHTML = groups.map(s => `<div class="similar-group">${s.refs.map(id => {
+    const it = activeMatn.items.find(x => x.id === id); if (!it) return "";
+    const cur = id === item.id;
+    return `<div class="similar-item ${cur ? "current" : ""}"><small>${escapeHTML(it.reference || "")}</small>
+      <p class="${cur && !revealed ? "concealed" : ""}">${highlight(it.text, s.diff || [])}</p></div>`;
+  }).join("")}${s.note ? `<p class="similar-note">${escapeHTML(s.note)}</p>` : ""}
+    ${s.source ? `<small>المصدر: ${escapeHTML(s.source)}</small>` : ""}</div>`).join("");
 }
-
-function setItemStatus(status) {
-  if (!activeMatn) return;
-  const progress = readProgress();
-  progress[progressKey(activeMatn.id, activeMatn.items[activeIndex].id)] = {
-    status, updatedAt: new Date().toISOString()
-  };
-  writeProgress(progress);
-  updateStats(); renderStudyItem(); renderLibrary();
-}
-
-function updateStats() {
-  const values = Object.values(readProgress());
-  $("saved-count").textContent = values.filter(item => item.status === "mastered").length;
-  $("review-count").textContent = values.filter(item => item.status === "review").length;
-  const sessions = new Set(values.filter(item => item.updatedAt).map(item => item.updatedAt.slice(0, 10)));
-  const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 7);
-  $("streak-count").textContent = [...sessions].filter(day => new Date(day) >= weekAgo).length;
-}
-
 function go(step) {
   if (!activeMatn) return;
-  const next = activeIndex + step;
-  if (next < 0 || next >= activeMatn.items.length) return;
-  activeIndex = next;
-  resetItemView();
-  renderStudyItem();
+  const n = activeIndex + step;
+  if (n < 0 || n >= activeMatn.items.length) return;
+  activeIndex = n; resetItemView(); renderStudyItem();
 }
 
+/* ---------- التفضيلات: حجم الخط والوضع الليلي ---------- */
+const prefs = Object.assign({ fs: 1, theme: "" }, J(PREFS, {}));
+function applyPrefs() {
+  const r = document.documentElement;
+  r.style.setProperty("--fs", prefs.fs);
+  r.dataset.theme = prefs.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  S(PREFS, prefs);
+}
+
+/* ---------- الأحداث ---------- */
 on("search-input", "input", renderLibrary);
 on("reveal-btn", "click", () => { revealed = !revealed; renderStudyItem(); });
 on("meaning-btn", "click", () => { meaningVisible = !meaningVisible; renderStudyItem(); });
 on("similar-btn", "click", () => { similarVisible = !similarVisible; renderSimilar(); });
-on("mastered-btn", "click", () => setItemStatus("mastered"));
-on("review-btn", "click", () => setItemStatus("review"));
+on("review-btn", "click", () => grade(2));
+on("good-btn", "click", () => grade(4));
+on("mastered-btn", "click", () => grade(5));
 on("previous-btn", "click", () => go(-1));
 on("next-btn", "click", () => go(1));
 on("close-study", "click", () => $("study-panel").classList.add("hidden"));
+on("item-jump", "change", e => { activeIndex = +e.target.value; resetItemView(); renderStudyItem(); });
+on("export-btn", "click", exportData);
+on("import-input", "change", e => { importData(e.target.files[0]); e.target.value = ""; });
+on("font-up", "click", () => { prefs.fs = Math.min(1.6, +(prefs.fs + 0.1).toFixed(1)); applyPrefs(); });
+on("font-down", "click", () => { prefs.fs = Math.max(0.8, +(prefs.fs - 0.1).toFixed(1)); applyPrefs(); });
+on("theme-btn", "click", () => { prefs.theme = document.documentElement.dataset.theme === "dark" ? "light" : "dark"; applyPrefs(); });
 
 function updateNetworkStatus() {
-  const status = $("offline-status");
-  if (!status) return;
+  const s = $("offline-status"); if (!s) return;
   const online = navigator.onLine;
-  status.classList.toggle("online", online);
-  status.classList.toggle("offline", !online);
-  status.innerHTML = `<i></i>${online ? "متصل بالإنترنت" : "تعمل دون اتصال"}`;
+  s.classList.toggle("online", online); s.classList.toggle("offline", !online);
+  s.innerHTML = `<i></i>${online ? "متصل بالإنترنت" : "تعمل دون اتصال"}`;
 }
 window.addEventListener("online", updateNetworkStatus);
 window.addEventListener("offline", updateNetworkStatus);
-updateNetworkStatus();
-
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(console.error));
-}
-window.addEventListener("beforeinstallprompt", event => {
-  event.preventDefault();
-  deferredInstallPrompt = event;
-  $("install-btn")?.classList.remove("hidden");
-});
+if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(console.error));
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferredInstallPrompt = e; $("install-btn")?.classList.remove("hidden"); });
 on("install-btn", "click", async () => {
   if (!deferredInstallPrompt) return;
-  deferredInstallPrompt.prompt();
-  await deferredInstallPrompt.userChoice;
-  deferredInstallPrompt = null;
-  $("install-btn").classList.add("hidden");
+  deferredInstallPrompt.prompt(); await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt = null; $("install-btn").classList.add("hidden");
 });
 
-loadLibrary();
+applyPrefs(); updateNetworkStatus(); loadLibrary();
