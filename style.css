@@ -142,3 +142,6 @@ footer{flex-wrap:wrap}}
 [data-theme=dark] .similar-group{background:#1b2b25}
 [data-theme=dark] mark{background:#5a4718;color:#fff}
 [data-theme=dark] footer{background:#101c17}
+
+
+.topbar, header { position: static !important; top: auto !important; }
