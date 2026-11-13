@@ -145,3 +145,8 @@ footer{flex-wrap:wrap}}
 
 
 .topbar { position: sticky; top: 0; z-index: 50; }
+
+
+/* وضوح حالة اكتمال المتون */
+.content-status{display:inline-block;margin:8px 0 0 8px;padding:3px 9px;border:1px solid #d7b66e;border-radius:999px;color:#76551b;background:#fff7e5;font-size:11px;font-weight:700}
+.study-warning{margin:12px 0;padding:10px 14px;border:1px solid #d7b66e;border-radius:12px;background:#fff7e5;color:#76551b;font-size:13px}
