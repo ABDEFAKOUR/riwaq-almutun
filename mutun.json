@@ -269,7 +269,8 @@
         "note": "هذا نص افتتاحي تجريبي للمراجعة. يُرجى مقابلة النص الكامل مع طبعة محققة معتمدة قبل اعتماد المحتوى للنشر."
       }
     ],
-    "similar": []
+    "similar": [],
+    "contentStatus": "partial"
   },
   {
     "id": "tuhfat-al-atfal",
@@ -286,7 +287,8 @@
         "note": "بطاقة مكانية فقط. أضف النص بعد مقابلته على طبعة محققة موثوقة."
       }
     ],
-    "similar": []
+    "similar": [],
+    "contentStatus": "partial"
   },
   {
     "id": "shurut-al-salah",
@@ -303,7 +305,8 @@
         "note": "بطاقة مكانية فقط. أضف النص بعد مقابلته على طبعة محققة موثوقة."
       }
     ],
-    "similar": []
+    "similar": [],
+    "contentStatus": "partial"
   },
   {
     "id": "kitab-al-tawhid",
@@ -320,7 +323,8 @@
         "note": "بطاقة مكانية فقط. أضف النص بعد مقابلته على طبعة محققة موثوقة."
       }
     ],
-    "similar": []
+    "similar": [],
+    "contentStatus": "partial"
   },
   {
     "id": "bayquniyya",
@@ -337,7 +341,8 @@
         "note": "بطاقة مكانية فقط. أضف النص بعد مقابلته على طبعة محققة موثوقة."
       }
     ],
-    "similar": []
+    "similar": [],
+    "contentStatus": "partial"
   },
   {
     "id": "elbiri",
@@ -354,7 +359,8 @@
         "note": "بطاقة مكانية فقط. أضف النص بعد مقابلته على طبعة محققة موثوقة."
       }
     ],
-    "similar": []
+    "similar": [],
+    "contentStatus": "partial"
   },
   {
     "id": "ajurrumiyya",
@@ -371,7 +377,8 @@
         "note": "بطاقة مكانية فقط. أضف النص بعد مقابلته على طبعة محققة موثوقة."
       }
     ],
-    "similar": []
+    "similar": [],
+    "contentStatus": "partial"
   },
   {
     "id": "wasitiyya",
@@ -388,7 +395,8 @@
         "note": "بطاقة مكانية فقط. أضف النص بعد مقابلته على طبعة محققة موثوقة."
       }
     ],
-    "similar": []
+    "similar": [],
+    "contentStatus": "partial"
   },
   {
     "id": "waraqat",
@@ -405,7 +413,8 @@
         "note": "بطاقة مكانية فقط. أضف النص بعد مقابلته على طبعة محققة موثوقة."
       }
     ],
-    "similar": []
+    "similar": [],
+    "contentStatus": "partial"
   },
   {
     "id": "unwan-al-hukm",
@@ -422,7 +431,8 @@
         "note": "بطاقة مكانية فقط. أضف النص بعد مقابلته على طبعة محققة موثوقة."
       }
     ],
-    "similar": []
+    "similar": [],
+    "contentStatus": "partial"
   },
   {
     "id": "rahbiyya",
@@ -439,7 +449,8 @@
         "note": "بطاقة مكانية فقط. أضف النص بعد مقابلته على طبعة محققة موثوقة."
       }
     ],
-    "similar": []
+    "similar": [],
+    "contentStatus": "partial"
   },
   {
     "id": "tahawiyya",
@@ -456,7 +467,8 @@
         "note": "بطاقة مكانية فقط. أضف النص بعد مقابلته على طبعة محققة موثوقة."
       }
     ],
-    "similar": []
+    "similar": [],
+    "contentStatus": "partial"
   },
   {
     "id": "ibn-ashir",
@@ -473,6 +485,7 @@
         "note": "بطاقة مكانية فقط. أضف النص بعد مقابلته على طبعة محققة موثوقة."
       }
     ],
-    "similar": []
+    "similar": [],
+    "contentStatus": "partial"
   }
 ]

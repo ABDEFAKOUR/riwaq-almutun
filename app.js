@@ -88,7 +88,7 @@ function renderLibrary() {
   if (!results.length) { $("matn-grid").innerHTML = '<div class="empty-state">لا توجد نتائج مطابقة. جرّب كلمة أخرى.</div>'; return; }
   $("matn-grid").innerHTML = results.map(m => {
     const done = m.items.filter(i => (progress[pk(m.id, i.id)] || {}).int >= 6).length;
-    return `<article class="matn-card"><span class="tag">${escapeHTML(m.subject)}</span><h3>${escapeHTML(m.title)}</h3>
+    return `<article class="matn-card"><span class="tag">${escapeHTML(m.subject)}</span>${m.contentStatus === "partial" ? '<span class="content-status">المتن غير مكتمل</span>' : ""}<h3>${escapeHTML(m.title)}</h3>
       <p>${escapeHTML(m.description)}</p><div class="card-bottom"><span>${m.items.length} مقاطع · ${done} متقنة</span>
       <button data-open="${escapeHTML(m.id)}">ابدأ الدراسة ←</button></div></article>`;
   }).join("");
@@ -106,6 +106,8 @@ function openMatn(id) {
   $("study-panel").classList.remove("hidden");
   $("study-title").textContent = activeMatn.title;
   $("study-subject").textContent = activeMatn.subject;
+  const warning = $("study-warning");
+  if (warning) { warning.textContent = activeMatn.contentStatus === "partial" ? "تنبيه: هذا المتن غير مكتمل في المكتبة حالياً؛ المقاطع المتاحة فقط هي المعروضة، فلا تعتمد هذه النسخة على أنها النص الكامل." : ""; warning.classList.toggle("hidden", activeMatn.contentStatus !== "partial"); }
   renderStudyItem();
   $("study-panel").scrollIntoView({ behavior: "smooth", block: "start" });
 }
