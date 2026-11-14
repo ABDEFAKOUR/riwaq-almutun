@@ -39,9 +39,9 @@
     </section>
 
     <section class="stats-grid" aria-label="إحصائيات الحفظ">
-      <article class="stat-card"><span class="stat-icon">▤</span><div><strong id="saved-count">0</strong><small>مقاطع أتقنتها</small></div></article>
-      <article class="stat-card"><span class="stat-icon">◷</span><div><strong id="review-count">0</strong><small>مقاطع للمراجعة</small></div></article>
-      <article class="stat-card"><span class="stat-icon">✦</span><div><strong id="streak-count">0</strong><small>جلسات هذا الأسبوع</small></div></article>
+      <button class="stat-card stat-card-button" type="button" data-progress-view="mastered" aria-label="عرض المقاطع التي أتقنتها"><span class="stat-icon">▤</span><div><strong id="saved-count">0</strong><small>مقاطع أتقنتها · اضغط للعرض</small></div></button>
+      <button class="stat-card stat-card-button" type="button" data-progress-view="review" aria-label="عرض المقاطع المستحقة للمراجعة"><span class="stat-icon">◷</span><div><strong id="review-count">0</strong><small>مقاطع للمراجعة · اضغط للعرض</small></div></button>
+      <div class="stat-card"><span class="stat-icon">✦</span><div><strong id="streak-count">0</strong><small>جلسات هذا الأسبوع</small></div></div>
     </section>
 
     <section id="library" class="section">
@@ -83,6 +83,14 @@
         <button id="next-btn" class="button button-ghost" type="button">التالي</button>
       </div>
       <p class="study-tip">نصيحة: اقرأ المقطع، أخفِ النص، ثم استظهره بصوتك قبل كشف الإجابة.</p>
+    </section>
+
+    <section id="progress-panel" class="progress-panel hidden" aria-live="polite">
+      <div class="progress-panel-head">
+        <div><span class="eyebrow">مسارك في الحفظ</span><h2 id="progress-panel-title">مقاطع الحفظ</h2></div>
+        <button id="close-progress" class="icon-button" type="button" aria-label="إغلاق">×</button>
+      </div>
+      <div id="progress-list" class="progress-list"></div>
     </section>
 
     <section class="how-section">
