@@ -404,7 +404,7 @@ function normalizeRecitationText(value) {
     .replace(/[\u0610-\u061A\u06D6-\u06ED]/g, "")
     .replace(/[.,،؛:!?؟«»"']/g, " ").replace(/\s+/g, " ").trim().toLowerCase();
 }
-function alignLiveRecitation(expected, spoken) {
+function alignLiveRecitation(expected, spoken, complete = false) {
   const a=normalizeRecitationText(expected).split(" ").filter(Boolean);
   const b=String(spoken||"").trim().split(/\s+/).filter(Boolean);
   const an=a.map(normalizeRecitationText), bn=b.map(normalizeRecitationText);
@@ -416,6 +416,10 @@ function alignLiveRecitation(expected, spoken) {
   let endI=0,best=Infinity;
   for(let i=0;i<=a.length;i++)if(dp[i][b.length]<best){best=dp[i][b.length];endI=i;}
   const expectedStates=a.map(()=>"pending"),spokenStates=b.map(()=>"extra"),issues=[];
+  if (complete) for (let k=endI;k<a.length;k++) {
+    expectedStates[k]="missing";
+    issues.push({type:"missing",expected:a[k],spoken:"",expectedIndex:k,spokenIndex:b.length});
+  }
   let i=endI,j=b.length;
   while(j>0){
     if(i>0&&an[i-1]===bn[j-1]&&dp[i][j]===dp[i-1][j-1]){expectedStates[i-1]="correct";spokenStates[j-1]="correct";i--;j--;}
@@ -438,10 +442,10 @@ function playRecitationAlert(){
     o.connect(g);g.connect(recitationAudioContext.destination);o.start();o.stop(recitationAudioContext.currentTime+.2);
   }catch(e){console.warn("تعذر تشغيل تنبيه التسميع",e);}
 }
-function renderLiveRecitation(spoken,finalText){
+function renderLiveRecitation(spoken,finalText,complete=false){
   const transcript=$("recitation-transcript"),original=$("recitation-original");
   if(!activeMatn||!transcript||!original)return {issues:[]};
-  const aligned=alignLiveRecitation(activeMatn.items[activeIndex].text,spoken);
+  const aligned=alignLiveRecitation(activeMatn.items[activeIndex].text,spoken,complete);
   const finalCount=String(finalText||"").trim().split(/\s+/).filter(Boolean).length;
   transcript.innerHTML="<strong>ما نطقتَ:</strong> "+aligned.spoken.map((x,k)=>{
     const cls=k>=finalCount?"recitation-interim":x.state==="correct"?"recitation-word-correct":"recitation-word-wrong";
@@ -465,7 +469,7 @@ function alertConfirmedRecitationErrors(finalText){
   if(fresh){playRecitationAlert();$("recitation-status").textContent="تنبيه: رُصد اختلاف محتمل. راجع الكلمات الحمراء والتصحيح الأخضر.";}
 }
 function compareRecitation(expected,spoken){
-  const aligned=alignLiveRecitation(expected,spoken);
+  const aligned=alignLiveRecitation(expected,spoken,true);
   return {issues:aligned.issues,total:Math.max(normalizeRecitationText(expected).split(" ").filter(Boolean).length,normalizeRecitationText(spoken).split(" ").filter(Boolean).length)};
 }
 function showRecitationComparison(spoken){
@@ -509,7 +513,7 @@ function startRecitation(){
     recitationActive=false;start.disabled=false;stop.disabled=true;
     const spoken=(transcript.dataset.finalText||finalText).trim();
     status.textContent=spoken?"انتهى التسميع. راجع الكلمات الملوّنة والتصحيح أدناه.":"انتهى التسميع دون التقاط نص واضح.";
-    if(spoken){renderLiveRecitation(spoken,spoken);showRecitationComparison(spoken);}
+    if(spoken){renderLiveRecitation(spoken,spoken,true);showRecitationComparison(spoken);}
   };
   try{recognition.start();}catch(e){recitationActive=false;start.disabled=false;stop.disabled=true;status.textContent="تعذر بدء الميكروفون. تحقق من إذن المتصفح وحاول مجدداً.";}
 }
