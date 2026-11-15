@@ -1,7 +1,7 @@
-const CACHE = "riwaq-v19";
+const CACHE = "riwaq-v20";
 const CORE_FILES = [
   "./",
-  "./index.html",
+  "./index.html",\n  "./istidhar.html",\n  "./istidhar.js",
   "./style.css",
   "./app.js",
   "./mutun.json",
@@ -46,7 +46,7 @@ self.addEventListener("fetch", event => {
         const response = await fetch(request);
         if (response && response.ok) {
           const cache = await caches.open(CACHE);
-          await cache.put(new URL("./index.html", self.registration.scope).href, response.clone());
+          await cache.put(request.url, response.clone());\n          await cache.put(new URL("./index.html", self.registration.scope).href, response.clone());
         }
         return response;
       } catch {
