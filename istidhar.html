@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173d32">
+  <meta name="description" content="استظهر المتن كاملاً بصوتك، وتابع الكلمات التي تنطق بها مع تنبيه فوري عند الاختلاف.">
+  <title>الاستظهار الكامل | رِواق المتون</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="recall-page">
+  <header class="topbar">
+    <a class="brand" href="./index.html#library" aria-label="رواق المتون - المكتبة">
+      <span class="brand-mark">رِ</span><span><strong>رِواق المتون</strong><small>الاستظهار الكامل</small></span>
+    </a>
+    <a class="button button-outline small recall-back" href="./index.html#library">العودة إلى المكتبة ←</a>
+  </header>
+  <main class="recall-shell">
+    <div class="recall-head">
+      <div><span class="eyebrow">اختبر حفظك دون رؤية النص</span><h1 id="recall-title">الاستظهار الكامل</h1><p id="recall-subtitle">اقرأ المتن كاملاً بصوت مرتفع، وسنكتب ما تنطق به فقط.</p></div>
+    </div>
+    <section class="recall-card">
+      <p id="recall-warning" class="recall-warning hidden" role="status"></p>
+      <div class="recall-actions">
+        <button id="recall-start" class="button button-primary" type="button">ابدأ الاستظهار 🎙️</button>
+        <button id="recall-stop" class="button button-outline" type="button" disabled>إيقاف</button>
+        <button id="recall-clear" class="button button-ghost" type="button">مسح التفريغ</button>
+      </div>
+      <p id="recall-status" class="recall-status" role="status">اضغط «ابدأ الاستظهار» واسمح باستعمال الميكروفون.</p>
+      <div id="recall-transcript" class="recall-transcript" aria-live="polite"><span class="recall-placeholder">سيظهر هنا كلامك كما تنطق به، كلمة بكلمة…</span></div>
+      <div class="recall-meta"><span id="recall-word-count">0 كلمة</span><span>الأخضر: مطابق · الأحمر: اختلاف محتمل</span></div>
+      <p class="recall-note">النص الأصلي لا يظهر في هذه الصفحة؛ تتم المقارنة في الخلفية فقط. قد يخطئ التعرف الصوتي أحياناً، لذلك راجع الكلمة الحمراء قبل الحكم على حفظك. يتطلب التسميع الصوتي متصفحاً يدعم التعرف على الكلام واتصالاً بالإنترنت. مستوى صوت التنبيه يعتمد أيضاً على مستوى صوت الجهاز والمتصفح.</p>
+    </section>
+  </main>
+  <script src="istidhar.js" defer></script>
+</body>
+</html>
