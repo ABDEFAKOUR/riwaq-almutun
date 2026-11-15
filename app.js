@@ -296,6 +296,7 @@ async function loadLibrary() {
       }
     }
     if (location.pathname.endsWith("/review.html")) renderProgressList("review");
+    if (location.pathname.endsWith("/progress.html")) renderProgressList("recent");
   } catch (e) {
     console.error(e);
     $("matn-grid").innerHTML = '<div class="empty-state">تعذر تحميل بيانات المتون. تأكد من وجود ملف mutun.json بجانب index.html وأنه ملف JSON صالح، ثم أعد تحميل الصفحة.</div>';
@@ -667,7 +668,7 @@ on("daily-review-btn", "click", () => {
 on("session-start-btn", "click", startSession);
 on("session-end-btn", "click", () => finishSession(false));
 on("close-progress", "click", () => {
-  if (location.pathname.endsWith("/review.html")) window.location.href = "./index.html";
+  if (location.pathname.endsWith("/review.html") || location.pathname.endsWith("/progress.html")) window.location.href = "./index.html";
   else $("progress-panel").classList.add("hidden");
 });
 on("progress-list", "click", e => {

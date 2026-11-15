@@ -329,3 +329,14 @@ body.review-route footer { display: none !important; }
 body.review-route .container { padding-top: 22px; }
 body.review-route .progress-panel { display: block; margin: 0 0 55px; }
 body.review-route .progress-panel.hidden { display: block !important; }
+
+
+/* صفحة الإحصائيات والتقدم المستقلة */
+body.progress-route .container > section:not(.stats-grid):not(.daily-review):not(.weekly-report):not(.achievements-section):not(#progress-panel) { display: none !important; }
+body.progress-route footer { display: none !important; }
+body.progress-route .container { padding-top: 22px; }
+body.progress-route .stats-grid { margin-top: 18px; margin-bottom: 28px; }
+body.progress-route .daily-review { margin-bottom: 28px; }
+body.progress-route #session-start-btn { display: none !important; }
+body.progress-route .progress-panel { display: block; margin: 0 0 55px; }
+body.progress-route .progress-panel.hidden { display: none !important; }
