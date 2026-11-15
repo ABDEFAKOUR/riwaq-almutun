@@ -34,7 +34,12 @@ function grade(q) {
   c.last = Date.now(); c.due = q < 3 ? c.last + 6e5 : c.last + c.int * DAY;
   all[k] = c; S(KEY, all);
   updateStats(); renderLibrary();
-  if (activeIndex < activeMatn.items.length - 1) go(1); else renderStudyItem();
+  if (sessionActive) {
+    sessionIndex++;
+    if (sessionIndex >= sessionQueue.length) finishSession(true);
+    else renderSessionItem();
+  } else if (activeIndex < activeMatn.items.length - 1) go(1);
+  else renderStudyItem();
 }
 function updateStats() {
   const progress = readProgress(), now = Date.now();
@@ -144,7 +149,7 @@ function finishSession(completed = false) {
   $("session-panel")?.classList.add("hidden");
   if (completed) alert("أحسنت! أتممت جلسة الحفظ بنجاح.");
 }
-\n/* ---------- نسخة احتياطية ---------- */
+/* ---------- نسخة احتياطية ---------- */
 function exportData() {
   const a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([JSON.stringify({ app: "riwayq", v: 2, progress: readProgress() })], { type: "application/json" }));
