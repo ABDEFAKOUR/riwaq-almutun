@@ -1,4 +1,4 @@
-const CACHE = "riwaq-v21";
+const CACHE = "riwaq-v22";
 const CORE_FILES = [
   "./",
   "./index.html",
@@ -15,15 +15,12 @@ const CORE_FILES = [
 self.addEventListener("install", event => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE);
-    // Cache each file separately: one optional/missing asset must not cancel the whole install.
+    // لا نفعّل نسخة جديدة إذا لم تُحمّل الملفات الأساسية كلها بنجاح.
     await Promise.all(CORE_FILES.map(async path => {
-      try {
-        const url = new URL(path, self.registration.scope).href;
-        const response = await fetch(url, { cache: "reload" });
-        if (response.ok) await cache.put(url, response);
-      } catch (error) {
-        console.warn("Riwayq precache skipped:", path, error);
-      }
+      const url = new URL(path, self.registration.scope).href;
+      const response = await fetch(url, { cache: "reload" });
+      if (!response.ok) throw new Error(`تعذر تخزين الملف الأساسي: ${path} (${response.status})`);
+      await cache.put(url, response);
     }));
     await self.skipWaiting();
   })());
@@ -56,10 +53,10 @@ self.addEventListener("fetch", event => {
         const cache = await caches.open(CACHE);
         const cleanUrl = new URL(request.url);
         cleanUrl.search = "";
-        return (await cache.match(request)) ||
-          (await cache.match(cleanUrl.href)) ||
+        return (await cache.match(request, { ignoreSearch: true })) ||
+          (await cache.match(cleanUrl.href, { ignoreSearch: true })) ||
           (await cache.match(new URL("./index.html", self.registration.scope).href)) ||
-          new Response("التطبيق غير متاح دون اتصال بعد. افتحه مرة واحدة مع الإنترنت ثم أعد المحاولة.", {
+          new Response("التطبيق غير متاح دون اتصال. افتحه مرة واحدة مع الإنترنت وانتظر اكتمال التجهيز.", {
             status: 503, headers: { "Content-Type": "text/plain; charset=utf-8" }
           });
       }
@@ -69,9 +66,8 @@ self.addEventListener("fetch", event => {
 
   event.respondWith((async () => {
     const cache = await caches.open(CACHE);
-    const cached = await cache.match(request);
+    const cached = await cache.match(request, { ignoreSearch: true });
     if (cached) {
-      // Refresh the cached copy when online, while returning it immediately.
       fetch(request).then(response => {
         if (response && response.ok) cache.put(request, response.clone());
       }).catch(() => {});
