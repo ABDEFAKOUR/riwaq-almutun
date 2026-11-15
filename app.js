@@ -36,10 +36,16 @@ function grade(q) {
   if (activeIndex < activeMatn.items.length - 1) go(1); else renderStudyItem();
 }
 function updateStats() {
-  const v = Object.values(readProgress()), now = Date.now();
-  $("saved-count").textContent = v.filter(c => c.int >= 6).length;
-  $("review-count").textContent = v.filter(c => c.due <= now).length;
-  $("streak-count").textContent = new Set(v.filter(c => c.last > now - 7 * DAY).map(c => new Date(c.last).toISOString().slice(0, 10))).size;
+  const progress = readProgress(), now = Date.now();
+  const items = library.flatMap(matn => matn.items.map(item => progress[pk(matn.id, item.id)] || null));
+  $("new-count").textContent = items.filter(c => !c).length;
+  $("learning-count").textContent = items.filter(c => c && c.int < 6).length;
+  $("saved-count").textContent = items.filter(c => c && c.int >= 6).length;
+  $("review-count").textContent = items.filter(c => c && c.due <= now).length;
+  $("streak-count").textContent = new Set(
+    items.filter(c => c && c.last > now - 7 * DAY)
+      .map(c => new Date(c.last).toLocaleDateString("en-CA"))
+  ).size;
 }
 
 function renderProgressList(type) {
@@ -48,25 +54,50 @@ function renderProgressList(type) {
   const now = Date.now(), progress = readProgress(), rows = [];
   for (const matn of library) {
     matn.items.forEach((item, index) => {
-      const state = progress[pk(matn.id, item.id)];
-      if (!state) return;
-      const mastered = state.int >= 6;
-      const due = state.due <= now;
-      const recent = Number.isFinite(state.last) && state.last > 0;
-      if ((type === "mastered" && mastered) || (type === "review" && due) || (type === "recent" && recent)) {
-        rows.push({ matn, item, index, state });
-      }
+      const state = progress[pk(matn.id, item.id)] || null;
+      const mastered = !!state && state.int >= 6;
+      const learning = !!state && state.int < 6;
+      const due = !!state && state.due <= now;
+      const recent = !!state && Number.isFinite(state.last) && state.last > 0;
+      const include =
+        (type === "new" && !state) ||
+        (type === "learning" && learning) ||
+        (type === "mastered" && mastered) ||
+        (type === "review" && due) ||
+        (type === "recent" && recent);
+      if (include) rows.push({ matn, item, index, state });
     });
   }
-  title.textContent = type === "mastered" ? "المقاطع التي أتقنتها" : type === "review" ? "المقاطع المستحقة للمراجعة" : "آخر المقاطع التي درستها";
+  const titles = {
+    new: "المقاطع الجديدة",
+    learning: "المقاطع قيد الحفظ",
+    mastered: "المقاطع التي أتقنتها",
+    review: "المقاطع المستحقة للمراجعة",
+    recent: "آخر المقاطع التي درستها"
+  };
+  title.textContent = titles[type] || "مقاطع الحفظ";
   if (type === "recent") rows.sort((a, b) => (b.state.last || 0) - (a.state.last || 0));
-  list.innerHTML = rows.length ? rows.map((r, n) =>
-    `<button class="progress-item" type="button" data-progress-matn="${escapeHTML(r.matn.id)}" data-progress-index="${r.index}">
+  if (type === "review") rows.sort((a, b) => (a.state.due || 0) - (b.state.due || 0));
+  if (type === "learning") rows.sort((a, b) => (b.state.last || 0) - (a.state.last || 0));
+  const empty = {
+    new: "أحسنت! لا توجد مقاطع جديدة غير مبدوءة.",
+    learning: "لا توجد مقاطع قيد الحفظ حالياً.",
+    mastered: "لم تتقن أي مقطع بعد. ابدأ بمقطع واحفظه جيداً، ثم اضغط «سهل».",
+    review: "لا توجد مقاطع مستحقة للمراجعة الآن.",
+    recent: "لم تسجل دراسة أي مقطع بعد."
+  };
+  list.innerHTML = rows.length ? rows.map((r, n) => {
+    const detail = type === "recent" ? new Date(r.state.last).toLocaleDateString("ar")
+      : type === "new" ? "جديد"
+      : type === "learning" ? "قيد الحفظ"
+      : type === "mastered" ? "متقَن"
+      : "للمراجعة";
+    return `<button class="progress-item" type="button" data-progress-matn="${escapeHTML(r.matn.id)}" data-progress-index="${r.index}">
       <span class="progress-item-number">${n + 1}</span>
-      <span class="progress-item-copy"><strong>${escapeHTML(r.matn.title)}</strong><small>${escapeHTML(r.item.reference || `المقطع ${r.index + 1}`)} · ${type === "recent" ? new Date(r.state.last).toLocaleDateString("ar") : type === "mastered" ? "متقَن" : "للمراجعة"}</small></span>
+      <span class="progress-item-copy"><strong>${escapeHTML(r.matn.title)}</strong><small>${escapeHTML(r.item.reference || `المقطع ${r.index + 1}`)} · ${detail}</small></span>
       <span class="progress-item-arrow">←</span>
-    </button>`).join("") :
-    `<p class="empty-state">${type === "mastered" ? "لم تتقن أي مقطع بعد. ابدأ بمقطع واحفظه جيداً، ثم اضغط «سهل»." : type === "review" ? "لا توجد مقاطع مستحقة للمراجعة الآن." : "لم تسجل دراسة أي مقطع بعد."}</p>`;
+    </button>`;
+  }).join("") : `<p class="empty-state">${empty[type] || "لا توجد مقاطع هنا."}</p>`;
   panel.classList.remove("hidden");
   panel.scrollIntoView({ behavior: "smooth", block: "start" });
 }
