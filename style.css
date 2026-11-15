@@ -287,3 +287,30 @@ footer{flex-wrap:wrap}}
 [data-theme=dark] .recitation-word-wrong{color:#ff7777}
 @media(prefers-reduced-motion:no-preference){.recitation-word-wrong{animation:recitation-pulse .7s ease-in-out 1}}
 @keyframes recitation-pulse{50%{background:rgba(198,40,40,.12)}}
+
+
+/* الاستظهار الكامل */
+.matn-card-recall{cursor:pointer;transition:transform .16s,border-color .16s,box-shadow .16s}
+.matn-card-recall:hover,.matn-card-recall:focus-visible{transform:translateY(-3px);border-color:var(--gold);box-shadow:0 10px 24px rgba(25,48,38,.09)}
+.recall-page{min-height:100vh;background:var(--cream)}
+.recall-shell{width:min(920px,92vw);margin:0 auto;padding:28px 0 60px}
+.recall-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:24px}
+.recall-head h1{font-family:Amiri,serif;color:var(--green);font-size:clamp(25px,5vw,38px);margin:3px 0}
+.recall-head p{color:var(--muted);font-size:13px;margin:0}
+.recall-back{white-space:nowrap;text-decoration:none}
+.recall-card{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:clamp(18px,4vw,30px);box-shadow:var(--shadow)}
+.recall-actions{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
+.recall-actions button{min-width:145px}
+.recall-status{padding:12px 14px;border-radius:12px;background:var(--cream);color:var(--green2);font-size:13px}
+.recall-transcript{min-height:230px;margin-top:14px;padding:20px;border:1px dashed var(--line);border-radius:15px;background:var(--cream);font-family:Amiri,serif;font-size:clamp(24px,4vw,34px);line-height:2.1;white-space:pre-wrap;overflow-wrap:anywhere}
+.recall-placeholder{color:var(--muted);font-size:18px}
+.recall-word-correct{color:#16834b;font-weight:700}
+.recall-word-wrong{color:#d21f2b;font-weight:800;text-decoration:underline wavy rgba(210,31,43,.55)}
+.recall-word-interim{color:var(--muted);text-decoration:underline dotted}
+.recall-meta{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin-top:14px}
+.recall-warning{margin:12px 0;padding:11px 14px;border:1px solid #d7b66e;border-radius:12px;background:#fff7e5;color:#76551b;font-size:13px}
+.recall-note{color:var(--muted);font-size:12px;line-height:1.9;margin-top:18px}
+[data-theme=dark] .recall-head h1{color:#8fcfb2}
+[data-theme=dark] .recall-word-correct{color:#65d69a}
+[data-theme=dark] .recall-word-wrong{color:#ff7777}
+@media(max-width:520px){.recall-head{align-items:flex-start;flex-direction:column}.recall-actions button{flex:1}.recall-transcript{min-height:190px;padding:14px}}
