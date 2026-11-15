@@ -42,6 +42,33 @@ function updateStats() {
   $("streak-count").textContent = new Set(v.filter(c => c.last > now - 7 * DAY).map(c => new Date(c.last).toISOString().slice(0, 10))).size;
 }
 
+function renderProgressList(type) {
+  const panel = $("progress-panel"), list = $("progress-list"), title = $("progress-panel-title");
+  if (!panel || !list) return;
+  const now = Date.now(), progress = readProgress(), rows = [];
+  for (const matn of library) {
+    matn.items.forEach((item, index) => {
+      const state = progress[pk(matn.id, item.id)];
+      if (!state) return;
+      const mastered = state.int >= 6;
+      const due = state.due <= now;
+      if ((type === "mastered" && mastered) || (type === "review" && due)) {
+        rows.push({ matn, item, index, state });
+      }
+    });
+  }
+  title.textContent = type === "mastered" ? "المقاطع التي أتقنتها" : "المقاطع المستحقة للمراجعة";
+  list.innerHTML = rows.length ? rows.map((r, n) =>
+    `<button class="progress-item" type="button" data-progress-matn="${escapeHTML(r.matn.id)}" data-progress-index="${r.index}">
+      <span class="progress-item-number">${n + 1}</span>
+      <span class="progress-item-copy"><strong>${escapeHTML(r.matn.title)}</strong><small>${escapeHTML(r.item.reference || `المقطع ${r.index + 1}`)}</small></span>
+      <span class="progress-item-arrow">←</span>
+    </button>`).join("") :
+    `<p class="empty-state">${type === "mastered" ? "لم تتقن أي مقطع بعد. ابدأ بمقطع واحفظه جيداً، ثم اضغط «سهل»." : "لا توجد مقاطع مستحقة للمراجعة الآن."}</p>`;
+  panel.classList.remove("hidden");
+  panel.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 /* ---------- نسخة احتياطية ---------- */
 function exportData() {
   const a = document.createElement("a");
@@ -181,6 +208,19 @@ function applyPrefs() {
 
 /* ---------- الأحداث ---------- */
 on("search-input", "input", renderLibrary);
+document.querySelectorAll("[data-progress-view]").forEach(button => button.addEventListener("click", () => renderProgressList(button.dataset.progressView)));
+on("close-progress", "click", () => $("progress-panel").classList.add("hidden"));
+on("progress-list", "click", e => {
+  const button = e.target.closest("[data-progress-matn]");
+  if (!button) return;
+  const id = button.dataset.progressMatn, index = Number(button.dataset.progressIndex);
+  openMatn(id);
+  activeIndex = index;
+  resetItemView();
+  renderStudyItem();
+  $("progress-panel").classList.add("hidden");
+  $("study-panel").scrollIntoView({ behavior: "smooth", block: "start" });
+});
 on("reveal-btn", "click", () => { revealed = !revealed; renderStudyItem(); });
 on("meaning-btn", "click", () => { meaningVisible = !meaningVisible; renderStudyItem(); });
 on("similar-btn", "click", () => { similarVisible = !similarVisible; renderSimilar(); });
