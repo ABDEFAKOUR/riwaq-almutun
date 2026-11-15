@@ -431,15 +431,25 @@ function alignLiveRecitation(expected, spoken, complete = false) {
 }
 function playRecitationAlert(){
   try{
-    const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+    const AC=window.AudioContext||window.webkitAudioContext;
+    if(!AC)return;
     if(!recitationAudioContext)recitationAudioContext=new AC();
     if(recitationAudioContext.state==="suspended")recitationAudioContext.resume();
-    const o=recitationAudioContext.createOscillator(),g=recitationAudioContext.createGain();
-    o.type="sine";o.frequency.value=740;
-    g.gain.setValueAtTime(.0001,recitationAudioContext.currentTime);
-    g.gain.exponentialRampToValueAtTime(.12,recitationAudioContext.currentTime+.015);
-    g.gain.exponentialRampToValueAtTime(.0001,recitationAudioContext.currentTime+.19);
-    o.connect(g);g.connect(recitationAudioContext.destination);o.start();o.stop(recitationAudioContext.currentTime+.2);
+    const ctx=recitationAudioContext,now=ctx.currentTime;
+    // جرس قصير من نغمتين متناغمتين، أوضح من النبضة السابقة.
+    [[880,1320,0],[988,1480,0.18]].forEach(([low,high,delay])=>{
+      [low,high].forEach((frequency,index)=>{
+        const oscillator=ctx.createOscillator(),gain=ctx.createGain();
+        const start=now+delay,duration=index===0?0.34:0.28;
+        oscillator.type="sine";
+        oscillator.frequency.setValueAtTime(frequency,start);
+        gain.gain.setValueAtTime(0.0001,start);
+        gain.gain.exponentialRampToValueAtTime(index===0?0.34:0.16,start+0.012);
+        gain.gain.exponentialRampToValueAtTime(0.0001,start+duration);
+        oscillator.connect(gain);gain.connect(ctx.destination);
+        oscillator.start(start);oscillator.stop(start+duration+0.02);
+      });
+    });
   }catch(e){console.warn("تعذر تشغيل تنبيه التسميع",e);}
 }
 function renderLiveRecitation(spoken,finalText,complete=false){
