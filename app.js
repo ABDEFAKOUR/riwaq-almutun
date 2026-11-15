@@ -310,6 +310,11 @@ function applyPrefs() {
 }
 
 /* ---------- الأحداث ---------- */
+on("daily-goal-input", "change", e => {
+  const value = Math.min(50, Math.max(1, Math.round(Number(e.target.value) || 5)));
+  S(DAILY_GOAL, value);
+  updateDailyPlan();
+});
 on("search-input", "input", renderLibrary);
 document.querySelectorAll("[data-progress-view]").forEach(button => button.addEventListener("click", () => renderProgressList(button.dataset.progressView)));
 on("daily-review-btn", "click", () => renderProgressList("review"));
