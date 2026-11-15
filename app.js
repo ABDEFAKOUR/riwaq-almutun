@@ -296,6 +296,7 @@ async function loadLibrary() {
       }
     }
     if (location.pathname.endsWith("/review.html")) renderProgressList("review");
+    if (location.pathname.endsWith("/progress.html")) renderProgressList("recent");
   } catch (e) {
     console.error(e);
     $("matn-grid").innerHTML = '<div class="empty-state">تعذر تحميل بيانات المتون. تأكد من وجود ملف mutun.json بجانب index.html وأنه ملف JSON صالح، ثم أعد تحميل الصفحة.</div>';
