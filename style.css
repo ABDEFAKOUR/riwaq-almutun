@@ -170,3 +170,18 @@ footer{flex-wrap:wrap}}
 
 .install-button{white-space:nowrap;flex:none}
 @media(max-width:620px){.top-actions{gap:7px;flex-wrap:wrap}.install-button{order:-1}}
+
+
+/* ورد المراجعة اليومي */
+.daily-review{display:flex;align-items:center;justify-content:space-between;gap:24px;margin:-28px 0 58px;padding:24px 28px;border:1px solid var(--line);border-radius:18px;background:var(--paper)}
+.daily-review-copy{max-width:560px}
+.daily-review-copy h2{font-family:Amiri,serif;font-size:27px;color:var(--green);margin:2px 0}
+.daily-review-copy p{font-size:12px;color:var(--muted);margin:0}
+.daily-review-action{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.daily-review-action strong,.daily-review-action small{display:block}
+.daily-review-action strong{font-size:25px;line-height:1.2;color:var(--green)}
+.daily-review-action small,.daily-review-empty{font-size:11px;color:var(--muted)}
+.daily-review-empty{margin:0}
+.daily-review-action button:disabled{opacity:.5;cursor:not-allowed;transform:none}
+[data-theme=dark] .daily-review-copy h2,[data-theme=dark] .daily-review-action strong{color:#8fcfb2}
+@media(max-width:650px){.daily-review{align-items:flex-start;flex-direction:column;padding:20px}.daily-review-action{width:100%;justify-content:space-between}}
