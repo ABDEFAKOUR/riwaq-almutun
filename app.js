@@ -394,121 +394,126 @@ function applyPrefs() {
   S(PREFS, prefs);
 }
 
-/* ---------- التسميع الصوتي ---------- */
+/* ---------- التسميع الصوتي المباشر ---------- */
 let recitationRecognition = null, recitationActive = false;
+let recitationAudioContext = null, recitationAlerted = new Set();
 function normalizeRecitationText(value) {
-  return String(value || "")
-    .normalize("NFD")
+  return String(value || "").normalize("NFD")
     .replace(/[\u064B-\u065F\u0670\u0640]/g, "")
-    .replace(/[أإآٱ]/g, "ا")
-    .replace(/ى/g, "ي")
+    .replace(/[أإآٱ]/g, "ا").replace(/ى/g, "ي")
     .replace(/[\u0610-\u061A\u06D6-\u06ED]/g, "")
-    .replace(/[.,،؛:!?؟«»"']/g, " ")
-    .replace(/\s+/g, " ")
-    .trim()
-    .toLowerCase();
+    .replace(/[.,،؛:!?؟«»"']/g, " ").replace(/\s+/g, " ").trim().toLowerCase();
 }
-function compareRecitation(expected, spoken) {
-  const a = normalizeRecitationText(expected).split(" ").filter(Boolean);
-  const b = normalizeRecitationText(spoken).split(" ").filter(Boolean);
-  const dp = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
-  for (let i = 0; i <= a.length; i++) dp[i][0] = i;
-  for (let j = 0; j <= b.length; j++) dp[0][j] = j;
-  for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++) {
-    dp[i][j] = a[i - 1] === b[j - 1] ? dp[i - 1][j - 1] :
-      Math.min(dp[i - 1][j - 1] + 1, dp[i - 1][j] + 1, dp[i][j - 1] + 1);
+function alignLiveRecitation(expected, spoken) {
+  const a=normalizeRecitationText(expected).split(" ").filter(Boolean);
+  const b=String(spoken||"").trim().split(/\s+/).filter(Boolean);
+  const an=a.map(normalizeRecitationText), bn=b.map(normalizeRecitationText);
+  const dp=Array.from({length:a.length+1},()=>Array(b.length+1).fill(0));
+  for(let i=0;i<=a.length;i++)dp[i][0]=i;
+  for(let j=0;j<=b.length;j++)dp[0][j]=j;
+  for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)
+    dp[i][j]=an[i-1]===bn[j-1]?dp[i-1][j-1]:Math.min(dp[i-1][j-1]+1,dp[i-1][j]+1,dp[i][j-1]+1);
+  let endI=0,best=Infinity;
+  for(let i=0;i<=a.length;i++)if(dp[i][b.length]<best){best=dp[i][b.length];endI=i;}
+  const expectedStates=a.map(()=>"pending"),spokenStates=b.map(()=>"extra"),issues=[];
+  let i=endI,j=b.length;
+  while(j>0){
+    if(i>0&&an[i-1]===bn[j-1]&&dp[i][j]===dp[i-1][j-1]){expectedStates[i-1]="correct";spokenStates[j-1]="correct";i--;j--;}
+    else if(i>0&&j>0&&dp[i][j]===dp[i-1][j-1]+1){expectedStates[i-1]="correction";spokenStates[j-1]="wrong";issues.push({type:"changed",expected:a[i-1],spoken:b[j-1],expectedIndex:i-1,spokenIndex:j-1});i--;j--;}
+    else if(i>0&&dp[i][j]===dp[i-1][j]+1){expectedStates[i-1]="missing";issues.push({type:"missing",expected:a[i-1],spoken:"",expectedIndex:i-1,spokenIndex:j});i--;}
+    else{spokenStates[j-1]="wrong";issues.push({type:"extra",expected:"",spoken:b[j-1],expectedIndex:i,spokenIndex:j-1});j--;}
   }
-  const issues = [];
-  let i = a.length, j = b.length;
-  while (i || j) {
-    if (i && j && a[i - 1] === b[j - 1]) { i--; j--; continue; }
-    if (i && j && dp[i][j] === dp[i - 1][j - 1] + 1) {
-      issues.push({ type: "changed", expected: a[i - 1], spoken: b[j - 1] }); i--; j--;
-    } else if (i && dp[i][j] === dp[i - 1][j] + 1) {
-      issues.push({ type: "missing", expected: a[i - 1], spoken: "" }); i--;
-    } else {
-      issues.push({ type: "extra", expected: "", spoken: b[j - 1] }); j--;
-    }
-  }
-  issues.reverse();
-  return { issues, total: Math.max(a.length, b.length), distance: dp[a.length][b.length] };
+  return {expected:a.map((word,k)=>({word,state:expectedStates[k]})),spoken:b.map((word,k)=>({word,state:spokenStates[k]})),issues:issues.reverse()};
 }
-function showRecitationComparison(spoken) {
-  const feedback = $("recitation-feedback");
-  if (!activeMatn || !feedback) return;
-  if (!spoken.trim()) {
-    feedback.classList.remove("hidden");
-    feedback.innerHTML = "<strong>لم نلتقط كلاماً واضحاً.</strong><p>جرّب مرة أخرى وتحدث بصوت واضح.</p>";
-    return;
+function playRecitationAlert(){
+  try{
+    const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+    if(!recitationAudioContext)recitationAudioContext=new AC();
+    if(recitationAudioContext.state==="suspended")recitationAudioContext.resume();
+    const o=recitationAudioContext.createOscillator(),g=recitationAudioContext.createGain();
+    o.type="sine";o.frequency.value=740;
+    g.gain.setValueAtTime(.0001,recitationAudioContext.currentTime);
+    g.gain.exponentialRampToValueAtTime(.12,recitationAudioContext.currentTime+.015);
+    g.gain.exponentialRampToValueAtTime(.0001,recitationAudioContext.currentTime+.19);
+    o.connect(g);g.connect(recitationAudioContext.destination);o.start();o.stop(recitationAudioContext.currentTime+.2);
+  }catch(e){console.warn("تعذر تشغيل تنبيه التسميع",e);}
+}
+function renderLiveRecitation(spoken,finalText){
+  const transcript=$("recitation-transcript"),original=$("recitation-original");
+  if(!activeMatn||!transcript||!original)return {issues:[]};
+  const aligned=alignLiveRecitation(activeMatn.items[activeIndex].text,spoken);
+  const finalCount=String(finalText||"").trim().split(/\s+/).filter(Boolean).length;
+  transcript.innerHTML="<strong>ما نطقتَ:</strong> "+aligned.spoken.map((x,k)=>{
+    const cls=k>=finalCount?"recitation-interim":x.state==="correct"?"recitation-word-correct":"recitation-word-wrong";
+    return '<span class="'+cls+'">'+escapeHTML(x.word)+"</span>";
+  }).join(" ");
+  original.innerHTML="<strong>النص الأصلي:</strong> "+aligned.expected.map(x=>{
+    const cls=x.state==="pending"?"recitation-word-pending":"recitation-word-correct";
+    const marker=x.state==="missing"?' <small class="recitation-missing-label">(ساقطة)</small>':"";
+    return '<span class="'+cls+'">'+escapeHTML(x.word)+"</span>"+marker;
+  }).join(" ");
+  return aligned;
+}
+function alertConfirmedRecitationErrors(finalText){
+  if(!activeMatn||!String(finalText||"").trim())return;
+  const aligned=alignLiveRecitation(activeMatn.items[activeIndex].text,finalText);
+  let fresh=false;
+  for(const x of aligned.issues){
+    const key=[x.type,x.expectedIndex,x.spokenIndex,x.expected,x.spoken].join("|");
+    if(!recitationAlerted.has(key)){recitationAlerted.add(key);fresh=true;}
   }
-  const result = compareRecitation(activeMatn.items[activeIndex].text, spoken);
-  const errors = result.issues;
-  const accuracy = result.total ? Math.max(0, Math.round((1 - result.distance / result.total) * 100)) : 100;
-  const details = errors.length ? errors.slice(0, 30).map(issue => {
-    if (issue.type === "missing") return '<li><span class="recitation-missing">ناقص</span> الكلمة الصحيحة: <strong>' + escapeHTML(issue.expected) + '</strong></li>';
-    if (issue.type === "extra") return '<li><span class="recitation-extra">زائد</span> قلتَ: <strong>' + escapeHTML(issue.spoken) + '</strong></li>';
-    return '<li><span class="recitation-changed">اختلاف</span> قلتَ: <strong>' + escapeHTML(issue.spoken) + '</strong> والصواب في النص: <strong>' + escapeHTML(issue.expected) + '</strong></li>';
-  }).join("") : "<li>لم يظهر اختلاف في الكلمات بعد تطبيع التشكيل وعلامات الترقيم.</li>";
+  if(fresh){playRecitationAlert();$("recitation-status").textContent="تنبيه: رُصد اختلاف محتمل. راجع الكلمات الحمراء والتصحيح الأخضر.";}
+}
+function compareRecitation(expected,spoken){
+  const aligned=alignLiveRecitation(expected,spoken);
+  return {issues:aligned.issues,total:Math.max(normalizeRecitationText(expected).split(" ").filter(Boolean).length,normalizeRecitationText(spoken).split(" ").filter(Boolean).length)};
+}
+function showRecitationComparison(spoken){
+  const feedback=$("recitation-feedback");if(!activeMatn||!feedback)return;
+  if(!spoken.trim()){feedback.classList.remove("hidden");feedback.innerHTML="<strong>لم نلتقط كلاماً واضحاً.</strong><p>جرّب مرة أخرى وتحدث بصوت واضح.</p>";return;}
+  const result=compareRecitation(activeMatn.items[activeIndex].text,spoken),errors=result.issues;
+  const accuracy=result.total?Math.max(0,Math.round((1-errors.length/result.total)*100)):100;
+  const details=errors.length?errors.slice(0,30).map(x=>{
+    if(x.type==="missing")return '<li><span class="recitation-missing">ناقص</span> الكلمة الصحيحة: <strong>'+escapeHTML(x.expected)+"</strong></li>";
+    if(x.type==="extra")return '<li><span class="recitation-extra">زائد</span> قلتَ: <strong>'+escapeHTML(x.spoken)+"</strong></li>";
+    return '<li><span class="recitation-changed">اختلاف</span> قلتَ: <strong>'+escapeHTML(x.spoken)+"</strong> والصواب: <strong>"+escapeHTML(x.expected)+"</strong></li>";
+  }).join(""):"<li>لم يظهر اختلاف في الكلمات بعد تطبيع التشكيل وعلامات الترقيم.</li>";
   feedback.classList.remove("hidden");
-  feedback.innerHTML = '<div class="recitation-score"><strong>' + accuracy + '%</strong><span>' + (errors.length ? 'مراجعة مواضع الاختلاف' : 'مطابقة الكلمات ممتازة') + '</span></div><ul>' + details + '</ul><p class="recitation-caution">هذه مقارنة آلية للكلمات وليست حكماً نهائياً على صحة الأداء أو التجويد؛ قد يخطئ التعرف الصوتي.</p>';
+  feedback.innerHTML='<div class="recitation-score"><strong>'+accuracy+'%</strong><span>'+(errors.length?"مراجعة مواضع الاختلاف":"مطابقة الكلمات ممتازة")+'</span></div><ul>'+details+'</ul><p class="recitation-caution">هذه مقارنة آلية للكلمات وليست حكماً نهائياً على صحة الأداء أو التجويد؛ قد يخطئ التعرف الصوتي.</p>';
 }
-function startRecitation() {
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const status = $("recitation-status"), transcript = $("recitation-transcript");
-  const start = $("recitation-start"), stop = $("recitation-stop");
-  if (!SpeechRecognition) {
-    status.textContent = "متصفحك لا يدعم التعرف الصوتي. جرّب Google Chrome أو متصفحاً يدعم Speech Recognition.";
-    return;
-  }
-  if (recitationActive) return;
-  const recognition = new SpeechRecognition();
-  recitationRecognition = recognition;
-  recognition.lang = "ar-SA";
-  recognition.continuous = true;
-  recognition.interimResults = true;
-  recognition.maxAlternatives = 1;
-  let finalText = "";
-  recognition.onstart = () => {
-    recitationActive = true;
-    revealed = false;
-    renderStudyItem();
-    start.disabled = true; stop.disabled = false;
-    transcript.textContent = "";
-    $("recitation-feedback").classList.add("hidden");
-    status.textContent = "أستمع إليك الآن… استظهر المقطع بوضوح.";
+function startRecitation(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  const status=$("recitation-status"),transcript=$("recitation-transcript"),start=$("recitation-start"),stop=$("recitation-stop");
+  if(!SR){status.textContent="متصفحك لا يدعم التعرف الصوتي. جرّب Google Chrome.";return;}
+  if(recitationActive)return;
+  const recognition=new SR();recitationRecognition=recognition;recitationAlerted=new Set();
+  try{const AC=window.AudioContext||window.webkitAudioContext;if(AC){if(!recitationAudioContext)recitationAudioContext=new AC();if(recitationAudioContext.state==="suspended")recitationAudioContext.resume();}}catch{}
+  recognition.lang="ar-SA";recognition.continuous=true;recognition.interimResults=true;recognition.maxAlternatives=1;
+  let finalText="";
+  recognition.onstart=()=>{
+    recitationActive=true;revealed=false;renderStudyItem();start.disabled=true;stop.disabled=false;
+    transcript.dataset.finalText="";transcript.textContent="أستمع إليك…";$("recitation-original").textContent="";
+    $("recitation-feedback").classList.add("hidden");status.textContent="أستمع إليك الآن… استظهر المقطع بوضوح.";
   };
-  recognition.onresult = event => {
-    finalText = "";
-    let interim = "";
-    for (let i = 0; i < event.results.length; i++) {
-      const text = event.results[i][0].transcript;
-      if (event.results[i].isFinal) finalText += text + " ";
-      else interim += text;
-    }
-    transcript.textContent = (finalText + interim).trim() || "أستمع إليك…";
-    transcript.dataset.finalText = finalText.trim();
+  recognition.onresult=event=>{
+    finalText="";let interim="";
+    for(let i=0;i<event.results.length;i++){const t=event.results[i][0].transcript;if(event.results[i].isFinal)finalText+=t+" ";else interim+=t;}
+    const all=(finalText+interim).trim();transcript.dataset.finalText=finalText.trim();
+    renderLiveRecitation(all,finalText);alertConfirmedRecitationErrors(finalText);
+    if(!recitationAlerted.size)status.textContent="أستمع إليك… الأخضر مطابق، والأحمر يحتاج مراجعة.";
   };
-  recognition.onerror = event => {
-    status.textContent = event.error === "not-allowed" ? "لم تسمح باستعمال الميكروفون. فعّل الإذن من إعدادات المتصفح." :
-      event.error === "no-speech" ? "لم نسمع صوتاً. حاول الاقتراب من الميكروفون والتحدث بوضوح." :
-      "وقع مشكل أثناء التعرف الصوتي: " + event.error;
+  recognition.onerror=event=>{
+    status.textContent=event.error==="not-allowed"?"لم تسمح باستعمال الميكروفون. فعّل الإذن من إعدادات المتصفح.":event.error==="no-speech"?"لم نسمع صوتاً. تحدث بوضوح قرب الميكروفون.":"وقع مشكل أثناء التعرف الصوتي: "+event.error;
   };
-  recognition.onend = () => {
-    recitationActive = false;
-    start.disabled = false; stop.disabled = true;
-    const spoken = (transcript.dataset.finalText || finalText).trim();
-    status.textContent = spoken ? "انتهى التسميع. هذه نتيجة المقارنة مع النص الأصلي:" : "انتهى التسميع دون التقاط نص واضح.";
-    if (spoken) showRecitationComparison(spoken);
+  recognition.onend=()=>{
+    recitationActive=false;start.disabled=false;stop.disabled=true;
+    const spoken=(transcript.dataset.finalText||finalText).trim();
+    status.textContent=spoken?"انتهى التسميع. راجع الكلمات الملوّنة والتصحيح أدناه.":"انتهى التسميع دون التقاط نص واضح.";
+    if(spoken){renderLiveRecitation(spoken,spoken);showRecitationComparison(spoken);}
   };
-  try { recognition.start(); }
-  catch (error) {
-    recitationActive = false; start.disabled = false; stop.disabled = true;
-    status.textContent = "تعذر بدء الميكروفون. حاول مرة أخرى بعد التأكد من إذن المتصفح.";
-  }
+  try{recognition.start();}catch(e){recitationActive=false;start.disabled=false;stop.disabled=true;status.textContent="تعذر بدء الميكروفون. تحقق من إذن المتصفح وحاول مجدداً.";}
 }
-function stopRecitation() {
-  if (recitationRecognition && recitationActive) recitationRecognition.stop();
-}
+function stopRecitation(){if(recitationRecognition&&recitationActive)recitationRecognition.stop();}
 
 /* ---------- الأحداث ---------- */
 on("daily-goal-input", "change", e => {
