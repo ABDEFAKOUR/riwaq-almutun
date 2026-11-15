@@ -340,3 +340,19 @@ body.progress-route .daily-review { margin-bottom: 28px; }
 body.progress-route #session-start-btn { display: none !important; }
 body.progress-route .progress-panel { display: block; margin: 0 0 55px; }
 body.progress-route .progress-panel.hidden { display: none !important; }
+
+
+/* صفحة الإعدادات والأهداف المستقلة */
+body.settings-route .container > section:not(.daily-review):not(.settings-intro):not(.settings-panel) { display: none !important; }
+body.settings-route footer { display: none !important; }
+body.settings-route .container { padding-top: 22px; }
+body.settings-route .settings-intro h1 { font-family: Amiri,serif; color: var(--green); font-size: 34px; margin: 4px 0; }
+body.settings-route .settings-intro p,.settings-help { color: var(--muted); font-size: 13px; }
+body.settings-route .daily-review { margin: 0 0 22px; }
+body.settings-route .daily-review-copy,body.settings-route .daily-review-action { display: none !important; }
+body.settings-route .daily-plan { flex: 1 1 100%; max-width: none; }
+.settings-panel { padding: 22px; border: 1px solid var(--line); border-radius: 18px; background: var(--paper); }
+.settings-panel .section-heading h2 { font-family: Amiri,serif; color: var(--green); margin: 0; }
+.settings-panel .tools { margin: 14px 0 0; }
+[data-theme=dark] body.settings-route .settings-intro h1,[data-theme=dark] .settings-panel .section-heading h2 { color: #8fcfb2; }
+@media(max-width:650px){.settings-panel{padding:17px}}
