@@ -1,7 +1,9 @@
 const CACHE = "riwaq-v20";
 const CORE_FILES = [
   "./",
-  "./index.html",\n  "./istidhar.html",\n  "./istidhar.js",
+  "./index.html",
+  "./istidhar.html",
+  "./istidhar.js",
   "./style.css",
   "./app.js",
   "./mutun.json",
@@ -46,12 +48,16 @@ self.addEventListener("fetch", event => {
         const response = await fetch(request);
         if (response && response.ok) {
           const cache = await caches.open(CACHE);
-          await cache.put(request.url, response.clone());\n          await cache.put(new URL("./index.html", self.registration.scope).href, response.clone());
+          await cache.put(request.url, response.clone());
+          await cache.put(new URL("./index.html", self.registration.scope).href, response.clone());
         }
         return response;
       } catch {
         const cache = await caches.open(CACHE);
+        const cleanUrl = new URL(request.url);
+        cleanUrl.search = "";
         return (await cache.match(request)) ||
+          (await cache.match(cleanUrl.href)) ||
           (await cache.match(new URL("./index.html", self.registration.scope).href)) ||
           new Response("التطبيق غير متاح دون اتصال بعد. افتحه مرة واحدة مع الإنترنت ثم أعد المحاولة.", {
             status: 503, headers: { "Content-Type": "text/plain; charset=utf-8" }
