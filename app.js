@@ -41,7 +41,13 @@ function updateStats() {
   $("new-count").textContent = items.filter(c => !c).length;
   $("learning-count").textContent = items.filter(c => c && c.due > now && c.int < 6).length;
   $("saved-count").textContent = items.filter(c => c && c.due > now && c.int >= 6).length;
-  $("review-count").textContent = items.filter(c => c && c.due <= now).length;
+  const dueCount = items.filter(c => c && c.due <= now).length;
+  $("review-count").textContent = dueCount;
+  const dailyCount = $("daily-review-count");
+  if (dailyCount) dailyCount.textContent = dueCount;
+  const dailyButton = $("daily-review-btn");
+  if (dailyButton) dailyButton.disabled = dueCount === 0;
+  $("daily-review-empty")?.classList.toggle("hidden", dueCount > 0);
   $("streak-count").textContent = new Set(
     items.filter(c => c && c.last > now - 7 * DAY)
       .map(c => new Date(c.last).toLocaleDateString("en-CA"))
@@ -91,6 +97,7 @@ function renderProgressList(type) {
       : type === "new" ? "جديد"
       : type === "learning" ? "قيد الحفظ"
       : type === "mastered" ? "متقَن"
+      : type === "review" ? (Math.floor((now - r.state.due) / DAY) >= 1 ? `متأخر منذ ${Math.floor((now - r.state.due) / DAY)} يوم` : "مستحق اليوم")
       : "للمراجعة";
     return `<button class="progress-item" type="button" data-progress-matn="${escapeHTML(r.matn.id)}" data-progress-index="${r.index}">
       <span class="progress-item-number">${n + 1}</span>
@@ -242,6 +249,7 @@ function applyPrefs() {
 /* ---------- الأحداث ---------- */
 on("search-input", "input", renderLibrary);
 document.querySelectorAll("[data-progress-view]").forEach(button => button.addEventListener("click", () => renderProgressList(button.dataset.progressView)));
+on("daily-review-btn", "click", () => renderProgressList("review"));
 on("close-progress", "click", () => $("progress-panel").classList.add("hidden"));
 on("progress-list", "click", e => {
   const button = e.target.closest("[data-progress-matn]");
