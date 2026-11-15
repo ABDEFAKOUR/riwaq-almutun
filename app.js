@@ -667,7 +667,7 @@ on("daily-review-btn", "click", () => {
 on("session-start-btn", "click", startSession);
 on("session-end-btn", "click", () => finishSession(false));
 on("close-progress", "click", () => {
-  if (location.pathname.endsWith("/review.html")) window.location.href = "./index.html";
+  if (location.pathname.endsWith("/review.html") || location.pathname.endsWith("/progress.html")) window.location.href = "./index.html";
   else $("progress-panel").classList.add("hidden");
 });
 on("progress-list", "click", e => {
