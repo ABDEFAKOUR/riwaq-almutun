@@ -167,3 +167,6 @@ footer{flex-wrap:wrap}}
 .progress-item-copy small{font-size:11px;color:var(--muted)}
 .progress-item-arrow{color:var(--green2);font-size:18px}
 @media(max-width:650px){.progress-list{grid-template-columns:1fr}.stat-card-button{padding:14px}}
+
+.install-button{white-space:nowrap;flex:none}
+@media(max-width:620px){.top-actions{gap:7px;flex-wrap:wrap}.install-button{order:-1}}
