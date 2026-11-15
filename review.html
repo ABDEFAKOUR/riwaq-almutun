@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173d32">
+  <meta name="description" content="رِواق المتون: مساحة مجانية لحفظ المتون العلمية ومراجعتها دون اتصال بالإنترنت.">
+  <title>المراجعة | رِواق المتون</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="review-route">
+  <header class="topbar">
+    <a class="brand" href="./index.html" aria-label="رواق المتون - الرئيسية">
+      <span class="brand-mark">رِ</span>
+      <span><strong>رِواق المتون</strong><small>رفيقك في حفظ العلم</small></span>
+    </a>
+    <div class="top-actions">
+      <button id="font-down" class="button button-outline small" type="button" aria-label="تصغير الخط">أ-</button><button id="font-up" class="button button-outline small" type="button" aria-label="تكبير الخط">أ+</button><button id="theme-btn" class="button button-outline small" type="button" aria-label="الوضع الليلي">◐</button>
+      <span id="offline-status" class="status"><i></i> جارٍ التحقق...</span>
+      <button id="install-btn" class="button button-outline small install-button hidden" type="button">تثبيت التطبيق</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow">مكتبتك العلمية في كل مكان</span>
+        <h1>خطوة ثابتة،<br><em>وحفظٌ متقَن.</em></h1>
+        <p>نظّم حفظك، اختبر استحضارك، وراجع محفوظاتك. يعمل رِواق المتون دون اتصال بعد فتحه وتحميل ملفاته أول مرة.</p>
+        <a class="button button-light" href="#library">ابدأ الحفظ <span aria-hidden="true">←</span></a>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="arch arch-back"></div><div class="arch arch-front"></div>
+        <div class="book"><span>طَلَبُ العِلْم</span><b>رِواق</b></div>
+        <span class="star star-one">✳</span><span class="star star-two">✧</span>
+      </div>
+    </section>
+
+    <section class="stats-grid" aria-label="إحصائيات الحفظ">
+      <button class="stat-card stat-card-button" type="button" data-progress-view="new" aria-label="عرض المقاطع الجديدة"><span class="stat-icon">＋</span><div><strong id="new-count">0</strong><small>مقاطع جديدة · اضغط للعرض</small></div></button>
+      <button class="stat-card stat-card-button" type="button" data-progress-view="learning" aria-label="عرض المقاطع قيد الحفظ"><span class="stat-icon">◷</span><div><strong id="learning-count">0</strong><small>قيد الحفظ · اضغط للعرض</small></div></button>
+      <button class="stat-card stat-card-button" type="button" data-progress-view="mastered" aria-label="عرض المقاطع التي أتقنتها"><span class="stat-icon">▤</span><div><strong id="saved-count">0</strong><small>مقاطع متقنة · اضغط للعرض</small></div></button>
+      <button class="stat-card stat-card-button" type="button" data-progress-view="review" aria-label="عرض المقاطع المستحقة للمراجعة"><span class="stat-icon">↻</span><div><strong id="review-count">0</strong><small>مقاطع للمراجعة · اضغط للعرض</small></div></button>
+      <div class="stat-card" aria-label="أيام الحفظ المتتالية"><span class="stat-icon">✦</span><div><strong id="streak-count">0</strong><small>أيام متتالية</small></div></div>
+    </section>
+
+    <section class="daily-review" aria-label="مراجعة اليوم">
+      <div class="daily-review-copy">
+        <span class="eyebrow">وردك اليوم</span>
+        <h2>مراجعة المحفوظات</h2>
+        <p>ابدأ بالمقاطع التي حان موعد مراجعتها، والأقدم استحقاقاً يظهر أولاً.</p>
+      </div>
+      <div class="daily-plan" aria-label="الخطة اليومية">
+        <div class="daily-plan-heading"><strong>هدفك اليومي</strong><label for="daily-goal-input">عدد المقاطع</label><input id="daily-goal-input" type="number" min="1" max="50" step="1" value="5" inputmode="numeric" aria-label="عدد المقاطع المستهدف يومياً"></div>
+        <p class="daily-plan-count"><strong id="daily-goal-completed">0</strong> من <span id="daily-goal-total">5</span> مقاطع</p>
+        <div class="daily-goal-track" role="progressbar" aria-label="نسبة إنجاز الهدف اليومي" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="daily-goal-bar"></span></div>
+        <small id="daily-goal-message">ابدأ اليوم بمقدار يسير وثابت.</small>
+      </div>
+      <div class="daily-review-action">
+        <div><strong id="daily-review-count">0</strong><small>مقاطع مستحقة اليوم</small></div>
+        <button id="daily-review-btn" class="button button-light" type="button">عرض مراجعات اليوم ←</button>
+        <button id="session-start-btn" class="button button-primary" type="button">ابدأ جلسة الحفظ</button>
+        <p id="daily-review-empty" class="daily-review-empty">أحسنت! لا توجد مراجعات مستحقة الآن.</p>
+      </div>
+    </section>
+
+    <section class="session-panel hidden" id="session-panel" aria-live="polite">
+      <div class="session-panel-head">
+        <div><span class="eyebrow">جلسة مركّزة</span><h2>جلسة الحفظ</h2><p id="session-progress">المقطع 1 من 1</p></div>
+        <button id="session-end-btn" class="button button-outline" type="button">إنهاء الجلسة</button>
+      </div>
+      <div class="session-progress-track"><span id="session-progress-bar"></span></div>
+    </section>
+
+    <section class="weekly-report section" aria-label="التقرير الأسبوعي">
+      <div class="section-heading weekly-heading">
+        <div><span class="eyebrow">تابع ثباتك</span><h2>تقرير آخر 7 أيام</h2></div>
+        <span id="weekly-range" class="weekly-range"></span>
+      </div>
+      <div class="weekly-summary">
+        <article class="weekly-metric"><strong id="weekly-total">0</strong><small>مرات تقييم المقاطع</small></article>
+        <article class="weekly-metric"><strong id="weekly-days">0</strong><small>أيام نشطة</small></article>
+        <article class="weekly-metric"><strong id="weekly-average">0</strong><small>متوسط التقييمات يومياً</small></article>
+      </div>
+      <div id="weekly-chart" class="weekly-chart" role="img" aria-label="عدد المقاطع التي تم تقييمها في كل يوم من آخر سبعة أيام"></div>
+      <div class="weekly-status">
+        <div><span class="status-dot mastered-dot"></span>متقنة <strong id="weekly-mastered">0</strong></div>
+        <div><span class="status-dot learning-dot"></span>قيد الحفظ <strong id="weekly-learning">0</strong></div>
+        <div><span class="status-dot review-dot"></span>للمراجعة <strong id="weekly-review">0</strong></div>
+      </div>
+      <p class="weekly-note">يبدأ سجل النشاط من تاريخ تفعيل التقرير، ولا تُحتسب بيانات الأيام السابقة غير المسجلة. حالات الحفظ تشمل محفوظاتك الحالية.</p>
+    </section>
+
+    <section class="achievements-section section" aria-label="إنجازاتي">
+      <div class="section-heading achievements-heading">
+        <div><span class="eyebrow">خطواتك تستحق التقدير</span><h2>إنجازاتي</h2></div>
+        <span class="achievement-counter"><strong id="achievement-earned">0</strong> من 6 إنجازات</span>
+      </div>
+      <div id="achievement-list" class="achievement-grid"></div>
+      <p class="achievements-note">تُحتسب سلسلة الاستمرار من أيام النشاط المسجلة ابتداءً من تفعيل سجل التقرير الأسبوعي.</p>
+    </section>
+
+    <section id="library" class="section">
+      <div class="section-heading">
+        <div><span class="eyebrow">ابدأ من حيث تشاء</span><h2>مكتبة المتون</h2></div>
+        <label class="search-box"><span aria-hidden="true">⌕</span><input id="search-input" type="search" placeholder="ابحث عن متن أو علم..." aria-label="ابحث عن متن أو علم"></label>
+      </div>
+      <div class="tools"><button id="export-btn" class="button button-outline small" type="button">تصدير التقدم</button><label class="button button-outline small">استيراد التقدم<input id="import-input" type="file" accept=".json" hidden></label></div>
+      <div id="subject-filters" class="filters" aria-label="تصفية حسب العلم"></div>
+      <div id="matn-grid" class="matn-grid"></div>
+    </section>
+
+    <section id="study-panel" class="study-panel hidden" aria-live="polite">
+      <div class="study-head">
+        <div><span class="eyebrow" id="study-subject">المتن</span><h2 id="study-title">عنوان المتن</h2></div>
+        <button id="close-study" class="icon-button" type="button" aria-label="إغلاق">×</button>
+      </div>
+      <p id="study-warning" class="study-warning hidden" role="status"></p>
+      <div class="study-meta"><span id="item-counter">المقطع 1 من 1</span><span id="item-status" class="pill">جديد</span></div>
+      <label class="jump">انتقل إلى: <select id="item-jump"></select></label>
+      <article class="memorize-card">
+        <div class="card-topline"><span>مقطع الحفظ</span><span id="item-reference"></span></div>
+        <p id="item-text" class="matn-text"></p>
+        <p id="item-meaning" class="meaning hidden"></p>
+        <div id="similar-box" class="similar-box hidden"></div>
+        <div class="card-actions">
+          <button id="reveal-btn" class="button button-outline" type="button">إظهار النص</button>
+          <button id="meaning-btn" class="button button-ghost" type="button">ملاحظة / شرح</button>
+          <button id="similar-btn" class="button button-ghost hidden" type="button">كشف المتشابهات</button>
+        </div>
+      </article>
+      <section class="recitation-panel" aria-label="التسميع الصوتي">
+        <div class="recitation-heading">
+          <div><h3>التسميع الصوتي</h3><p>اقرأ المقطع بصوتك؛ سنلوّن الصحيح والخطأ مباشرة وننبهك عند رصد اختلاف محتمل.</p></div>
+          <span class="recitation-mic" aria-hidden="true">🎙️</span>
+        </div>
+        <div class="recitation-actions">
+          <button id="recitation-start" class="button button-primary" type="button">ابدأ التسميع</button>
+          <button id="recitation-stop" class="button button-outline" type="button" disabled>إيقاف التسميع</button>
+        </div>
+        <p id="recitation-status" class="recitation-status" role="status">اضغط «ابدأ التسميع» واسمح باستعمال الميكروفون.</p>
+        <div id="recitation-transcript" class="recitation-transcript" aria-live="polite">سيظهر هنا الكلام الذي تتعرف عليه المنظومة.</div>
+        <div id="recitation-original" class="recitation-original" aria-live="polite"></div>
+        <div id="recitation-feedback" class="recitation-feedback hidden" aria-live="polite"></div>
+        <p class="recitation-note">يتطلب التعرف الصوتي اتصالاً بالإنترنت ومتصفحاً يدعم الإملاء الصوتي. الأخضر للكلمة الصحيحة، والأحمر للكلمة المختلفة. قد يخطئ التعرف الصوتي أحياناً.</p>
+      </section>
+      <div class="study-controls">
+        <button id="previous-btn" class="button button-ghost" type="button">السابق</button>
+        <div class="mastery-actions">
+          <button id="review-btn" class="button button-outline" type="button">صعب</button>
+          <button id="good-btn" class="button button-outline" type="button">متوسط</button>
+          <button id="mastered-btn" class="button button-primary" type="button">سهل ✓</button>
+        </div>
+        <button id="next-btn" class="button button-ghost" type="button">التالي</button>
+      </div>
+      <p class="study-tip">نصيحة: اقرأ المقطع، أخفِ النص، ثم استظهره بصوتك قبل كشف الإجابة.</p>
+    </section>
+
+    <section id="progress-panel" class="progress-panel hidden" aria-live="polite">
+      <div class="progress-panel-head">
+        <div><span class="eyebrow">مسارك في الحفظ</span><h2 id="progress-panel-title">مقاطع الحفظ</h2></div>
+        <button id="close-progress" class="icon-button" type="button" aria-label="إغلاق">×</button>
+      </div>
+      <div id="progress-list" class="progress-list"></div>
+    </section>
+
+    <section class="how-section">
+      <div><span class="eyebrow">طريقة بسيطة ونافعة</span><h2>اجعل للحفظ وِردًا</h2><p>اختر مقدارًا يسيرًا، وكرره، ثم راجعه في اليوم التالي. رِواق يساعدك على تنظيم ذلك دون تشتيت.</p></div>
+      <div class="steps"><div><b>01</b><span>اختر متنًا</span></div><div><b>02</b><span>احفظ مقطعًا</span></div><div><b>03</b><span>اختبر نفسك</span></div><div><b>04</b><span>راجع باستمرار</span></div></div>
+    </section>
+  </main>
+
+  <footer><strong>رِواق المتون</strong><span>نسخة أولية تجريبية · المحتوى قابل للمراجعة والإضافة</span><span>صُنع لخدمة طالب العلم</span></footer>
+  <script src="app.js" defer></script>
+</body>
+</html>
