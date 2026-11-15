@@ -295,6 +295,7 @@ async function loadLibrary() {
         }
       }
     }
+    if (location.pathname.endsWith("/review.html")) renderProgressList("review");
   } catch (e) {
     console.error(e);
     $("matn-grid").innerHTML = '<div class="empty-state">تعذر تحميل بيانات المتون. تأكد من وجود ملف mutun.json بجانب index.html وأنه ملف JSON صالح، ثم أعد تحميل الصفحة.</div>';
@@ -655,11 +656,20 @@ on("daily-goal-input", "change", e => {
   updateDailyPlan();
 });
 on("search-input", "input", renderLibrary);
-document.querySelectorAll("[data-progress-view]").forEach(button => button.addEventListener("click", () => renderProgressList(button.dataset.progressView)));
-on("daily-review-btn", "click", () => renderProgressList("review"));
+document.querySelectorAll("[data-progress-view]").forEach(button => button.addEventListener("click", () => {
+  if (button.dataset.progressView === "review" && !location.pathname.endsWith("/review.html")) { window.location.href = "./review.html"; return; }
+  renderProgressList(button.dataset.progressView);
+}));
+on("daily-review-btn", "click", () => {
+  if (!location.pathname.endsWith("/review.html")) window.location.href = "./review.html";
+  else renderProgressList("review");
+});
 on("session-start-btn", "click", startSession);
 on("session-end-btn", "click", () => finishSession(false));
-on("close-progress", "click", () => $("progress-panel").classList.add("hidden"));
+on("close-progress", "click", () => {
+  if (location.pathname.endsWith("/review.html")) window.location.href = "./index.html";
+  else $("progress-panel").classList.add("hidden");
+});
 on("progress-list", "click", e => {
   const button = e.target.closest("[data-progress-matn]");
   if (!button) return;
