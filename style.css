@@ -314,3 +314,10 @@ footer{flex-wrap:wrap}}
 [data-theme=dark] .recall-word-correct{color:#65d69a}
 [data-theme=dark] .recall-word-wrong{color:#ff7777}
 @media(max-width:520px){.recall-head{align-items:flex-start;flex-direction:column}.recall-actions button{flex:1}.recall-transcript{min-height:190px;padding:14px}}
+
+/* صفحة الدراسة المستقلة: تُبقي محرك الدراسة وبياناته المشتركين، وتعرض واجهة الدراسة فقط. */
+body.study-route .container > section:not(#study-panel) { display: none !important; }
+body.study-route footer { display: none !important; }
+body.study-route .container { padding-top: 22px; }
+body.study-route .study-panel { display: block; }
+body.study-route .study-panel.hidden { display: block !important; }
