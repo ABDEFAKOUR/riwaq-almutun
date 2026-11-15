@@ -1,5 +1,5 @@
 const KEY = "riwaq-progress-v2", OLD = "riwaq-progress-v1", LAST = "riwaq-last", PREFS = "riwaq-prefs", DAILY_GOAL = "riwaq-daily-goal";
-const DATA_URL = "mutun.json", DAY = 864e5;
+const DATA_URL = "mutun.json", DAY = 864e5, HISTORY = "riwaq-study-history";
 let library = [], selectedSubject = "الكل", activeMatn = null, activeIndex = 0;
 let revealed = true, meaningVisible = false, similarVisible = false, deferredInstallPrompt = null;
 let sessionQueue = [], sessionIndex = 0, sessionActive = false;
@@ -24,6 +24,15 @@ function readProgress() {
   }
   S(KEY, n); return n;
 }
+function readStudyHistory() {
+  const value = J(HISTORY, []);
+  return Array.isArray(value) ? value.filter(e => e && typeof e.key === "string" && Number.isFinite(e.at)) : [];
+}
+function recordStudyEvent(key, quality, at = Date.now()) {
+  const history = readStudyHistory().filter(e => e.at >= at - 365 * DAY);
+  history.push({ key, quality, at });
+  S(HISTORY, history.slice(-5000));
+}
 function grade(q) {
   if (!activeMatn) return;
   const all = readProgress(), k = pk(activeMatn.id, activeMatn.items[activeIndex].id);
@@ -33,6 +42,7 @@ function grade(q) {
   c.ef = Math.max(1.3, c.ef + 0.1 - (5 - q) * (0.08 + (5 - q) * 0.02));
   c.last = Date.now(); c.due = q < 3 ? c.last + 6e5 : c.last + c.int * DAY;
   all[k] = c; S(KEY, all);
+  recordStudyEvent(k, q, c.last);
   updateStats(); renderLibrary();
   if (sessionActive) {
     sessionIndex++;
@@ -59,6 +69,40 @@ function updateStats() {
       .map(c => new Date(c.last).toLocaleDateString("en-CA"))
   ).size;
   updateDailyPlan(items, now);
+  updateWeeklyReport(items, now);
+}
+
+
+/* ---------- التقرير الأسبوعي ---------- */
+function updateWeeklyReport(items = null, now = Date.now()) {
+  const totalEl = $("weekly-total"), daysEl = $("weekly-days"), averageEl = $("weekly-average");
+  const chart = $("weekly-chart"), range = $("weekly-range");
+  if (!totalEl || !daysEl || !averageEl || !chart || !range) return;
+  const today = new Date(now);
+  const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+  const firstDay = todayStart - 6 * DAY;
+  const history = readStudyHistory().filter(event => event.at >= firstDay && event.at <= now);
+  const days = Array.from({ length: 7 }, (_, index) => {
+    const start = firstDay + index * DAY;
+    const count = history.filter(event => event.at >= start && event.at < start + DAY).length;
+    return { date: new Date(start), count };
+  });
+  const total = history.length, activeDays = days.filter(day => day.count > 0).length;
+  const max = Math.max(1, ...days.map(day => day.count));
+  totalEl.textContent = String(total);
+  daysEl.textContent = String(activeDays);
+  averageEl.textContent = (total / 7).toLocaleString("ar", { maximumFractionDigits: 1 });
+  range.textContent = days[0].date.toLocaleDateString("ar", { day: "numeric", month: "short" }) + " – " + days[6].date.toLocaleDateString("ar", { day: "numeric", month: "short" });
+  chart.innerHTML = days.map(day => {
+    const height = day.count ? Math.max(5, Math.round(day.count / max * 100)) : 0;
+    const label = day.date.toLocaleDateString("ar", { weekday: "short" });
+    return '<div class="weekly-day" title="' + escapeHTML(label) + ': ' + day.count + ' مقاطع"><span class="weekly-bar-value">' + day.count + '</span><div class="weekly-bar-track"><span style="height:' + height + '%"></span></div><small>' + escapeHTML(label) + '</small></div>';
+  }).join("");
+  const progress = readProgress();
+  const states = items || library.flatMap(matn => matn.items.map(item => progress[pk(matn.id, item.id)] || null));
+  $("weekly-mastered").textContent = String(states.filter(state => state && state.due > now && state.int >= 6).length);
+  $("weekly-learning").textContent = String(states.filter(state => state && state.due > now && state.int < 6).length);
+  $("weekly-review").textContent = String(states.filter(state => state && state.due <= now).length);
 }
 
 /* ---------- الخطة اليومية ---------- */
@@ -175,7 +219,7 @@ function finishSession(completed = false) {
 /* ---------- نسخة احتياطية ---------- */
 function exportData() {
   const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([JSON.stringify({ app: "riwayq", v: 2, progress: readProgress() })], { type: "application/json" }));
+  a.href = URL.createObjectURL(new Blob([JSON.stringify({ app: "riwayq", v: 3, progress: readProgress(), studyHistory: readStudyHistory(), dailyGoal: dailyGoal() })], { type: "application/json" }));
   a.download = `riwayq-backup-${new Date().toISOString().slice(0, 10)}.json`;
   a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
 }
@@ -186,7 +230,17 @@ async function importData(file) {
     if (o.app !== "riwayq" || typeof o.progress !== "object") throw 0;
     const cur = readProgress();
     for (const [k, c] of Object.entries(o.progress)) if (!cur[k] || (c.last || 0) > (cur[k].last || 0)) cur[k] = c;
-    S(KEY, cur); updateStats(); renderLibrary(); renderStudyItem();
+    S(KEY, cur);
+    if (Array.isArray(o.studyHistory)) {
+      const merged = new Map();
+      for (const event of [...readStudyHistory(), ...o.studyHistory]) {
+        if (!event || typeof event.key !== "string" || !Number.isFinite(event.at)) continue;
+        merged.set(event.key + "|" + event.at + "|" + (event.quality ?? ""), event);
+      }
+      S(HISTORY, [...merged.values()].sort((x, y) => x.at - y.at).slice(-5000));
+    }
+    if (Number.isFinite(Number(o.dailyGoal))) S(DAILY_GOAL, Math.min(50, Math.max(1, Math.round(Number(o.dailyGoal)))));
+    updateStats(); renderLibrary(); renderStudyItem();
     alert("تم استيراد النسخة الاحتياطية");
   } catch { alert("ملف النسخة الاحتياطية غير صالح"); }
 }
