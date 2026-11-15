@@ -283,6 +283,18 @@ async function loadLibrary() {
     if (!r.ok) throw new Error("تعذر تحميل المكتبة");
     library = await r.json();
     renderFilters(); renderLibrary(); updateStats();
+    if (location.pathname.endsWith("/study.html")) {
+      const params = new URLSearchParams(location.search);
+      const matnId = params.get("matn");
+      if (matnId) openMatn(matnId);
+      else {
+        const panel = $("study-panel");
+        if (panel) {
+          panel.classList.remove("hidden");
+          panel.innerHTML = '<p class="empty-state">اختر متناً من المكتبة لبدء الدراسة.</p><a class="button button-outline" href="./index.html#library">العودة إلى المكتبة</a>';
+        }
+      }
+    }
   } catch (e) {
     console.error(e);
     $("matn-grid").innerHTML = '<div class="empty-state">تعذر تحميل بيانات المتون. تأكد من وجود ملف mutun.json بجانب index.html وأنه ملف JSON صالح، ثم أعد تحميل الصفحة.</div>';
@@ -322,7 +334,8 @@ function renderLibrary() {
     });
   });
   $("matn-grid").querySelectorAll("[data-open]").forEach(b => b.addEventListener("click", event => {
-    event.stopPropagation(); openMatn(b.dataset.open);
+    event.stopPropagation();
+    window.location.href = `./study.html?matn=${encodeURIComponent(b.dataset.open)}`;
   }));
 }
 
@@ -330,7 +343,9 @@ function renderLibrary() {
 function openMatn(id) {
   activeMatn = library.find(i => i.id === id);
   if (!activeMatn) return;
-  activeIndex = Math.min(J(LAST, {})[id] || 0, activeMatn.items.length - 1);
+  const requestedItem = location.pathname.endsWith("/study.html") ? new URLSearchParams(location.search).get("item") : null;
+  const startIndex = requestedItem === null ? (J(LAST, {})[id] || 0) : Math.max(0, Number(requestedItem) || 0);
+  activeIndex = Math.min(startIndex, activeMatn.items.length - 1);
   resetItemView();
   const sel = $("item-jump");
   if (sel) sel.innerHTML = activeMatn.items.map((it, i) => `<option value="${i}">${i + 1}. ${escapeHTML(it.reference || "")}</option>`).join("");
@@ -649,12 +664,7 @@ on("progress-list", "click", e => {
   const button = e.target.closest("[data-progress-matn]");
   if (!button) return;
   const id = button.dataset.progressMatn, index = Number(button.dataset.progressIndex);
-  openMatn(id);
-  activeIndex = index;
-  resetItemView();
-  renderStudyItem();
-  $("progress-panel").classList.add("hidden");
-  $("study-panel").scrollIntoView({ behavior: "smooth", block: "start" });
+  window.location.href = `./study.html?matn=${encodeURIComponent(id)}&item=${index}`;
 });
 on("recitation-start", "click", startRecitation);
 on("recitation-stop", "click", stopRecitation);
@@ -666,7 +676,10 @@ on("good-btn", "click", () => grade(4));
 on("mastered-btn", "click", () => grade(5));
 on("previous-btn", "click", () => go(-1));
 on("next-btn", "click", () => go(1));
-on("close-study", "click", () => $("study-panel").classList.add("hidden"));
+on("close-study", "click", () => {
+  if (location.pathname.endsWith("/study.html")) window.location.href = "./index.html#library";
+  else $("study-panel").classList.add("hidden");
+});
 on("item-jump", "change", e => { activeIndex = +e.target.value; resetItemView(); renderStudyItem(); });
 on("export-btn", "click", exportData);
 on("import-input", "change", e => { importData(e.target.files[0]); e.target.value = ""; });
