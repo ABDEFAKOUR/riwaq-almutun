@@ -249,16 +249,15 @@ if ("serviceWorker" in navigator) window.addEventListener("load", () => navigato
 window.addEventListener("beforeinstallprompt", e => {
   e.preventDefault();
   deferredInstallPrompt = e;
+  $("install-btn")?.classList.remove("hidden");
 });
 on("install-btn", "click", async () => {
-  if (deferredInstallPrompt) {
-    deferredInstallPrompt.prompt();
-    const choice = await deferredInstallPrompt.userChoice;
-    deferredInstallPrompt = null;
-    if (choice && choice.outcome === "accepted") $("install-btn")?.classList.add("hidden");
-    return;
-  }
-  alert("لتثبيت رِواق المتون: افتح قائمة Chrome (⋮)، ثم اختر «حفظ ومشاركة» أو «تثبيت الصفحة كتطبيق». إذا لم يظهر خيار التثبيت، حدّث الصفحة بعد تحميلها بالإنترنت.");
+  if (!deferredInstallPrompt) return;
+  const promptEvent = deferredInstallPrompt;
+  deferredInstallPrompt = null;
+  promptEvent.prompt();
+  const choice = await promptEvent.userChoice;
+  if (choice && choice.outcome === "accepted") $("install-btn")?.classList.add("hidden");
 });
 window.addEventListener("appinstalled", () => {
   deferredInstallPrompt = null;
