@@ -513,7 +513,14 @@ function startRecitation(){
     finalText="";let interim="";
     for(let i=0;i<event.results.length;i++){const t=event.results[i][0].transcript;if(event.results[i].isFinal)finalText+=t+" ";else interim+=t;}
     const all=(finalText+interim).trim();transcript.dataset.finalText=finalText.trim();
-    renderLiveRecitation(all,finalText);alertConfirmedRecitationErrors(finalText);
+    // أظهر التفريغ الخام فور وصول نتيجة المتصفح، ثم أضف التلوين في الإطار التالي.
+    // هذا يمنع حساب المحاذاة من تأخير ظهور الكلمات للمستخدم.
+    transcript.textContent=all?"ما نطقتَ: "+all:"أستمع إليك…";
+    const liveText=all, confirmedText=finalText;
+    requestAnimationFrame(()=>{
+      renderLiveRecitation(liveText,confirmedText);
+      alertConfirmedRecitationErrors(confirmedText);
+    });
     if(!recitationAlerted.size)status.textContent="أستمع إليك… الأخضر مطابق، والأحمر يحتاج مراجعة.";
   };
   recognition.onerror=event=>{
