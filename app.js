@@ -303,11 +303,27 @@ function renderLibrary() {
   if (!results.length) { $("matn-grid").innerHTML = '<div class="empty-state">لا توجد نتائج مطابقة. جرّب كلمة أخرى.</div>'; return; }
   $("matn-grid").innerHTML = results.map(m => {
     const done = m.items.filter(i => (progress[pk(m.id, i.id)] || {}).int >= 6).length;
-    return `<article class="matn-card"><span class="tag">${escapeHTML(m.subject)}</span>${m.contentStatus === "partial" ? '<span class="content-status">المتن غير مكتمل</span>' : ""}<h3>${escapeHTML(m.title)}</h3>
-      <p>${escapeHTML(m.description)}</p><div class="card-bottom"><span>${m.items.length} مقاطع · ${done} متقنة</span>
-      <button data-open="${escapeHTML(m.id)}">ابدأ الدراسة ←</button></div></article>`;
+    return `<article class="matn-card matn-card-recall" data-recall="${escapeHTML(m.id)}" tabindex="0" role="link" aria-label="استظهار متن ${escapeHTML(m.title)}">
+      <span class="tag">${escapeHTML(m.subject)}</span>${m.contentStatus === "partial" ? '<span class="content-status">المتن غير مكتمل</span>' : ""}
+      <h3>${escapeHTML(m.title)}</h3><p>${escapeHTML(m.description)}</p>
+      <div class="card-bottom"><span>${m.items.length} مقاطع · ${done} متقنة</span>
+      <button data-open="${escapeHTML(m.id)}" type="button">ابدأ الدراسة ←</button></div></article>`;
   }).join("");
-  $("matn-grid").querySelectorAll("[data-open]").forEach(b => b.addEventListener("click", () => openMatn(b.dataset.open)));
+  $("matn-grid").querySelectorAll("[data-recall]").forEach(card => {
+    const openRecall = () => { window.location.href = `./istidhar.html?matn=${encodeURIComponent(card.dataset.recall)}`; };
+    card.addEventListener("click", event => {
+      if (event.target.closest("button")) return;
+      openRecall();
+    });
+    card.addEventListener("keydown", event => {
+      if ((event.key === "Enter" || event.key === " ") && event.target === card) {
+        event.preventDefault(); openRecall();
+      }
+    });
+  });
+  $("matn-grid").querySelectorAll("[data-open]").forEach(b => b.addEventListener("click", event => {
+    event.stopPropagation(); openMatn(b.dataset.open);
+  }));
 }
 
 /* ---------- الدراسة ---------- */
