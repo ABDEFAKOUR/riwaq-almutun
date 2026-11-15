@@ -399,12 +399,12 @@ let recitationRecognition = null, recitationActive = false;
 function normalizeRecitationText(value) {
   return String(value || "")
     .normalize("NFD")
-    .replace(/[\\u064B-\\u065F\\u0670\\u0640]/g, "")
+    .replace(/[\u064B-\u065F\u0670\u0640]/g, "")
     .replace(/[أإآٱ]/g, "ا")
     .replace(/ى/g, "ي")
-    .replace(/[\\u0610-\\u061A\\u06D6-\\u06ED]/g, "")
-    .replace(/[.,،؛:!?؟()\\[\\]{}«»"']/g, " ")
-    .replace(/\\s+/g, " ")
+    .replace(/[\u0610-\u061A\u06D6-\u06ED]/g, "")
+    .replace(/[.,،؛:!?؟«»"']/g, " ")
+    .replace(/\s+/g, " ")
     .trim()
     .toLowerCase();
 }
