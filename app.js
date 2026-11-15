@@ -1,4 +1,4 @@
-const KEY = "riwaq-progress-v2", OLD = "riwaq-progress-v1", LAST = "riwaq-last", PREFS = "riwaq-prefs";
+const KEY = "riwaq-progress-v2", OLD = "riwaq-progress-v1", LAST = "riwaq-last", PREFS = "riwaq-prefs", DAILY_GOAL = "riwaq-daily-goal";
 const DATA_URL = "mutun.json", DAY = 864e5;
 let library = [], selectedSubject = "الكل", activeMatn = null, activeIndex = 0;
 let revealed = true, meaningVisible = false, similarVisible = false, deferredInstallPrompt = null;
@@ -58,6 +58,29 @@ function updateStats() {
     items.filter(c => c && c.last > now - 7 * DAY)
       .map(c => new Date(c.last).toLocaleDateString("en-CA"))
   ).size;
+  updateDailyPlan(items, now);
+}
+
+/* ---------- الخطة اليومية ---------- */
+function dailyGoal() {
+  const value = Number(J(DAILY_GOAL, 5));
+  return Number.isFinite(value) ? Math.min(50, Math.max(1, Math.round(value))) : 5;
+}
+function updateDailyPlan(items = null, now = Date.now()) {
+  const goalInput = $("daily-goal-input"), completedEl = $("daily-goal-completed");
+  const goalEl = $("daily-goal-total"), fill = $("daily-goal-bar");
+  if (!goalInput || !completedEl || !goalEl || !fill) return;
+  const goal = dailyGoal();
+  const dayStart = new Date(new Date(now).getFullYear(), new Date(now).getMonth(), new Date(now).getDate()).getTime();
+  const progress = readProgress();
+  const states = items || library.flatMap(matn => matn.items.map(item => progress[pk(matn.id, item.id)] || null));
+  const completed = states.filter(state => state && Number.isFinite(state.last) && state.last >= dayStart && state.last <= now).length;
+  const percent = Math.min(100, Math.round((completed / goal) * 100));
+  goalInput.value = String(goal); completedEl.textContent = String(completed); goalEl.textContent = String(goal);
+  fill.style.width = `${percent}%`;
+  fill.parentElement.setAttribute("aria-valuenow", String(percent));
+  const message = $("daily-goal-message");
+  if (message) message.textContent = completed >= goal ? "أحسنت! حققت هدفك اليومي." : `باقي لك ${goal - completed} مقاطع لإتمام هدف اليوم.`;
 }
 
 function renderProgressList(type) {
@@ -287,6 +310,11 @@ function applyPrefs() {
 }
 
 /* ---------- الأحداث ---------- */
+on("daily-goal-input", "change", e => {
+  const value = Math.min(50, Math.max(1, Math.round(Number(e.target.value) || 5)));
+  S(DAILY_GOAL, value);
+  updateDailyPlan();
+});
 on("search-input", "input", renderLibrary);
 document.querySelectorAll("[data-progress-view]").forEach(button => button.addEventListener("click", () => renderProgressList(button.dataset.progressView)));
 on("daily-review-btn", "click", () => renderProgressList("review"));

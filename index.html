@@ -52,6 +52,12 @@
         <h2>مراجعة المحفوظات</h2>
         <p>ابدأ بالمقاطع التي حان موعد مراجعتها، والأقدم استحقاقاً يظهر أولاً.</p>
       </div>
+      <div class="daily-plan" aria-label="الخطة اليومية">
+        <div class="daily-plan-heading"><strong>هدفك اليومي</strong><label for="daily-goal-input">عدد المقاطع</label><input id="daily-goal-input" type="number" min="1" max="50" step="1" value="5" inputmode="numeric" aria-label="عدد المقاطع المستهدف يومياً"></div>
+        <p class="daily-plan-count"><strong id="daily-goal-completed">0</strong> من <span id="daily-goal-total">5</span> مقاطع</p>
+        <div class="daily-goal-track" role="progressbar" aria-label="نسبة إنجاز الهدف اليومي" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="daily-goal-bar"></span></div>
+        <small id="daily-goal-message">ابدأ اليوم بمقدار يسير وثابت.</small>
+      </div>
       <div class="daily-review-action">
         <div><strong id="daily-review-count">0</strong><small>مقاطع مستحقة اليوم</small></div>
         <button id="daily-review-btn" class="button button-light" type="button">عرض مراجعات اليوم ←</button>
