@@ -64,10 +64,7 @@ function updateStats() {
   const dailyButton = $("daily-review-btn");
   if (dailyButton) dailyButton.disabled = dueCount === 0;
   $("daily-review-empty")?.classList.toggle("hidden", dueCount > 0);
-  $("streak-count").textContent = new Set(
-    items.filter(c => c && c.last > now - 7 * DAY)
-      .map(c => new Date(c.last).toLocaleDateString("en-CA"))
-  ).size;
+  updateAchievements(items, now);
   updateDailyPlan(items, now);
   updateWeeklyReport(items, now);
 }
@@ -104,6 +101,40 @@ function updateWeeklyReport(items = null, now = Date.now()) {
   $("weekly-learning").textContent = String(states.filter(state => state && state.due > now && state.int < 6).length);
   $("weekly-review").textContent = String(states.filter(state => state && state.due <= now).length);
 }
+ 
+/* ---------- الإنجازات وسلسلة الاستمرار ---------- */
+function updateAchievements(items, now = Date.now()) {
+  const events = readStudyHistory();
+  const dateKey = date => date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+  const activeDates = new Set(events.map(event => dateKey(new Date(event.at))));
+  const cursor = new Date(new Date(now).getFullYear(), new Date(now).getMonth(), new Date(now).getDate());
+  if (!activeDates.has(dateKey(cursor))) cursor.setDate(cursor.getDate() - 1);
+  let streak = 0;
+  while (activeDates.has(dateKey(cursor))) {
+    streak++;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+  const streakEl = $("streak-count");
+  if (streakEl) streakEl.textContent = String(streak);
+  const mastered = items.filter(state => state && state.int >= 6).length;
+  const achievements = [
+    { title: "أول خطوة", detail: "قيّم أول مقطع", earned: events.length >= 1, icon: "🌱" },
+    { title: "إتقان 10 مقاطع", detail: "أتقن عشرة مقاطع", earned: mastered >= 10, icon: "📘" },
+    { title: "إتقان 50 مقطعاً", detail: "أتقن خمسين مقطعاً", earned: mastered >= 50, icon: "🏅" },
+    { title: "إتقان 100 مقطع", detail: "أتقن مئة مقطع", earned: mastered >= 100, icon: "🏆" },
+    { title: "ثلاثة أيام متتالية", detail: "ادرس ثلاثة أيام دون انقطاع", earned: streak >= 3, icon: "🔥" },
+    { title: "أسبوع من الثبات", detail: "ادرس سبعة أيام متتالية", earned: streak >= 7, icon: "⭐" }
+  ];
+  const earnedEl = $("achievement-earned"), list = $("achievement-list");
+  if (earnedEl) earnedEl.textContent = String(achievements.filter(item => item.earned).length);
+  if (list) list.innerHTML = achievements.map(item =>
+    '<article class="achievement-card' + (item.earned ? ' earned' : '') + '">' +
+    '<span class="achievement-icon" aria-hidden="true">' + item.icon + '</span>' +
+    '<strong>' + escapeHTML(item.title) + '</strong><small>' + escapeHTML(item.detail) + '</small>' +
+    '<span class="achievement-state">' + (item.earned ? "تم الإنجاز ✓" : "لم يتحقق بعد") + '</span></article>'
+  ).join("");
+}
+
 
 /* ---------- الخطة اليومية ---------- */
 function dailyGoal() {
