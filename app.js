@@ -39,8 +39,8 @@ function updateStats() {
   const progress = readProgress(), now = Date.now();
   const items = library.flatMap(matn => matn.items.map(item => progress[pk(matn.id, item.id)] || null));
   $("new-count").textContent = items.filter(c => !c).length;
-  $("learning-count").textContent = items.filter(c => c && c.int < 6).length;
-  $("saved-count").textContent = items.filter(c => c && c.int >= 6).length;
+  $("learning-count").textContent = items.filter(c => c && c.due > now && c.int < 6).length;
+  $("saved-count").textContent = items.filter(c => c && c.due > now && c.int >= 6).length;
   $("review-count").textContent = items.filter(c => c && c.due <= now).length;
   $("streak-count").textContent = new Set(
     items.filter(c => c && c.last > now - 7 * DAY)
@@ -55,9 +55,9 @@ function renderProgressList(type) {
   for (const matn of library) {
     matn.items.forEach((item, index) => {
       const state = progress[pk(matn.id, item.id)] || null;
-      const mastered = !!state && state.int >= 6;
-      const learning = !!state && state.int < 6;
       const due = !!state && state.due <= now;
+      const mastered = !!state && !due && state.int >= 6;
+      const learning = !!state && !due && state.int < 6;
       const recent = !!state && Number.isFinite(state.last) && state.last > 0;
       const include =
         (type === "new" && !state) ||
