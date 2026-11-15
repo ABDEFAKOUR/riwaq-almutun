@@ -8,16 +8,16 @@
 
   function normalize(value) {
     return String(value || "").normalize("NFD")
-      .replace(/[\\u064B-\\u065F\\u0670\\u0640]/g, "")
+      .replace(/[\u064B-\u065F\u0670\u0640]/g, "")
       .replace(/[أإآٱ]/g, "ا").replace(/ى/g, "ي")
-      .replace(/[\\u0610-\\u061A\\u06D6-\\u06ED]/g, "")
-      .replace(/[.,،؛:!?؟«»"'()[\\]{}]/g, " ")
-      .replace(/\\s+/g, " ").trim().toLowerCase();
+      .replace(/[\u0610-\u061A\u06D6-\u06ED]/g, "")
+      .replace(/[.,،؛:!?؟«»"'()[\]{}]/g, " ")
+      .replace(/\s+/g, " ").trim().toLowerCase();
   }
 
   function align(expected, spoken) {
     const a = normalize(expected).split(" ").filter(Boolean);
-    const b = String(spoken || "").trim().split(/\\s+/).filter(Boolean);
+    const b = String(spoken || "").trim().split(/\s+/).filter(Boolean);
     const an = a.map(normalize), bn = b.map(normalize);
     const dp = Array.from({length:a.length+1}, () => Array(b.length+1).fill(0));
     for(let i=0;i<=a.length;i++) dp[i][0]=i;
@@ -63,8 +63,8 @@
 
   function render(spoken, interim) {
     const result=align(matn.items.map(item=>item.text).join(" "),spoken);
-    const confirmedCount=String(spoken||"").trim().split(/\\s+/).filter(Boolean).length;
-    const interimWords=String(interim||"").trim().split(/\\s+/).filter(Boolean);
+    const confirmedCount=String(spoken||"").trim().split(/\s+/).filter(Boolean).length;
+    const interimWords=String(interim||"").trim().split(/\s+/).filter(Boolean);
     const html=result.words.map((item,index)=>{
       const cls=item.state==="correct"?"recall-word-correct":"recall-word-wrong";
       return '<span class="'+cls+'">'+escapeHTML(item.word)+'</span>';
