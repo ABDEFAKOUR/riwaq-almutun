@@ -235,3 +235,21 @@ footer{flex-wrap:wrap}}
 .weekly-note{font-size:11px;color:var(--muted);margin:14px 0 0}
 [data-theme=dark] .weekly-heading h2,[data-theme=dark] .weekly-metric strong,[data-theme=dark] .weekly-status strong{color:#8fcfb2}
 @media(max-width:600px){.weekly-report{padding:17px}.weekly-summary{gap:7px}.weekly-metric{padding:10px 8px}.weekly-metric strong{font-size:21px}.weekly-metric small{font-size:9px}.weekly-chart{gap:5px;height:165px}.weekly-bar-track{height:105px}.weekly-status{gap:12px}}
+
+
+/* الإنجازات */
+.achievements-section{padding:24px;background:var(--paper);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
+.achievements-heading h2{font-family:Amiri,serif;font-size:31px;color:var(--green);margin:0}
+.achievement-counter{font-size:12px;color:var(--muted)}
+.achievement-counter strong{font-size:20px;color:var(--green)}
+.achievement-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.achievement-card{min-height:132px;display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:15px;border:1px solid var(--line);border-radius:14px;background:var(--cream);opacity:.68}
+.achievement-card.earned{opacity:1;border-color:var(--green2);background:var(--paper)}
+.achievement-icon{font-size:25px;line-height:1.2}
+.achievement-card strong{font-size:14px;color:var(--green)}
+.achievement-card small{font-size:11px;color:var(--muted)}
+.achievement-state{margin-top:auto;font-size:10px;color:var(--muted)}
+.achievement-card.earned .achievement-state{color:var(--green2);font-weight:700}
+.achievements-note{font-size:11px;color:var(--muted);margin:15px 0 0}
+[data-theme=dark] .achievements-heading h2,[data-theme=dark] .achievement-counter strong,[data-theme=dark] .achievement-card strong{color:#8fcfb2}
+@media(max-width:600px){.achievements-section{padding:17px}.achievement-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.achievement-card{min-height:125px;padding:12px}}
