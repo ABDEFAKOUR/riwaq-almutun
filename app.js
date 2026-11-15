@@ -394,6 +394,122 @@ function applyPrefs() {
   S(PREFS, prefs);
 }
 
+/* ---------- التسميع الصوتي ---------- */
+let recitationRecognition = null, recitationActive = false;
+function normalizeRecitationText(value) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u064B-\u065F\u0670\u0640]/g, "")
+    .replace(/[أإآٱ]/g, "ا")
+    .replace(/ى/g, "ي")
+    .replace(/[\u0610-\u061A\u06D6-\u06ED]/g, "")
+    .replace(/[.,،؛:!?؟«»"']/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+}
+function compareRecitation(expected, spoken) {
+  const a = normalizeRecitationText(expected).split(" ").filter(Boolean);
+  const b = normalizeRecitationText(spoken).split(" ").filter(Boolean);
+  const dp = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
+  for (let i = 0; i <= a.length; i++) dp[i][0] = i;
+  for (let j = 0; j <= b.length; j++) dp[0][j] = j;
+  for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++) {
+    dp[i][j] = a[i - 1] === b[j - 1] ? dp[i - 1][j - 1] :
+      Math.min(dp[i - 1][j - 1] + 1, dp[i - 1][j] + 1, dp[i][j - 1] + 1);
+  }
+  const issues = [];
+  let i = a.length, j = b.length;
+  while (i || j) {
+    if (i && j && a[i - 1] === b[j - 1]) { i--; j--; continue; }
+    if (i && j && dp[i][j] === dp[i - 1][j - 1] + 1) {
+      issues.push({ type: "changed", expected: a[i - 1], spoken: b[j - 1] }); i--; j--;
+    } else if (i && dp[i][j] === dp[i - 1][j] + 1) {
+      issues.push({ type: "missing", expected: a[i - 1], spoken: "" }); i--;
+    } else {
+      issues.push({ type: "extra", expected: "", spoken: b[j - 1] }); j--;
+    }
+  }
+  issues.reverse();
+  return { issues, total: Math.max(a.length, b.length), distance: dp[a.length][b.length] };
+}
+function showRecitationComparison(spoken) {
+  const feedback = $("recitation-feedback");
+  if (!activeMatn || !feedback) return;
+  if (!spoken.trim()) {
+    feedback.classList.remove("hidden");
+    feedback.innerHTML = "<strong>لم نلتقط كلاماً واضحاً.</strong><p>جرّب مرة أخرى وتحدث بصوت واضح.</p>";
+    return;
+  }
+  const result = compareRecitation(activeMatn.items[activeIndex].text, spoken);
+  const errors = result.issues;
+  const accuracy = result.total ? Math.max(0, Math.round((1 - result.distance / result.total) * 100)) : 100;
+  const details = errors.length ? errors.slice(0, 30).map(issue => {
+    if (issue.type === "missing") return '<li><span class="recitation-missing">ناقص</span> الكلمة الصحيحة: <strong>' + escapeHTML(issue.expected) + '</strong></li>';
+    if (issue.type === "extra") return '<li><span class="recitation-extra">زائد</span> قلتَ: <strong>' + escapeHTML(issue.spoken) + '</strong></li>';
+    return '<li><span class="recitation-changed">اختلاف</span> قلتَ: <strong>' + escapeHTML(issue.spoken) + '</strong> والصواب في النص: <strong>' + escapeHTML(issue.expected) + '</strong></li>';
+  }).join("") : "<li>لم يظهر اختلاف في الكلمات بعد تطبيع التشكيل وعلامات الترقيم.</li>";
+  feedback.classList.remove("hidden");
+  feedback.innerHTML = '<div class="recitation-score"><strong>' + accuracy + '%</strong><span>' + (errors.length ? 'مراجعة مواضع الاختلاف' : 'مطابقة الكلمات ممتازة') + '</span></div><ul>' + details + '</ul><p class="recitation-caution">هذه مقارنة آلية للكلمات وليست حكماً نهائياً على صحة الأداء أو التجويد؛ قد يخطئ التعرف الصوتي.</p>';
+}
+function startRecitation() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const status = $("recitation-status"), transcript = $("recitation-transcript");
+  const start = $("recitation-start"), stop = $("recitation-stop");
+  if (!SpeechRecognition) {
+    status.textContent = "متصفحك لا يدعم التعرف الصوتي. جرّب Google Chrome أو متصفحاً يدعم Speech Recognition.";
+    return;
+  }
+  if (recitationActive) return;
+  const recognition = new SpeechRecognition();
+  recitationRecognition = recognition;
+  recognition.lang = "ar-SA";
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.maxAlternatives = 1;
+  let finalText = "";
+  recognition.onstart = () => {
+    recitationActive = true;
+    revealed = false;
+    renderStudyItem();
+    start.disabled = true; stop.disabled = false;
+    transcript.textContent = "";
+    $("recitation-feedback").classList.add("hidden");
+    status.textContent = "أستمع إليك الآن… استظهر المقطع بوضوح.";
+  };
+  recognition.onresult = event => {
+    finalText = "";
+    let interim = "";
+    for (let i = 0; i < event.results.length; i++) {
+      const text = event.results[i][0].transcript;
+      if (event.results[i].isFinal) finalText += text + " ";
+      else interim += text;
+    }
+    transcript.textContent = (finalText + interim).trim() || "أستمع إليك…";
+    transcript.dataset.finalText = finalText.trim();
+  };
+  recognition.onerror = event => {
+    status.textContent = event.error === "not-allowed" ? "لم تسمح باستعمال الميكروفون. فعّل الإذن من إعدادات المتصفح." :
+      event.error === "no-speech" ? "لم نسمع صوتاً. حاول الاقتراب من الميكروفون والتحدث بوضوح." :
+      "وقع مشكل أثناء التعرف الصوتي: " + event.error;
+  };
+  recognition.onend = () => {
+    recitationActive = false;
+    start.disabled = false; stop.disabled = true;
+    const spoken = (transcript.dataset.finalText || finalText).trim();
+    status.textContent = spoken ? "انتهى التسميع. هذه نتيجة المقارنة مع النص الأصلي:" : "انتهى التسميع دون التقاط نص واضح.";
+    if (spoken) showRecitationComparison(spoken);
+  };
+  try { recognition.start(); }
+  catch (error) {
+    recitationActive = false; start.disabled = false; stop.disabled = true;
+    status.textContent = "تعذر بدء الميكروفون. حاول مرة أخرى بعد التأكد من إذن المتصفح.";
+  }
+}
+function stopRecitation() {
+  if (recitationRecognition && recitationActive) recitationRecognition.stop();
+}
+
 /* ---------- الأحداث ---------- */
 on("daily-goal-input", "change", e => {
   const value = Math.min(50, Math.max(1, Math.round(Number(e.target.value) || 5)));
@@ -417,6 +533,8 @@ on("progress-list", "click", e => {
   $("progress-panel").classList.add("hidden");
   $("study-panel").scrollIntoView({ behavior: "smooth", block: "start" });
 });
+on("recitation-start", "click", startRecitation);
+on("recitation-stop", "click", stopRecitation);
 on("reveal-btn", "click", () => { revealed = !revealed; renderStudyItem(); });
 on("meaning-btn", "click", () => { meaningVisible = !meaningVisible; renderStudyItem(); });
 on("similar-btn", "click", () => { similarVisible = !similarVisible; renderSimilar(); });

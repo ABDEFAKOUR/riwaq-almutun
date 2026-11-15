@@ -131,6 +131,20 @@
           <button id="similar-btn" class="button button-ghost hidden" type="button">كشف المتشابهات</button>
         </div>
       </article>
+      <section class="recitation-panel" aria-label="التسميع الصوتي">
+        <div class="recitation-heading">
+          <div><h3>التسميع الصوتي</h3><p>استظهر المقطع بصوتك، وسنحوّل كلامك إلى نص ونقارنه بالأصل.</p></div>
+          <span class="recitation-mic" aria-hidden="true">🎙️</span>
+        </div>
+        <div class="recitation-actions">
+          <button id="recitation-start" class="button button-primary" type="button">ابدأ التسميع</button>
+          <button id="recitation-stop" class="button button-outline" type="button" disabled>إيقاف التسميع</button>
+        </div>
+        <p id="recitation-status" class="recitation-status" role="status">اضغط «ابدأ التسميع» واسمح باستعمال الميكروفون.</p>
+        <div id="recitation-transcript" class="recitation-transcript" aria-live="polite">سيظهر هنا النص الذي تتعرف عليه المنظومة.</div>
+        <div id="recitation-feedback" class="recitation-feedback hidden" aria-live="polite"></div>
+        <p class="recitation-note">يتطلب التعرف الصوتي اتصالاً بالإنترنت ومتصفحاً يدعم الإملاء الصوتي. راجع النص المسموع قبل اعتماد النتيجة.</p>
+      </section>
       <div class="study-controls">
         <button id="previous-btn" class="button button-ghost" type="button">السابق</button>
         <div class="mastery-actions">
