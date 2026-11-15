@@ -116,7 +116,7 @@ function updateAchievements(items, now = Date.now()) {
   }
   const streakEl = $("streak-count");
   if (streakEl) streakEl.textContent = String(streak);
-  const mastered = items.filter(state => state && state.int >= 6).length;
+  const mastered = items.filter(state => state && state.due > now && state.int >= 6).length;
   const achievements = [
     { title: "أول خطوة", detail: "قيّم أول مقطع", earned: events.length >= 1, icon: "🌱" },
     { title: "إتقان 10 مقاطع", detail: "أتقن عشرة مقاطع", earned: mastered >= 10, icon: "📘" },
