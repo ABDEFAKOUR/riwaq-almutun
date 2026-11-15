@@ -52,19 +52,21 @@ function renderProgressList(type) {
       if (!state) return;
       const mastered = state.int >= 6;
       const due = state.due <= now;
-      if ((type === "mastered" && mastered) || (type === "review" && due)) {
+      const recent = Number.isFinite(state.last) && state.last > 0;
+      if ((type === "mastered" && mastered) || (type === "review" && due) || (type === "recent" && recent)) {
         rows.push({ matn, item, index, state });
       }
     });
   }
-  title.textContent = type === "mastered" ? "المقاطع التي أتقنتها" : "المقاطع المستحقة للمراجعة";
+  title.textContent = type === "mastered" ? "المقاطع التي أتقنتها" : type === "review" ? "المقاطع المستحقة للمراجعة" : "آخر المقاطع التي درستها";
+  if (type === "recent") rows.sort((a, b) => (b.state.last || 0) - (a.state.last || 0));
   list.innerHTML = rows.length ? rows.map((r, n) =>
     `<button class="progress-item" type="button" data-progress-matn="${escapeHTML(r.matn.id)}" data-progress-index="${r.index}">
       <span class="progress-item-number">${n + 1}</span>
-      <span class="progress-item-copy"><strong>${escapeHTML(r.matn.title)}</strong><small>${escapeHTML(r.item.reference || `المقطع ${r.index + 1}`)}</small></span>
+      <span class="progress-item-copy"><strong>${escapeHTML(r.matn.title)}</strong><small>${escapeHTML(r.item.reference || `المقطع ${r.index + 1}`)} · ${type === "recent" ? new Date(r.state.last).toLocaleDateString("ar") : type === "mastered" ? "متقَن" : "للمراجعة"}</small></span>
       <span class="progress-item-arrow">←</span>
     </button>`).join("") :
-    `<p class="empty-state">${type === "mastered" ? "لم تتقن أي مقطع بعد. ابدأ بمقطع واحفظه جيداً، ثم اضغط «سهل»." : "لا توجد مقاطع مستحقة للمراجعة الآن."}</p>`;
+    `<p class="empty-state">${type === "mastered" ? "لم تتقن أي مقطع بعد. ابدأ بمقطع واحفظه جيداً، ثم اضغط «سهل»." : type === "review" ? "لا توجد مقاطع مستحقة للمراجعة الآن." : "لم تسجل دراسة أي مقطع بعد."}</p>`;
   panel.classList.remove("hidden");
   panel.scrollIntoView({ behavior: "smooth", block: "start" });
 }
