@@ -2,6 +2,7 @@ const KEY = "riwaq-progress-v2", OLD = "riwaq-progress-v1", LAST = "riwaq-last",
 const DATA_URL = "mutun.json", DAY = 864e5;
 let library = [], selectedSubject = "الكل", activeMatn = null, activeIndex = 0;
 let revealed = true, meaningVisible = false, similarVisible = false, deferredInstallPrompt = null;
+let sessionQueue = [], sessionIndex = 0, sessionActive = false;
 
 const $ = (id) => document.getElementById(id);
 const on = (id, ev, fn) => { const el = $(id); if (el) el.addEventListener(ev, fn); };
@@ -109,7 +110,41 @@ function renderProgressList(type) {
   panel.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-/* ---------- نسخة احتياطية ---------- */
+/* ---------- جلسة الحفظ ---------- */
+function startSession() {
+  const now = Date.now(), progress = readProgress(), due = [], fresh = [];
+  for (const matn of library) matn.items.forEach((item, index) => {
+    const state = progress[pk(matn.id, item.id)] || null;
+    const entry = { matnId: matn.id, index, due: state?.due || 0 };
+    if (state && state.due <= now) due.push(entry);
+    else if (!state) fresh.push(entry);
+  });
+  due.sort((a, b) => a.due - b.due);
+  sessionQueue = [...due, ...fresh.slice(0, 3)];
+  if (!sessionQueue.length) {
+    alert("لا توجد مقاطع جديدة أو مستحقة للمراجعة. أحسنت!");
+    return;
+  }
+  sessionIndex = 0; sessionActive = true;
+  $("session-panel")?.classList.remove("hidden");
+  renderSessionItem();
+}
+function renderSessionItem() {
+  if (!sessionActive || !sessionQueue[sessionIndex]) return;
+  const entry = sessionQueue[sessionIndex];
+  const matn = library.find(m => m.id === entry.matnId);
+  if (!matn) return;
+  $("session-progress").textContent = `المقطع ${sessionIndex + 1} من ${sessionQueue.length}`;
+  $("session-progress-bar").style.width = `${((sessionIndex + 1) / sessionQueue.length) * 100}%`;
+  openMatn(entry.matnId);
+  activeIndex = entry.index; resetItemView(); renderStudyItem();
+}
+function finishSession(completed = false) {
+  sessionActive = false; sessionQueue = []; sessionIndex = 0;
+  $("session-panel")?.classList.add("hidden");
+  if (completed) alert("أحسنت! أتممت جلسة الحفظ بنجاح.");
+}
+\n/* ---------- نسخة احتياطية ---------- */
 function exportData() {
   const a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([JSON.stringify({ app: "riwayq", v: 2, progress: readProgress() })], { type: "application/json" }));
@@ -250,6 +285,8 @@ function applyPrefs() {
 on("search-input", "input", renderLibrary);
 document.querySelectorAll("[data-progress-view]").forEach(button => button.addEventListener("click", () => renderProgressList(button.dataset.progressView)));
 on("daily-review-btn", "click", () => renderProgressList("review"));
+on("session-start-btn", "click", startSession);
+on("session-end-btn", "click", () => finishSession(false));
 on("close-progress", "click", () => $("progress-panel").classList.add("hidden"));
 on("progress-list", "click", e => {
   const button = e.target.closest("[data-progress-matn]");

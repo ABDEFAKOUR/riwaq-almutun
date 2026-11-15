@@ -54,9 +54,17 @@
       </div>
       <div class="daily-review-action">
         <div><strong id="daily-review-count">0</strong><small>مقاطع مستحقة اليوم</small></div>
-        <button id="daily-review-btn" class="button button-light" type="button">عرض مراجعات اليوم ←</button>
+        <button id="daily-review-btn" class="button button-light" type="button">عرض مراجعات اليوم ←</button>\n        <button id="session-start-btn" class="button button-primary" type="button">ابدأ جلسة الحفظ</button>
         <p id="daily-review-empty" class="daily-review-empty">أحسنت! لا توجد مراجعات مستحقة الآن.</p>
       </div>
+    </section>
+
+    <section class="session-panel hidden" id="session-panel" aria-live="polite">
+      <div class="session-panel-head">
+        <div><span class="eyebrow">جلسة مركّزة</span><h2>جلسة الحفظ</h2><p id="session-progress">المقطع 1 من 1</p></div>
+        <button id="session-end-btn" class="button button-outline" type="button">إنهاء الجلسة</button>
+      </div>
+      <div class="session-progress-track"><span id="session-progress-bar"></span></div>
     </section>
 
     <section id="library" class="section">
