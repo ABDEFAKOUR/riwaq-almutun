@@ -321,3 +321,11 @@ body.study-route footer { display: none !important; }
 body.study-route .container { padding-top: 22px; }
 body.study-route .study-panel { display: block; }
 body.study-route .study-panel.hidden { display: block !important; }
+
+
+/* صفحة المراجعة المستقلة */
+body.review-route .container > section:not(#progress-panel) { display: none !important; }
+body.review-route footer { display: none !important; }
+body.review-route .container { padding-top: 22px; }
+body.review-route .progress-panel { display: block; margin: 0 0 55px; }
+body.review-route .progress-panel.hidden { display: block !important; }
