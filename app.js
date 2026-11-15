@@ -246,11 +246,23 @@ function updateNetworkStatus() {
 window.addEventListener("online", updateNetworkStatus);
 window.addEventListener("offline", updateNetworkStatus);
 if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(console.error));
-window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferredInstallPrompt = e; $("install-btn")?.classList.remove("hidden"); });
+window.addEventListener("beforeinstallprompt", e => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+});
 on("install-btn", "click", async () => {
-  if (!deferredInstallPrompt) return;
-  deferredInstallPrompt.prompt(); await deferredInstallPrompt.userChoice;
-  deferredInstallPrompt = null; $("install-btn").classList.add("hidden");
+  if (deferredInstallPrompt) {
+    deferredInstallPrompt.prompt();
+    const choice = await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+    if (choice && choice.outcome === "accepted") $("install-btn")?.classList.add("hidden");
+    return;
+  }
+  alert("لتثبيت رِواق المتون: افتح قائمة Chrome (⋮)، ثم اختر «حفظ ومشاركة» أو «تثبيت الصفحة كتطبيق». إذا لم يظهر خيار التثبيت، حدّث الصفحة بعد تحميلها بالإنترنت.");
+});
+window.addEventListener("appinstalled", () => {
+  deferredInstallPrompt = null;
+  $("install-btn")?.classList.add("hidden");
 });
 
 applyPrefs(); updateNetworkStatus(); loadLibrary();
