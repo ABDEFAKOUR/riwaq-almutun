@@ -503,7 +503,7 @@ function startRecitation(){
   const recognition=new SR();recitationRecognition=recognition;recitationAlerted=new Set();
   try{const AC=window.AudioContext||window.webkitAudioContext;if(AC){if(!recitationAudioContext)recitationAudioContext=new AC();if(recitationAudioContext.state==="suspended")recitationAudioContext.resume();}}catch{}
   recognition.lang="ar-SA";recognition.continuous=true;recognition.interimResults=true;recognition.maxAlternatives=1;
-  let finalText="";
+  let finalText="",liveAlertTimer=null,lastInterimText="";
   recognition.onstart=()=>{
     recitationActive=true;revealed=false;renderStudyItem();start.disabled=true;stop.disabled=false;
     transcript.dataset.finalText="";transcript.textContent="أستمع إليك…";$("recitation-original").textContent="";
@@ -512,21 +512,40 @@ function startRecitation(){
   recognition.onresult=event=>{
     finalText="";let interim="";
     for(let i=0;i<event.results.length;i++){const t=event.results[i][0].transcript;if(event.results[i].isFinal)finalText+=t+" ";else interim+=t;}
-    const all=(finalText+interim).trim();transcript.dataset.finalText=finalText.trim();
-    // أظهر التفريغ الخام فور وصول نتيجة المتصفح، ثم أضف التلوين في الإطار التالي.
-    // هذا يمنع حساب المحاذاة من تأخير ظهور الكلمات للمستخدم.
-    transcript.textContent=all?"ما نطقتَ: "+all:"أستمع إليك…";
-    const liveText=all, confirmedText=finalText;
-    requestAnimationFrame(()=>{
-      renderLiveRecitation(liveText,confirmedText);
-      alertConfirmedRecitationErrors(confirmedText);
-    });
+    const all=(finalText+interim).trim(),confirmedText=finalText.trim();
+    transcript.dataset.finalText=confirmedText;
+
+    // اعرض ونسّق النتيجة فور وصولها، دون انتظار إطار رسم إضافي.
+    renderLiveRecitation(all,confirmedText);
+    alertConfirmedRecitationErrors(confirmedText);
+
+    // راقب الخطأ المؤقت إذا استقر قليلاً، مع إبقاء التنبيه النهائي فورياً.
+    if(liveAlertTimer)clearTimeout(liveAlertTimer);
+    lastInterimText=interim.trim();
+    if(lastInterimText&&activeMatn){
+      const finalCount=confirmedText.split(/\\s+/).filter(Boolean).length;
+      const aligned=alignLiveRecitation(activeMatn.items[activeIndex].text,all);
+      const pendingIssues=aligned.issues.filter(x=>x.type!=="missing"&&x.spokenIndex>=finalCount);
+      if(pendingIssues.length){
+        const candidate=lastInterimText;
+        liveAlertTimer=setTimeout(()=>{
+          if(!recitationActive||lastInterimText!==candidate)return;
+          let fresh=false;
+          for(const x of pendingIssues){
+            const key=[x.type,x.expectedIndex,x.spokenIndex,x.expected,x.spoken].join("|");
+            if(!recitationAlerted.has(key)){recitationAlerted.add(key);fresh=true;}
+          }
+          if(fresh){playRecitationAlert();status.textContent="تنبيه: اختلاف محتمل في القراءة. راجع الكلمة الحمراء والتصحيح الأخضر.";}
+        },350);
+      }
+    }
     if(!recitationAlerted.size)status.textContent="أستمع إليك… الأخضر مطابق، والأحمر يحتاج مراجعة.";
   };
   recognition.onerror=event=>{
     status.textContent=event.error==="not-allowed"?"لم تسمح باستعمال الميكروفون. فعّل الإذن من إعدادات المتصفح.":event.error==="no-speech"?"لم نسمع صوتاً. تحدث بوضوح قرب الميكروفون.":"وقع مشكل أثناء التعرف الصوتي: "+event.error;
   };
   recognition.onend=()=>{
+    if(liveAlertTimer)clearTimeout(liveAlertTimer);
     recitationActive=false;start.disabled=false;stop.disabled=true;
     const spoken=(transcript.dataset.finalText||finalText).trim();
     status.textContent=spoken?"انتهى التسميع. راجع الكلمات الملوّنة والتصحيح أدناه.":"انتهى التسميع دون التقاط نص واضح.";
