@@ -1,57 +1,34 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#173d32">
-  <meta name="description" content="استظهر المتن كاملاً بصوتك، وتابع الكلمات التي تنطق بها مع تنبيه فوري عند الاختلاف.">
-  <title>الاستظهار الكامل | رِواق المتون</title>
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#071f25">
+<meta name="description" content="استظهر المتن كاملاً بصوتك، وتابع الكلمات التي تنطق بها مع تنبيه فوري عند الاختلاف.">
+<title>الاستظهار الكامل | رِواق المتون</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css">
 </head>
 <body class="recall-page">
-  <header class="topbar">
-    <a class="brand" href="./index.html#library" aria-label="رواق المتون - المكتبة">
-      <span class="brand-mark">رِ</span><span><strong>رِواق المتون</strong><small>الاستظهار الكامل</small></span>
-    </a>
-    <button id="menu-toggle" class="menu-toggle" type="button" aria-label="فتح القائمة" aria-controls="app-menu" aria-expanded="false"><span aria-hidden="true">☰</span></button>
-    <nav class="top-actions"><a class="button button-outline small" href="./settings.html">الإعدادات</a><a class="button button-outline small recall-back" href="./index.html#library">العودة إلى المكتبة ←</a></nav>
-  </header>
-
-  <button id="menu-backdrop" class="menu-backdrop" type="button" aria-label="إغلاق القائمة" hidden></button>
-  <aside id="app-menu" class="app-menu" aria-label="القائمة الرئيسية" aria-hidden="true" hidden>
-    <div class="app-menu-head"><div class="app-menu-brand"><img class="menu-logo" src="./icon.svg" alt="شعار رِواق المتون"><div><strong>رِواق المتون</strong><small>تنقّل بين صفحات التطبيق</small></div></div><button id="menu-close" class="menu-close" type="button" aria-label="إغلاق القائمة">×</button></div>
-    <nav class="app-menu-links" aria-label="صفحات التطبيق">
-      <a href="./index.html" data-menu-link><span aria-hidden="true">⌂</span> الرئيسية</a>
-      <a href="./index.html#library" data-menu-link><span aria-hidden="true">▤</span> مكتبة المتون</a>
-      <a href="./istidhar.html" data-menu-link><span aria-hidden="true">🎙</span> الاستظهار والتسميع</a>
-      <a href="./review.html" data-menu-link><span aria-hidden="true">↻</span> المراجعة</a>
-      <a href="./progress.html" data-menu-link><span aria-hidden="true">▥</span> التقدم في الحفظ</a>
-      <a href="./progress.html#overdue-alert" data-menu-link><span aria-hidden="true">⚠</span> المراجعات المتأخرة</a>
-      <a href="./progress.html#matn-mastery" data-menu-link><span aria-hidden="true">◉</span> إتقان المتون</a>
-      <a href="./progress.html#daily-log" data-menu-link><span aria-hidden="true">▦</span> السجل اليومي</a>
-      <a href="./settings.html" data-menu-link><span aria-hidden="true">⚙</span> الإعدادات</a>
-    </nav>
-    <p class="app-menu-foot">رِواق المتون · رفيقك في حفظ العلم</p>
-  </aside>  <main class="recall-shell">
-    <div class="recall-head">
-      <div><span class="eyebrow">اختبر حفظك دون رؤية النص</span><h1 id="recall-title">الاستظهار الكامل</h1><p id="recall-subtitle">اقرأ المتن كاملاً بصوت مرتفع، وسنكتب ما تنطق به فقط.</p></div>
-    </div>
-    <section class="recall-card">
-      <p id="recall-warning" class="recall-warning hidden" role="status"></p>
-      <div class="recall-actions">
-        <button id="recall-start" class="button button-primary" type="button">ابدأ الاستظهار 🎙️</button>
-        <button id="recall-stop" class="button button-outline" type="button" disabled>إيقاف</button>
-        <button id="recall-clear" class="button button-ghost" type="button">مسح التفريغ</button>
-      </div>
-      <p id="recall-status" class="recall-status" role="status">اضغط «ابدأ الاستظهار» واسمح باستعمال الميكروفون.</p>
-      <div id="recall-transcript" class="recall-transcript" aria-live="polite"><span class="recall-placeholder">سيظهر هنا كلامك كما تنطق به، كلمة بكلمة…</span></div>
-      <div class="recall-meta"><span id="recall-word-count">0 كلمة</span><span>الأخضر: مطابق · الأحمر: اختلاف محتمل</span></div>
-      <p class="recall-note">النص الأصلي لا يظهر في هذه الصفحة؛ تتم المقارنة في الخلفية فقط. قد يخطئ التعرف الصوتي أحياناً، لذلك راجع الكلمة الحمراء قبل الحكم على حفظك. يتطلب التسميع الصوتي متصفحاً يدعم التعرف على الكلام واتصالاً بالإنترنت. مستوى صوت التنبيه يعتمد أيضاً على مستوى صوت الجهاز والمتصفح.</p>
-    </section>
-  </main>
-  <script src="menu.js" defer></script>
-  <script src="istidhar.js" defer></script>
-</body>
-</html>
+<header class="topbar recall-topbar">
+<a class="brand recall-brand" href="./index.html#library" aria-label="رواق المتون - المكتبة"><span class="brand-mark">رِ</span><span><strong>رِواق المتون</strong><small>مجلس الاستظهار</small></span></a>
+<button id="menu-toggle" class="menu-toggle" type="button" aria-label="فتح القائمة" aria-controls="app-menu" aria-expanded="false"><span aria-hidden="true">☰</span></button>
+<nav class="top-actions"><a class="button button-outline small" href="./settings.html">الإعدادات</a><a class="button button-outline small recall-back" href="./index.html#library">المكتبة ←</a></nav>
+</header>
+<button id="menu-backdrop" class="menu-backdrop" type="button" aria-label="إغلاق القائمة" hidden></button>
+<aside id="app-menu" class="app-menu" aria-label="القائمة الرئيسية" aria-hidden="true" hidden>
+<div class="app-menu-head"><div class="app-menu-brand"><img class="menu-logo" src="./icon.svg" alt="شعار رِواق المتون"><div><strong>رِواق المتون</strong><small>تنقّل بين صفحات التطبيق</small></div></div><button id="menu-close" class="menu-close" type="button" aria-label="إغلاق القائمة">×</button></div>
+<nav class="app-menu-links" aria-label="صفحات التطبيق">
+<a href="./index.html" data-menu-link><span aria-hidden="true">⌂</span> الرئيسية</a><a href="./index.html#library" data-menu-link><span aria-hidden="true">▤</span> مكتبة المتون</a><a href="./istidhar.html" data-menu-link><span aria-hidden="true">🎙</span> الاستظهار والتسميع</a><a href="./review.html" data-menu-link><span aria-hidden="true">↻</span> المراجعة</a><a href="./progress.html" data-menu-link><span aria-hidden="true">▥</span> التقدم في الحفظ</a><a href="./progress.html#overdue-alert" data-menu-link><span aria-hidden="true">⚠</span> المراجعات المتأخرة</a><a href="./progress.html#matn-mastery" data-menu-link><span aria-hidden="true">◉</span> إتقان المتون</a><a href="./progress.html#daily-log" data-menu-link><span aria-hidden="true">▦</span> السجل اليومي</a><a href="./settings.html" data-menu-link><span aria-hidden="true">⚙</span> الإعدادات</a>
+</nav><p class="app-menu-foot">رِواق المتون · رفيقك في حفظ العلم</p>
+</aside>
+<main class="recall-shell recall-screen">
+<div class="recall-head"><div><span class="eyebrow">مجلس التثبيت والمراجعة</span><h1 id="recall-title">الاستظهار الكامل</h1><p id="recall-subtitle">استظهر المتن بصوتك، وسنتابع كلامك دون إظهار النص الأصلي.</p></div><span class="recall-live-mark"><i></i> وضع الاستظهار</span></div>
+<section class="recall-card">
+<div class="recall-ornament" aria-hidden="true"><span>۞</span></div><div class="recall-display-title">مَجْلِسُ الاسْتِظْهَار</div>
+<p id="recall-warning" class="recall-warning hidden" role="status"></p>
+<div class="recall-actions"><button id="recall-start" class="button button-primary" type="button">ابدأ الاستظهار 🎙️</button><button id="recall-stop" class="button button-outline" type="button" disabled>إيقاف</button><button id="recall-clear" class="button button-ghost" type="button">مسح التفريغ</button></div>
+<div class="recall-status-wrap"><span class="recall-status-dot" aria-hidden="true"></span><p id="recall-status" class="recall-status" role="status">اضغط «ابدأ الاستظهار» واسمح باستعمال الميكروفون.</p></div>
+<div id="recall-transcript" class="recall-transcript" aria-live="polite"><span class="recall-placeholder">سيظهر هنا كلامك كما تنطق به، كلمة بكلمة…</span></div>
+<div class="recall-meta"><span id="recall-word-count">0 كلمة</span><span class="recall-legend"><i class="legend-correct"></i> مطابق <i class="legend-wrong"></i> اختلاف محتمل</span></div>
+<p class="recall-note">النص الأصلي لا يظهر هنا؛ تتم المقارنة في الخلفية فقط. قد يخطئ التعرف الصوتي أحياناً، فراجع الكلمة الملوّنة قبل الحكم على حفظك. يتطلب التسميع متصفحاً يدعم التعرف على الكلام واتصالاً بالإنترنت.</p>
+<div class="recall-bottom-ornament" aria-hidden="true">❖　 رِواق المتون　 ❖</div>
+</section></main>
+<script src="menu.js" defer></script><script src="istidhar.js" defer></script>
+</body></html>
