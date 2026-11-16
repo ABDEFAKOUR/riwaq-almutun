@@ -393,3 +393,51 @@ body.settings-route .daily-plan { flex: 1 1 100%; max-width: none; }
   .hero{margin-top:20px;min-height:260px}
   .weekly-report,.achievements-section{margin-top:22px}
 }
+
+
+/* تحسينات بصرية آمنة للصفحة الرئيسية — دون تغيير الوظائف أو ترتيب DOM */
+.container{max-width:1160px}
+.hero{box-shadow:var(--shadow)}
+.daily-review,.weekly-report,.achievements-section,.progress-panel{box-shadow:var(--shadow)}
+.daily-review{border-radius:20px}
+.daily-plan{border-radius:15px}
+.stats-grid{align-items:stretch}
+.stat-card{min-height:86px;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+.stat-card-button:hover{box-shadow:0 9px 22px rgba(25,48,38,.07)}
+.matn-card{transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+.matn-card:hover{transform:translateY(-3px);border-color:#d7c59b;box-shadow:var(--shadow)}
+.section-heading{margin-bottom:22px}
+#library .tools{margin-top:-5px}
+.search-box:focus-within{border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,169,107,.15)}
+.button{min-height:38px}
+.button:focus-visible,.filter:focus-visible,.matn-card button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+[data-theme=dark] .matn-card:hover,[data-theme=dark] .stat-card-button:hover{border-color:var(--gold);box-shadow:none}
+[data-theme=dark] .daily-plan{background:#111d18}
+@media(max-width:900px){
+  .container{width:min(100% - 32px,760px)}
+  .hero{padding:30px 5%;gap:10px}
+}
+@media(max-width:650px){
+  .container{width:calc(100% - 28px)}
+  .hero{border-radius:20px;padding:25px 22px;margin-bottom:18px}
+  .daily-review{gap:15px;margin-bottom:22px}
+  .daily-review-action{align-items:stretch}
+  .daily-review-action button{width:100%}
+  .stats-grid{margin-bottom:26px}
+  .stats-intro{padding:0 2px}
+  .section{margin-bottom:38px}
+  .weekly-report,.achievements-section{border-radius:16px}
+}
+@media(max-width:430px){
+  .topbar{height:auto;min-height:68px;padding:10px 14px;align-items:flex-start}
+  .top-actions{justify-content:flex-end;gap:6px}
+  .status{width:100%;text-align:left}
+  .top-actions .small{font-size:11px;padding:5px 8px}
+  .hero h1{font-size:35px}
+  .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stat-card{min-height:78px}
+}
+@media(prefers-reduced-motion:reduce){
+  .matn-card,.stat-card,.button{transition:none}
+  .matn-card:hover,.button:hover{transform:none}
+}
