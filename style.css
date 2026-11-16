@@ -692,3 +692,13 @@ body:not(.recall-page) .book b{color:#173d32}
 .gateway-footer{margin-top:auto}
 [data-theme=dark] .gateway-card{background:var(--paper);color:var(--ink)}
 @media(max-width:760px){.gateway-main{padding:35px 0 45px}.gateway-grid{grid-template-columns:1fr;gap:12px}.gateway-card{min-height:175px;padding:20px}.gateway-card-icon{margin-bottom:10px}.gateway-intro h1{font-size:31px}.gateway-welcome{display:none}}
+
+/* توحيد زر الوضع الليلي في بوابة الأقسام وصفحتي PDF والوسائط */
+.gateway-topbar .gateway-welcome{flex:1;text-align:center}
+.gateway-theme-actions{display:flex;align-items:center;gap:8px}
+[data-theme=dark] body{background:var(--cream);color:var(--ink)}
+[data-theme=dark] .gateway-intro h1,[data-theme=dark] .gateway-card-title,[data-theme=dark] .gateway-card-link{color:#8fcfb2}
+[data-theme=dark] .gateway-card-icon{background:#21332c;color:#8fcfb2}
+[data-theme=dark] .gateway-footer{color:var(--muted)}
+[data-theme=dark] .settings-panel h2{color:#8fcfb2!important}
+[data-theme=dark] .settings-panel label.button{color:#fff}
