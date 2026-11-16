@@ -356,3 +356,40 @@ body.settings-route .daily-plan { flex: 1 1 100%; max-width: none; }
 .settings-panel .tools { margin: 14px 0 0; }
 [data-theme=dark] body.settings-route .settings-intro h1,[data-theme=dark] .settings-panel .section-heading h2 { color: #8fcfb2; }
 @media(max-width:650px){.settings-panel{padding:17px}}
+
+
+/* تنظيم الصفحة الرئيسية: ترتيب أوضح ومساحات متوازنة */
+.hero{margin:30px auto 22px;min-height:285px}
+.daily-review{display:grid;grid-template-columns:minmax(170px,.85fr) minmax(260px,1.2fr) minmax(190px,.85fr);align-items:center;gap:18px;margin:0 0 26px;padding:22px}
+.daily-review-copy{max-width:none}
+.daily-plan{flex:initial;max-width:none;min-width:0}
+.daily-review-action{display:grid;align-content:center;justify-items:start;gap:9px}
+.daily-review-action>div{display:flex;align-items:baseline;gap:9px}
+.daily-review-action strong,.daily-review-action small{display:inline}
+.stats-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:11px;margin:0 0 34px}
+.stats-intro{grid-column:1/-1;margin-bottom:2px}
+.stats-intro h2{font-family:Amiri,serif;color:var(--green);font-size:27px;margin:0}
+.stats-intro p{font-size:12px;color:var(--muted);margin:2px 0 0}
+.stat-card{min-width:0;padding:14px 13px;gap:10px}
+.stat-card small{line-height:1.5}
+#library{margin-top:4px}
+#library .section-heading{align-items:center}
+.weekly-report,.achievements-section{margin-top:28px}
+.session-panel{margin:0 0 26px}
+[data-theme=dark] .stats-intro h2{color:#8fcfb2}
+@media(max-width:900px){
+  .daily-review{grid-template-columns:1fr 1.2fr}
+  .daily-review-copy{grid-column:1/-1}
+  .daily-review-action{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between}
+  .stats-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:650px){
+  .daily-review{grid-template-columns:1fr;padding:18px}
+  .daily-review-copy,.daily-review-action{grid-column:auto}
+  .daily-review-action{display:flex;align-items:center;justify-content:space-between}
+  .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .stat-card{padding:12px 10px}
+  .stats-intro h2{font-size:25px}
+  .hero{margin-top:20px;min-height:260px}
+  .weekly-report,.achievements-section{margin-top:22px}
+}
