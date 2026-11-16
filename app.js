@@ -271,7 +271,7 @@ function renderProgressList(type) {
     </button>`;
   }).join("") : `<p class="empty-state">${empty[type] || "لا توجد مقاطع هنا."}</p>`;
   panel.classList.remove("hidden");
-  panel.scrollIntoView({ behavior: "smooth", block: "start" });
+  if (!location.pathname.endsWith("/progress.html")) panel.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 /* ---------- جلسة الحفظ ---------- */
