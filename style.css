@@ -666,3 +666,9 @@ body:not(.recall-page) [data-theme=dark]{color:#f1eadc}
   body:not(.recall-page) .topbar{height:auto;min-height:72px;padding:10px 14px}
   body:not(.recall-page) .hero{margin-top:20px}
 }
+
+
+/* إصلاح وضوح كتابة غلاف الكتاب في الواجهة الرئيسية */
+body:not(.recall-page) .book{color:#173d32}
+body:not(.recall-page) .book span,
+body:not(.recall-page) .book b{color:#173d32}
