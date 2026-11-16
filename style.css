@@ -332,7 +332,7 @@ body.review-route .progress-panel.hidden { display: block !important; }
 
 
 /* صفحة الإحصائيات والتقدم المستقلة */
-body.progress-route .container > section:not(.stats-grid):not(.daily-review):not(.weekly-report):not(.achievements-section):not(#progress-panel) { display: none !important; }
+body.progress-route .container > section:not(.stats-grid):not(.daily-review):not(.weekly-report):not(.achievements-section):not(.smart-mastery-section):not(.daily-log-section):not(.overdue-alert):not(#progress-panel) { display: none !important; }
 body.progress-route footer { display: none !important; }
 body.progress-route .container { padding-top: 22px; }
 body.progress-route .stats-grid { margin-top: 18px; margin-bottom: 28px; }
@@ -472,3 +472,25 @@ body.menu-open{overflow:hidden}
 .menu-logo{width:58px;height:58px;flex:none;object-fit:contain;border-radius:14px}
 .hero-logo{display:block;width:76px;height:76px;object-fit:contain;border-radius:19px;margin:0 0 14px;box-shadow:0 8px 24px rgba(0,0,0,.12)}
 @media(max-width:760px){.menu-logo{width:52px;height:52px}.hero-logo{width:66px;height:66px}}
+
+
+/* لوحة المراجعة الذكية ونسب الإتقان والسجل اليومي */
+.overdue-alert{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 24px;padding:18px 20px;border:1px solid #e6b6a9;border-radius:16px;background:#fff4f0;color:#7f2d1d}
+.overdue-alert strong{font-size:15px}
+.overdue-alert p{margin:5px 0 0;font-size:12px;color:#8b5145}
+.overdue-alert .button{white-space:nowrap}
+.matn-mastery-list,.daily-log-list{display:grid;gap:10px}
+.matn-mastery-card,.daily-log-row{padding:14px 16px;border:1px solid var(--line);border-radius:13px;background:var(--paper)}
+.matn-mastery-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px}
+.matn-mastery-head strong{color:var(--green);font-size:14px}
+.matn-mastery-head span{font-weight:800;color:var(--green);font-variant-numeric:tabular-nums}
+.matn-mastery-track{height:10px;overflow:hidden;border-radius:20px;background:var(--cream)}
+.matn-mastery-track span{display:block;height:100%;border-radius:20px;background:var(--green2);transition:width .25s}
+.matn-mastery-card small{display:block;margin-top:8px;color:var(--muted);font-size:11px}
+.daily-log-row{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:13px}
+.daily-log-row span{color:var(--muted)}
+.daily-log-row strong{color:var(--green);font-variant-numeric:tabular-nums}
+[data-theme=dark] .overdue-alert{background:#321f1b;border-color:#70483e;color:#ffd0c2}
+[data-theme=dark] .overdue-alert p{color:#e0a99b}
+[data-theme=dark] .matn-mastery-head strong,[data-theme=dark] .matn-mastery-head span,[data-theme=dark] .daily-log-row strong{color:#8fcfb2}
+@media(max-width:600px){.overdue-alert{align-items:stretch;flex-direction:column;padding:15px}.overdue-alert .button{width:100%}.daily-log-row{font-size:12px}}
