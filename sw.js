@@ -1,7 +1,10 @@
-const CACHE = "riwaq-v40";
+const CACHE = "riwaq-v41";
 const CORE_FILES = [
   "./",
   "./index.html",
+  "./hifd.html",
+  "./reading.html",
+  "./media.html",
   "./study.html",
   "./review.html",
   "./progress.html",
