@@ -67,6 +67,7 @@ function updateStats() {
   updateAchievements(items, now);
   updateDailyPlan(items, now);
   updateWeeklyReport(items, now);
+  updateSmartDashboard(items, now);
 }
 
 
@@ -156,6 +157,66 @@ function updateDailyPlan(items = null, now = Date.now()) {
   fill.parentElement.setAttribute("aria-valuenow", String(percent));
   const message = $("daily-goal-message");
   if (message) message.textContent = completed >= goal ? "أحسنت! حققت هدفك اليومي." : `باقي لك ${goal - completed} مقاطع لإتمام هدف اليوم.`;
+}
+
+
+/* ---------- لوحة المراجعة الذكية ---------- */
+function updateSmartDashboard(items = null, now = Date.now()) {
+  const progress = readProgress();
+  const states = items || library.flatMap(matn => matn.items.map(item => progress[pk(matn.id, item.id)] || null));
+  const overdue = [];
+  for (const matn of library) matn.items.forEach((item, index) => {
+    const state = progress[pk(matn.id, item.id)];
+    if (state && state.due <= now) overdue.push({ matn, item, index, state });
+  });
+  overdue.sort((a, b) => a.state.due - b.state.due);
+  const alertBox = $("overdue-alert");
+  if (alertBox) {
+    alertBox.classList.toggle("hidden", overdue.length === 0);
+    const count = $("overdue-alert-count");
+    if (count) count.textContent = String(overdue.length);
+    const oldest = overdue.length ? Math.max(0, Math.floor((now - overdue[0].state.due) / DAY)) : 0;
+    const detail = $("overdue-alert-detail");
+    if (detail) detail.textContent = overdue.length
+      ? (oldest > 0 ? `أقدم مقطع متأخر منذ ${oldest} يومًا. ابدأ بالأقدم استحقاقًا.` : "لديك مقاطع حان موعد مراجعتها اليوم.")
+      : "";
+  }
+
+  const masteryList = $("matn-mastery-list");
+  if (masteryList) masteryList.innerHTML = library.map(matn => {
+    const total = matn.items.length;
+    const learned = matn.items.filter(item => {
+      const state = progress[pk(matn.id, item.id)];
+      return !!state && state.int >= 6;
+    }).length;
+    const due = matn.items.filter(item => {
+      const state = progress[pk(matn.id, item.id)];
+      return !!state && state.due <= now;
+    }).length;
+    const percent = total ? Math.round(learned / total * 100) : 0;
+    return `<article class="matn-mastery-card">
+      <div class="matn-mastery-head"><strong>${escapeHTML(matn.title)}</strong><span>${percent}%</span></div>
+      <div class="matn-mastery-track" role="progressbar" aria-label="نسبة إتقان ${escapeHTML(matn.title)}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${percent}"><span style="width:${percent}%"></span></div>
+      <small>${learned} من ${total} مقطعًا بلغ مستوى الإتقان · ${due} للمراجعة</small>
+    </article>`;
+  }).join("");
+
+  const log = $("daily-log-list");
+  if (log) {
+    const today = new Date(now);
+    const startToday = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+    const history = readStudyHistory();
+    const rows = Array.from({ length: 7 }, (_, index) => {
+      const start = startToday - (6 - index) * DAY;
+      const end = start + DAY;
+      const count = history.filter(event => event.at >= start && event.at < end).length;
+      return { date: new Date(start), count };
+    }).reverse();
+    log.innerHTML = rows.map(day => `<div class="daily-log-row">
+      <span>${escapeHTML(day.date.toLocaleDateString("ar", { weekday: "long", day: "numeric", month: "short" }))}</span>
+      <strong>${day.count} ${day.count === 1 ? "مقطع" : "مقاطع"}</strong>
+    </div>`).join("");
+  }
 }
 
 function renderProgressList(type) {
@@ -661,6 +722,7 @@ document.querySelectorAll("[data-progress-view]").forEach(button => button.addEv
   if (button.dataset.progressView === "review" && !location.pathname.endsWith("/review.html")) { window.location.href = "./review.html"; return; }
   renderProgressList(button.dataset.progressView);
 }));
+on("overdue-review-btn", "click", () => { window.location.href = "./review.html"; });
 on("daily-review-btn", "click", () => {
   if (!location.pathname.endsWith("/review.html")) window.location.href = "./review.html";
   else renderProgressList("review");
