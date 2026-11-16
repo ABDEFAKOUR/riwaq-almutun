@@ -45,6 +45,22 @@
   document.addEventListener("keydown", event => {
     if (event.key === "Escape" && toggle.getAttribute("aria-expanded") === "true") closeMenu();
   });
+  // تمييز الصفحة أو القسم المفتوح حالياً داخل القائمة.
+  const currentUrl = new URL(window.location.href);
+  const normalizePath = path => path.replace(/\\/+$/, "") || "/";
+  const currentPath = normalizePath(currentUrl.pathname);
+  menu.querySelectorAll("[data-menu-link]").forEach(link => {
+    const linkUrl = new URL(link.href, window.location.href);
+    const samePath = normalizePath(linkUrl.pathname) === currentPath;
+    const isCurrent = samePath && (
+      linkUrl.hash
+        ? currentUrl.hash === linkUrl.hash
+        : !currentUrl.hash
+    );
+    if (isCurrent) link.setAttribute("aria-current", "page");
+    else link.removeAttribute("aria-current");
+  });
+
   menu.querySelectorAll("[data-menu-link]").forEach(link => {
     link.addEventListener("click", closeMenu);
   });
