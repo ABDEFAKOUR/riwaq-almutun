@@ -38,17 +38,7 @@
         <div class="book"><span>طَلَبُ العِلْم</span><b>رِواق</b></div>
         <span class="star star-one">✳</span><span class="star star-two">✧</span>
       </div>
-    </section>
-
-    <section class="stats-grid" aria-label="إحصائيات الحفظ">
-      <button class="stat-card stat-card-button" type="button" data-progress-view="new" aria-label="عرض المقاطع الجديدة"><span class="stat-icon">＋</span><div><strong id="new-count">0</strong><small>مقاطع جديدة · اضغط للعرض</small></div></button>
-      <button class="stat-card stat-card-button" type="button" data-progress-view="learning" aria-label="عرض المقاطع قيد الحفظ"><span class="stat-icon">◷</span><div><strong id="learning-count">0</strong><small>قيد الحفظ · اضغط للعرض</small></div></button>
-      <button class="stat-card stat-card-button" type="button" data-progress-view="mastered" aria-label="عرض المقاطع التي أتقنتها"><span class="stat-icon">▤</span><div><strong id="saved-count">0</strong><small>مقاطع متقنة · اضغط للعرض</small></div></button>
-      <button class="stat-card stat-card-button" type="button" data-progress-view="review" aria-label="عرض المقاطع المستحقة للمراجعة"><span class="stat-icon">↻</span><div><strong id="review-count">0</strong><small>مقاطع للمراجعة · اضغط للعرض</small></div></button>
-      <div class="stat-card" aria-label="أيام الحفظ المتتالية"><span class="stat-icon">✦</span><div><strong id="streak-count">0</strong><small>أيام متتالية</small></div></div>
-    </section>
-
-    <section class="daily-review" aria-label="مراجعة اليوم">
+    </section>\n\n<section class="daily-review" aria-label="مراجعة اليوم">
       <div class="daily-review-copy">
         <span class="eyebrow">وردك اليوم</span>
         <h2>مراجعة المحفوظات</h2>
@@ -66,45 +56,19 @@
         <button id="session-start-btn" class="button button-primary" type="button">ابدأ جلسة الحفظ</button>
         <p id="daily-review-empty" class="daily-review-empty">أحسنت! لا توجد مراجعات مستحقة الآن.</p>
       </div>
-    </section>
-
-    <section class="session-panel hidden" id="session-panel" aria-live="polite">
+    </section>\n\n<section class="session-panel hidden" id="session-panel" aria-live="polite">
       <div class="session-panel-head">
         <div><span class="eyebrow">جلسة مركّزة</span><h2>جلسة الحفظ</h2><p id="session-progress">المقطع 1 من 1</p></div>
         <button id="session-end-btn" class="button button-outline" type="button">إنهاء الجلسة</button>
       </div>
       <div class="session-progress-track"><span id="session-progress-bar"></span></div>
-    </section>
-
-    <section class="weekly-report section" aria-label="التقرير الأسبوعي">
-      <div class="section-heading weekly-heading">
-        <div><span class="eyebrow">تابع ثباتك</span><h2>تقرير آخر 7 أيام</h2></div>
-        <span id="weekly-range" class="weekly-range"></span>
-      </div>
-      <div class="weekly-summary">
-        <article class="weekly-metric"><strong id="weekly-total">0</strong><small>مرات تقييم المقاطع</small></article>
-        <article class="weekly-metric"><strong id="weekly-days">0</strong><small>أيام نشطة</small></article>
-        <article class="weekly-metric"><strong id="weekly-average">0</strong><small>متوسط التقييمات يومياً</small></article>
-      </div>
-      <div id="weekly-chart" class="weekly-chart" role="img" aria-label="عدد المقاطع التي تم تقييمها في كل يوم من آخر سبعة أيام"></div>
-      <div class="weekly-status">
-        <div><span class="status-dot mastered-dot"></span>متقنة <strong id="weekly-mastered">0</strong></div>
-        <div><span class="status-dot learning-dot"></span>قيد الحفظ <strong id="weekly-learning">0</strong></div>
-        <div><span class="status-dot review-dot"></span>للمراجعة <strong id="weekly-review">0</strong></div>
-      </div>
-      <p class="weekly-note">يبدأ سجل النشاط من تاريخ تفعيل التقرير، ولا تُحتسب بيانات الأيام السابقة غير المسجلة. حالات الحفظ تشمل محفوظاتك الحالية.</p>
-    </section>
-
-    <section class="achievements-section section" aria-label="إنجازاتي">
-      <div class="section-heading achievements-heading">
-        <div><span class="eyebrow">خطواتك تستحق التقدير</span><h2>إنجازاتي</h2></div>
-        <span class="achievement-counter"><strong id="achievement-earned">0</strong> من 6 إنجازات</span>
-      </div>
-      <div id="achievement-list" class="achievement-grid"></div>
-      <p class="achievements-note">تُحتسب سلسلة الاستمرار من أيام النشاط المسجلة ابتداءً من تفعيل سجل التقرير الأسبوعي.</p>
-    </section>
-
-    <section id="library" class="section">
+    </section>\n\n<section class="stats-grid" aria-label="إحصائيات الحفظ">\n      <div class="stats-intro"><span class="eyebrow">نظرة سريعة</span><h2>ملخص الحفظ</h2><p>تابع محفوظاتك وإنجازك اليومي من مكان واحد.</p></div>
+      <button class="stat-card stat-card-button" type="button" data-progress-view="new" aria-label="عرض المقاطع الجديدة"><span class="stat-icon">＋</span><div><strong id="new-count">0</strong><small>مقاطع جديدة · اضغط للعرض</small></div></button>
+      <button class="stat-card stat-card-button" type="button" data-progress-view="learning" aria-label="عرض المقاطع قيد الحفظ"><span class="stat-icon">◷</span><div><strong id="learning-count">0</strong><small>قيد الحفظ · اضغط للعرض</small></div></button>
+      <button class="stat-card stat-card-button" type="button" data-progress-view="mastered" aria-label="عرض المقاطع التي أتقنتها"><span class="stat-icon">▤</span><div><strong id="saved-count">0</strong><small>مقاطع متقنة · اضغط للعرض</small></div></button>
+      <button class="stat-card stat-card-button" type="button" data-progress-view="review" aria-label="عرض المقاطع المستحقة للمراجعة"><span class="stat-icon">↻</span><div><strong id="review-count">0</strong><small>مقاطع للمراجعة · اضغط للعرض</small></div></button>
+      <div class="stat-card" aria-label="أيام الحفظ المتتالية"><span class="stat-icon">✦</span><div><strong id="streak-count">0</strong><small>أيام متتالية</small></div></div>
+    </section>\n\n<section id="library" class="section">
       <div class="section-heading">
         <div><span class="eyebrow">ابدأ من حيث تشاء</span><h2>مكتبة المتون</h2></div>
         <label class="search-box"><span aria-hidden="true">⌕</span><input id="search-input" type="search" placeholder="ابحث عن متن أو علم..." aria-label="ابحث عن متن أو علم"></label>
@@ -112,9 +76,7 @@
       <div class="tools"><button id="export-btn" class="button button-outline small" type="button">تصدير التقدم</button><label class="button button-outline small">استيراد التقدم<input id="import-input" type="file" accept=".json" hidden></label></div>
       <div id="subject-filters" class="filters" aria-label="تصفية حسب العلم"></div>
       <div id="matn-grid" class="matn-grid"></div>
-    </section>
-
-    <section id="study-panel" class="study-panel hidden" aria-live="polite">
+    </section>\n\n<section id="study-panel" class="study-panel hidden" aria-live="polite">
       <div class="study-head">
         <div><span class="eyebrow" id="study-subject">المتن</span><h2 id="study-title">عنوان المتن</h2></div>
         <button id="close-study" class="icon-button" type="button" aria-label="إغلاق">×</button>
@@ -158,15 +120,53 @@
         <button id="next-btn" class="button button-ghost" type="button">التالي</button>
       </div>
       <p class="study-tip">نصيحة: اقرأ المقطع، أخفِ النص، ثم استظهره بصوتك قبل كشف الإجابة.</p>
-    </section>
-
-    <section id="progress-panel" class="progress-panel hidden" aria-live="polite">
+    </section>\n\n<section id="progress-panel" class="progress-panel hidden" aria-live="polite">
       <div class="progress-panel-head">
         <div><span class="eyebrow">مسارك في الحفظ</span><h2 id="progress-panel-title">مقاطع الحفظ</h2></div>
         <button id="close-progress" class="icon-button" type="button" aria-label="إغلاق">×</button>
       </div>
       <div id="progress-list" class="progress-list"></div>
-    </section>
+    </section>\n\n<section class="weekly-report section" aria-label="التقرير الأسبوعي">
+      <div class="section-heading weekly-heading">
+        <div><span class="eyebrow">تابع ثباتك</span><h2>تقرير آخر 7 أيام</h2></div>
+        <span id="weekly-range" class="weekly-range"></span>
+      </div>
+      <div class="weekly-summary">
+        <article class="weekly-metric"><strong id="weekly-total">0</strong><small>مرات تقييم المقاطع</small></article>
+        <article class="weekly-metric"><strong id="weekly-days">0</strong><small>أيام نشطة</small></article>
+        <article class="weekly-metric"><strong id="weekly-average">0</strong><small>متوسط التقييمات يومياً</small></article>
+      </div>
+      <div id="weekly-chart" class="weekly-chart" role="img" aria-label="عدد المقاطع التي تم تقييمها في كل يوم من آخر سبعة أيام"></div>
+      <div class="weekly-status">
+        <div><span class="status-dot mastered-dot"></span>متقنة <strong id="weekly-mastered">0</strong></div>
+        <div><span class="status-dot learning-dot"></span>قيد الحفظ <strong id="weekly-learning">0</strong></div>
+        <div><span class="status-dot review-dot"></span>للمراجعة <strong id="weekly-review">0</strong></div>
+      </div>
+      <p class="weekly-note">يبدأ سجل النشاط من تاريخ تفعيل التقرير، ولا تُحتسب بيانات الأيام السابقة غير المسجلة. حالات الحفظ تشمل محفوظاتك الحالية.</p>
+    </section>\n\n<section class="achievements-section section" aria-label="إنجازاتي">
+      <div class="section-heading achievements-heading">
+        <div><span class="eyebrow">خطواتك تستحق التقدير</span><h2>إنجازاتي</h2></div>
+        <span class="achievement-counter"><strong id="achievement-earned">0</strong> من 6 إنجازات</span>
+      </div>
+      <div id="achievement-list" class="achievement-grid"></div>
+      <p class="achievements-note">تُحتسب سلسلة الاستمرار من أيام النشاط المسجلة ابتداءً من تفعيل سجل التقرير الأسبوعي.</p>
+    </section>\n\n
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 
     <section class="how-section">
       <div><span class="eyebrow">طريقة بسيطة ونافعة</span><h2>اجعل للحفظ وِردًا</h2><p>اختر مقدارًا يسيرًا، وكرره، ثم راجعه في اليوم التالي. رِواق يساعدك على تنظيم ذلك دون تشتيت.</p></div>
