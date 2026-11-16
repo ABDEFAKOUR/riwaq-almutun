@@ -526,3 +526,143 @@ body.recall-page{min-height:100vh;background:radial-gradient(ellipse at 50% 0%,#
 .recall-page .recall-note{color:#9eb2ac;font-size:11px;line-height:1.9;text-align:center;max-width:700px;margin:20px auto 0}.recall-bottom-ornament{margin:22px auto 0;text-align:center;color:#c7a96e;font-family:Amiri,serif;font-size:13px;letter-spacing:.08em}
 @media(max-width:620px){.recall-page .topbar.recall-topbar{height:68px;padding:0 13px}.recall-page .recall-shell{padding:25px 0 38px}.recall-page .recall-head{align-items:flex-start;flex-direction:column;gap:10px}.recall-live-mark{align-self:flex-start}.recall-page .recall-card{padding:20px 15px}.recall-page .recall-actions{display:grid;grid-template-columns:1fr 1fr}.recall-page .recall-actions button:first-child{grid-column:1/-1}.recall-page .recall-actions button{width:100%;min-width:0}.recall-page .recall-transcript{min-height:230px;padding:19px 13px}.recall-page .recall-meta{align-items:flex-start;flex-direction:column}}
 @media(prefers-reduced-motion:reduce){.recall-page *{scroll-behavior:auto}}
+
+
+
+/* هوية بصرية موحّدة لبقية التطبيق على نمط مجلس الاستظهار */
+body:not(.recall-page){
+  --cream:#071b20;--paper:#102b32;--ink:#f4eee2;--muted:#afc0bb;--line:rgba(211,180,119,.24);
+  --green:#e7d2a5;--green2:#d5b878;--gold:#d2b477;--shadow:0 18px 48px rgba(0,0,0,.22);
+  min-height:100vh;background:radial-gradient(ellipse at 50% 0%,#17414a 0%,#0b2930 42%,#06191e 100%);color:#f4eee2;
+}
+body:not(.recall-page) .topbar{
+  height:76px;padding:0 max(4vw,20px);background:rgba(4,22,27,.94);
+  border-bottom:1px solid rgba(202,169,111,.28);backdrop-filter:blur(12px);
+}
+body:not(.recall-page) .brand{color:#f5e8ca}
+body:not(.recall-page) .brand-mark{border-color:#c8a96b;color:#e7ce98}
+body:not(.recall-page) .brand small{color:#b8c7c2}
+body:not(.recall-page) .menu-toggle{background:#102f36;border-color:rgba(205,174,119,.35);color:#e8d3a6}
+body:not(.recall-page) .top-actions .button-outline{
+  border-color:rgba(205,174,119,.4);color:#ead9b7;background:rgba(255,255,255,.025)
+}
+body:not(.recall-page) .top-actions .button-outline:hover,
+body:not(.recall-page) .menu-toggle:hover{background:rgba(210,180,122,.12);border-color:#d2b477}
+body:not(.recall-page) .status{color:#b9c9c4}
+body:not(.recall-page) .container{width:min(1160px,92%);padding-top:28px;padding-bottom:46px}
+body:not(.recall-page) .hero{
+  background:linear-gradient(135deg,#123941,#0b252c 72%);border:1px solid rgba(210,180,122,.34);
+  border-radius:24px;box-shadow:var(--shadow);color:#f5eee0;
+}
+body:not(.recall-page) .hero h1{color:#f6e9cc}
+body:not(.recall-page) .hero h1 em{color:#d8bd82}
+body:not(.recall-page) .hero p{color:#b9c9c4}
+body:not(.recall-page) .eyebrow{color:#d4b77b}
+body:not(.recall-page) .button-primary,
+body:not(.recall-page) .filter.active{background:#b99556;border-color:#b99556;color:#10282d}
+body:not(.recall-page) .button-outline{border-color:rgba(205,174,119,.4);color:#ead9b7;background:rgba(255,255,255,.025)}
+body:not(.recall-page) .button-ghost{color:#c2cfc9}
+body:not(.recall-page) .button-light{background:#e8d5aa;color:#10282d}
+body:not(.recall-page) .stats-grid{gap:13px}
+body:not(.recall-page) .stat-card,
+body:not(.recall-page) .daily-review,
+body:not(.recall-page) .weekly-report,
+body:not(.recall-page) .achievements-section,
+body:not(.recall-page) .progress-panel,
+body:not(.recall-page) .study-panel,
+body:not(.recall-page) .settings-panel,
+body:not(.recall-page) .overdue-alert,
+body:not(.recall-page) .matn-card,
+body:not(.recall-page) .steps div,
+body:not(.recall-page) .matn-mastery-card,
+body:not(.recall-page) .daily-log-row{
+  background:linear-gradient(145deg,rgba(17,47,54,.98),rgba(11,35,41,.98));
+  border:1px solid rgba(210,180,122,.25);color:#f1eadc;box-shadow:var(--shadow);
+}
+body:not(.recall-page) .stat-icon,
+body:not(.recall-page) .matn-card .tag,
+body:not(.recall-page) .pill,
+body:not(.recall-page) .icon-button,
+body:not(.recall-page) .progress-item-number{
+  background:rgba(210,180,122,.13);color:#e2c78e
+}
+body:not(.recall-page) .stat-card strong,
+body:not(.recall-page) .section-heading h2,
+body:not(.recall-page) .study-head h2,
+body:not(.recall-page) .how-section h2,
+body:not(.recall-page) .matn-card h3,
+body:not(.recall-page) .daily-review-copy h2,
+body:not(.recall-page) .progress-panel-head h2,
+body:not(.recall-page) .settings-panel .section-heading h2,
+body:not(.recall-page) .matn-mastery-head strong,
+body:not(.recall-page) .matn-mastery-head span,
+body:not(.recall-page) .daily-log-row strong{color:#e8d2a4}
+body:not(.recall-page) .stat-card small,
+body:not(.recall-page) .matn-card p,
+body:not(.recall-page) .daily-review-copy p,
+body:not(.recall-page) .how-section p,
+body:not(.recall-page) .settings-help,
+body:not(.recall-page) .matn-mastery-card small{color:#afc0bb}
+body:not(.recall-page) .search-box,
+body:not(.recall-page) .filter,
+body:not(.recall-page) .jump select,
+body:not(.recall-page) .daily-plan,
+body:not(.recall-page) .memorize-card,
+body:not(.recall-page) .recitation-panel,
+body:not(.recall-page) .similar-group,
+body:not(.recall-page) .progress-item,
+body:not(.recall-page) .empty-state{
+  background:#0b252c;border-color:rgba(210,180,122,.24);color:#f1eadc
+}
+body:not(.recall-page) .search-box input,
+body:not(.recall-page) input,
+body:not(.recall-page) select,
+body:not(.recall-page) textarea{color:#f1eadc}
+body:not(.recall-page) input::placeholder{color:#91a7a1}
+body:not(.recall-page) .matn-text,
+body:not(.recall-page) .similar-item p{color:#f0e8d9}
+body:not(.recall-page) .similar-item{border-color:rgba(210,180,122,.2)}
+body:not(.recall-page) .similar-note,
+body:not(.recall-page) .progress-item-copy strong,
+body:not(.recall-page) .progress-item-arrow,
+body:not(.recall-page) .matn-card button{color:#dfc58f}
+body:not(.recall-page) .daily-plan-count strong{color:#e8d2a4}
+body:not(.recall-page) .daily-goal-track,
+body:not(.recall-page) .matn-mastery-track,
+body:not(.recall-page) .session-progress-track{background:#203e43}
+body:not(.recall-page) .daily-goal-track span,
+body:not(.recall-page) .matn-mastery-track span,
+body:not(.recall-page) .session-progress-track span{background:#c5a365}
+body:not(.recall-page) .how-section{border-color:rgba(210,180,122,.24)}
+body:not(.recall-page) footer{background:#06171c;color:#9fb4ad;border-top:1px solid rgba(210,180,122,.2)}
+body:not(.recall-page) footer strong{color:#e8d2a4}
+body:not(.recall-page) .app-menu{
+  background:#0b252c;color:#f1eadc;border-inline-end:1px solid rgba(210,180,122,.25)
+}
+body:not(.recall-page) .app-menu-head{border-color:rgba(210,180,122,.22)}
+body:not(.recall-page) .app-menu-head strong{color:#e8d2a4}
+body:not(.recall-page) .app-menu-head small,
+body:not(.recall-page) .app-menu-foot{color:#a9bcb5}
+body:not(.recall-page) .app-menu-links a{color:#e8eee9}
+body:not(.recall-page) .app-menu-links a span,
+body:not(.recall-page) .app-menu-links a:hover,
+body:not(.recall-page) .app-menu-links a[aria-current="page"]{
+  background:rgba(210,180,122,.13);color:#e8d2a4
+}
+body:not(.recall-page) .menu-close{color:#ead9b7;border-color:rgba(210,180,122,.3)}
+body:not(.recall-page) .overdue-alert{background:linear-gradient(145deg,#342723,#251d1c);color:#f3d2c5;border-color:#805447}
+body:not(.recall-page) .overdue-alert p{color:#d5aaa0}
+body:not(.recall-page) .content-status,
+body:not(.recall-page) .study-warning{background:#382f20;color:#f1d99e;border-color:#806b3e}
+body:not(.recall-page) .recitation-transcript,
+body:not(.recall-page) .recitation-original{background:#081f25;color:#eee5d5;border-color:rgba(210,180,122,.22)}
+body:not(.recall-page) .recitation-note,
+body:not(.recall-page) .study-tip,
+body:not(.recall-page) .weekly-note,
+body:not(.recall-page) .achievements-note{color:#a9bcb5}
+body:not(.recall-page) [data-theme=dark]{color:#f1eadc}
+@media(max-width:760px){
+  body:not(.recall-page) .container{width:calc(100% - 28px);padding-top:20px}
+  body:not(.recall-page) .topbar{height:auto;min-height:72px;padding:10px 14px}
+  body:not(.recall-page) .hero{margin-top:20px}
+}
