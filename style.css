@@ -465,3 +465,10 @@ body.settings-route .daily-plan { flex: 1 1 100%; max-width: none; }
 [data-theme=dark] .app-menu-links a span,[data-theme=dark] .app-menu-links a:hover,[data-theme=dark] .app-menu-links a[aria-current="page"]{background:#21332c;color:#8fcfb2}
 body.menu-open{overflow:hidden}
 @media(prefers-reduced-motion:reduce){.app-menu{transition:none}}
+
+
+/* شعار رِواق المتون في القائمة والواجهة الرئيسية */
+.app-menu-brand{display:flex;align-items:center;gap:12px;min-width:0}
+.menu-logo{width:58px;height:58px;flex:none;object-fit:contain;border-radius:14px}
+.hero-logo{display:block;width:76px;height:76px;object-fit:contain;border-radius:19px;margin:0 0 14px;box-shadow:0 8px 24px rgba(0,0,0,.12)}
+@media(max-width:760px){.menu-logo{width:52px;height:52px}.hero-logo{width:66px;height:66px}}
