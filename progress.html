@@ -109,6 +109,22 @@
       <p class="weekly-note">يبدأ سجل النشاط من تاريخ تفعيل التقرير، ولا تُحتسب بيانات الأيام السابقة غير المسجلة. حالات الحفظ تشمل محفوظاتك الحالية.</p>
     </section>
 
+    <section id="overdue-alert" class="overdue-alert hidden" aria-live="polite" aria-label="تنبيه المراجعات المتأخرة">
+      <div><strong>تنبيه المراجعة: لديك <span id="overdue-alert-count">0</span> مقطعًا مستحقًا</strong><p id="overdue-alert-detail">ابدأ بالأقدم استحقاقًا.</p></div>
+      <button id="overdue-review-btn" class="button button-primary" type="button">ابدأ المراجعة الآن</button>
+    </section>
+
+    <section class="smart-mastery-section section" aria-label="نسبة إتقان كل متن">
+      <div class="section-heading"><div><span class="eyebrow">قياس التقدم</span><h2>إتقانك لكل متن</h2></div></div>
+      <div id="matn-mastery-list" class="matn-mastery-list"></div>
+    </section>
+
+    <section class="daily-log-section section" aria-label="السجل اليومي للحفظ والمراجعة">
+      <div class="section-heading"><div><span class="eyebrow">مواظبتك اليومية</span><h2>سجل آخر 7 أيام</h2></div></div>
+      <div id="daily-log-list" class="daily-log-list"></div>
+      <p class="weekly-note">يُسجّل هذا النشاط على جهازك ويظل متاحًا دون اتصال بالإنترنت.</p>
+    </section>
+
     <section class="achievements-section section" aria-label="إنجازاتي">
       <div class="section-heading achievements-heading">
         <div><span class="eyebrow">خطواتك تستحق التقدير</span><h2>إنجازاتي</h2></div>
