@@ -47,7 +47,7 @@
   });
   // تمييز الصفحة أو القسم المفتوح حالياً داخل القائمة.
   const currentUrl = new URL(window.location.href);
-  const normalizePath = path => path.replace(/\\/+$/, "") || "/";
+  const normalizePath = path => path.replace(/\/+$/, "") || "/";
   const currentPath = normalizePath(currentUrl.pathname);
   menu.querySelectorAll("[data-menu-link]").forEach(link => {
     const linkUrl = new URL(link.href, window.location.href);
