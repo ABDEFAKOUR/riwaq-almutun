@@ -8,7 +8,7 @@
   <title>رِواق المتون | الأقسام الرئيسية</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css"><script>(function(){try{var p=JSON.parse(localStorage.getItem("riwaq-prefs")||"{}");document.documentElement.dataset.theme=p.theme||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}catch(e){document.documentElement.dataset.theme="light"}})();</script>
 </head>
 <body class="home-gateway">
   <header class="topbar gateway-topbar">
@@ -16,6 +16,7 @@
       <span class="brand-mark">رِ</span><span><strong>رِواق المتون</strong><small>رفيقك في طلب العلم</small></span>
     </a>
     <span class="gateway-welcome">مرحباً بك في رِواق المتون</span>
+    <button id="theme-btn" class="button button-outline small" type="button" aria-label="تفعيل الوضع الليلي">◐</button>
   </header>
   <main class="gateway-main">
     <section class="gateway-intro">
@@ -46,5 +47,6 @@
     </nav>
   </main>
   <footer class="gateway-footer"><strong>رِواق المتون</strong><span>صُنع لخدمة طالب العلم</span></footer>
+  <script src="theme.js" defer></script>
 </body>
 </html>
