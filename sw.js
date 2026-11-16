@@ -1,4 +1,4 @@
-const CACHE = "riwaq-v39";
+const CACHE = "riwaq-v40";
 const CORE_FILES = [
   "./",
   "./index.html",
@@ -13,7 +13,7 @@ const CORE_FILES = [
   "./menu.js",
   "./mutun.json",
   "./manifest.webmanifest",
-  "./icon.png"
+  "./icon.svg"
 ];
 
 self.addEventListener("install", event => {
