@@ -61,7 +61,7 @@
     });
 
     const currentUrl = new URL(window.location.href);
-    const normalizePath = path => path.replace(/\\/+$/, "") || "/";
+    const normalizePath = path => path.replace(/\/+$/, "") || "/";
     menu.querySelectorAll("[data-menu-link]").forEach(link => {
       const linkUrl = new URL(link.getAttribute("href"), window.location.href);
       const samePath = normalizePath(linkUrl.pathname) === normalizePath(currentUrl.pathname);
