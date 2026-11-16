@@ -1,4 +1,4 @@
-const CACHE = "riwaq-v25";
+const CACHE = "riwaq-v27";
 const CORE_FILES = [
   "./",
   "./index.html",
@@ -10,6 +10,7 @@ const CORE_FILES = [
   "./istidhar.js",
   "./style.css",
   "./app.js",
+  "./menu.js",
   "./mutun.json",
   "./manifest.webmanifest",
   "./icon.svg"

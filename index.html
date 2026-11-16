@@ -12,6 +12,7 @@
 </head>
 <body>
   <header class="topbar">
+    <button id="menu-toggle" class="menu-toggle" type="button" aria-label="فتح القائمة" aria-controls="app-menu" aria-expanded="false"><span aria-hidden="true">☰</span></button>
     <a class="brand" href="#" aria-label="رواق المتون - الرئيسية">
       <span class="brand-mark">رِ</span>
       <span><strong>رِواق المتون</strong><small>رفيقك في حفظ العلم</small></span>
@@ -25,6 +26,19 @@
     </div>
   </header>
 
+  <button id="menu-backdrop" class="menu-backdrop" type="button" aria-label="إغلاق القائمة" hidden></button>
+  <aside id="app-menu" class="app-menu" aria-label="القائمة الرئيسية" aria-hidden="true" hidden>
+    <div class="app-menu-head"><div><strong>رِواق المتون</strong><small>تنقّل بين صفحات التطبيق</small></div><button id="menu-close" class="menu-close" type="button" aria-label="إغلاق القائمة">×</button></div>
+    <nav class="app-menu-links" aria-label="صفحات التطبيق">
+      <a href="./index.html" data-menu-link><span aria-hidden="true">⌂</span> الرئيسية</a>
+      <a href="./index.html#library" data-menu-link><span aria-hidden="true">▤</span> مكتبة المتون</a>
+      <a href="./index.html#library" data-menu-link><span aria-hidden="true">🎙</span> الاستظهار والتسميع</a>
+      <a href="./index.html#daily-review" data-menu-link><span aria-hidden="true">↻</span> مراجعة اليوم</a>
+      <a href="./progress.html" data-menu-link><span aria-hidden="true">▥</span> التقدم في الحفظ</a>
+      <a href="./settings.html" data-menu-link><span aria-hidden="true">⚙</span> الإعدادات</a>
+    </nav>
+    <p class="app-menu-foot">رِواق المتون · رفيقك في حفظ العلم</p>
+  </aside>
   <main class="container">
     <section class="hero">
       <div class="hero-copy">
@@ -40,7 +54,7 @@
       </div>
     </section>
 
-<section class="daily-review" aria-label="مراجعة اليوم">
+<section id="daily-review" class="daily-review" aria-label="مراجعة اليوم">
       <div class="daily-review-copy">
         <span class="eyebrow">وردك اليوم</span>
         <h2>مراجعة المحفوظات</h2>
@@ -194,6 +208,7 @@
   </main>
 
   <footer><strong>رِواق المتون</strong><span>نسخة أولية تجريبية · المحتوى قابل للمراجعة والإضافة</span><span>صُنع لخدمة طالب العلم</span></footer>
+  <script src="menu.js" defer></script>
   <script src="app.js" defer></script>
 </body>
 </html>

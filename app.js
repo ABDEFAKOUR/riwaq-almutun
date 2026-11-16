@@ -726,3 +726,5 @@ window.addEventListener("appinstalled", () => {
 });
 
 applyPrefs(); updateNetworkStatus(); loadLibrary();
+
+
