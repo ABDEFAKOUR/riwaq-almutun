@@ -1,26 +1,99 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#173d32"><title>الوسائط التعليمية | رِواق المتون</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css"><script>(function(){try{var p=JSON.parse(localStorage.getItem("riwaq-prefs")||"{}");document.documentElement.dataset.theme=p.theme||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}catch(e){document.documentElement.dataset.theme="light"}})();</script><style>
-.audio-library{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
-.audio-matn-card{display:flex;flex-direction:column;gap:0;overflow:hidden;border:1px solid var(--line);border-radius:18px;background:var(--surface,rgba(20,70,62,.18));box-shadow:0 8px 22px rgba(0,0,0,.10)}
-.audio-art{height:190px;display:grid;place-items:center;border-bottom:1px solid rgba(194,155,82,.55);background:radial-gradient(circle at 50% 38%,rgba(194,155,82,.24),rgba(8,39,37,.92))}
-.audio-art svg{width:190px;height:150px;filter:drop-shadow(0 8px 12px rgba(0,0,0,.28))}
-.audio-matn-info{width:100%;box-sizing:border-box;padding:18px}
-.audio-matn-info h3{margin:0 0 5px;color:var(--green);font-family:Amiri,serif;font-size:1.4rem}
-.audio-matn-info p{margin:0 0 14px;color:var(--muted);font-size:.9rem}
-.audio-matn-info audio{display:block;width:100%}
-@media(max-width:700px){.audio-library{grid-template-columns:1fr;gap:15px}.audio-art{height:170px}.audio-art svg{height:140px}}
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#032b2a">
+<title>سماع المتون | رِواق المتون</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css">
+<script>(function(){try{var p=JSON.parse(localStorage.getItem("riwaq-prefs")||"{}");document.documentElement.dataset.theme=p.theme||"dark"}catch(e){document.documentElement.dataset.theme="dark"}})();</script>
+<style>
+:root{--media-bg:#032b2a;--media-panel:#063936;--media-gold:#d9a744;--media-gold-light:#f0c66b;--media-cream:#f5edda;--media-muted:#d4d0c1}
+body{background:var(--media-bg)!important;color:var(--media-cream)!important}
+.topbar{background:linear-gradient(180deg,#012322,#032b2a)!important;border-bottom:1px solid rgba(217,167,68,.7)!important;position:relative}
+.topbar:after{content:"";position:absolute;bottom:-1px;left:42%;width:16%;height:5px;background:var(--media-gold);clip-path:polygon(0 100%,10% 0,90% 0,100% 100%)}
+.topbar .brand strong,.topbar .brand small{color:var(--media-cream)!important}
+.topbar .brand-mark{border-color:var(--media-gold)!important;color:var(--media-gold)!important}
+.gateway-theme-actions .button{border-color:rgba(217,167,68,.65)!important;color:var(--media-cream)!important;background:transparent!important}
+.media-page{max-width:1480px;margin:0 auto;padding:0 28px 40px;position:relative}
+.media-hero{text-align:center;padding:34px 0 30px;position:relative;overflow:hidden}
+.media-hero:before{content:"";position:absolute;inset:0;opacity:.28;background:linear-gradient(180deg,transparent,#07504a),radial-gradient(ellipse at 10% 100%,#14766b 0,transparent 42%),radial-gradient(ellipse at 90% 100%,#14766b 0,transparent 42%);pointer-events:none}
+.media-hero .eyebrow{color:var(--media-gold-light);font-weight:700;position:relative}
+.media-hero h1{font-family:Amiri,serif;color:var(--media-gold-light)!important;font-size:clamp(2.2rem,4vw,3.4rem);margin:6px 0}
+.media-hero p{color:#f1eee5!important;font-size:1.15rem;margin:0;position:relative}
+.media-hero .book-emblem{display:block;margin:0 auto 8px;width:52px;height:40px;color:var(--media-gold)}
+.media-section{margin:12px 0 28px}
+.media-section-title{text-align:center;font-family:Amiri,serif;color:var(--media-gold-light);font-size:1.9rem;margin:0 0 20px}
+.audio-list{display:grid;gap:16px}
+.audio-row{direction:rtl;display:grid;grid-template-columns:190px 245px minmax(220px,1fr) 120px;align-items:center;gap:18px;min-height:140px;padding:12px 18px;border:2px solid var(--media-gold);border-radius:25px;background:linear-gradient(105deg,rgba(8,67,61,.98),rgba(3,45,43,.98));box-shadow:inset 0 0 0 1px rgba(240,198,107,.12),0 8px 22px rgba(0,0,0,.16);position:relative;overflow:hidden}
+.audio-row:after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.15;background:linear-gradient(135deg,transparent 65%,#0b7669)}
+.audio-cover{width:170px;height:118px;display:grid;place-items:center;position:relative;z-index:1}
+.audio-cover svg{width:100%;height:100%;filter:drop-shadow(0 7px 8px rgba(0,0,0,.45))}
+.audio-title{border-left:3px solid var(--media-gold);padding:8px 22px 8px 12px;position:relative;z-index:1}
+.audio-title h3{font-family:Amiri,serif;font-size:1.55rem;color:#fff4d9;margin:0 0 5px}
+.audio-title p{font-size:1.05rem;color:#f2e7cd;margin:0}
+.audio-player{width:100%;position:relative;z-index:1}
+.audio-player audio{width:100%;height:56px;display:block}
+.download-audio{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none!important;border:2px solid var(--media-gold);border-radius:20px;padding:12px 10px;color:var(--media-gold-light)!important;font-weight:800;white-space:nowrap;background:rgba(0,0,0,.08)}
+.download-audio:hover{background:rgba(217,167,68,.15)}
+.download-audio svg{width:21px;height:21px;fill:currentColor}
+.media-divider{height:2px;width:100%;margin:28px 0;background:linear-gradient(90deg,transparent,var(--media-gold),transparent)}
+.video-panel{border:2px solid var(--media-gold);border-radius:24px;padding:22px;background:linear-gradient(120deg,#073e39,#032b2a);text-align:center}
+.video-panel p{color:var(--media-muted)}
+.video-actions{display:flex;justify-content:center;align-items:center;gap:14px;flex-wrap:wrap;margin:14px 0}
+.video-pick{display:inline-flex;align-items:center;gap:8px;border:2px solid var(--media-gold);border-radius:16px;padding:10px 18px;color:var(--media-gold-light);cursor:pointer;font-weight:700}
+#video-player{display:block;width:100%;max-height:65vh;background:#000;border-radius:16px;margin-top:18px}
+#video-name{color:var(--media-muted);font-size:.9rem}
+.media-footer{text-align:center;color:var(--media-gold-light);padding:22px 0 8px;border-top:1px solid rgba(217,167,68,.35);font-family:Amiri,serif;font-size:1.15rem}
+.media-footer:before{content:"۞";display:block;color:var(--media-gold);font-size:2rem;line-height:1}
+@media(max-width:900px){.audio-row{grid-template-columns:135px minmax(170px,220px) minmax(180px,1fr);gap:12px}.audio-cover{width:125px;height:105px}.download-audio{grid-column:1/-1;justify-self:end;padding:8px 18px}.audio-title{padding-right:14px}}
+@media(max-width:620px){.media-page{padding:0 12px 28px}.media-hero{padding:26px 0 22px}.audio-row{grid-template-columns:95px minmax(0,1fr);gap:8px 12px;padding:12px;border-radius:19px}.audio-cover{width:92px;height:85px;grid-row:1}.audio-title{border-left:0;padding:0 8px;grid-column:2}.audio-title h3{font-size:1.2rem}.audio-title p{font-size:.88rem}.audio-player{grid-column:1/-1}.download-audio{grid-column:1/-1;justify-self:stretch}.media-section-title{font-size:1.6rem}}
 </style></head>
-<body><header class="topbar"><a class="brand" href="./index.html"><span class="brand-mark">رِ</span><span><strong>رِواق المتون</strong><small>الوسائط التعليمية</small></span></a><div class="gateway-theme-actions"><button id="theme-btn" class="button button-outline small" type="button" aria-label="تفعيل الوضع الليلي">◐</button><a class="button button-outline small" href="./index.html">الرئيسية ←</a></div></header>
-<main class="container"><section class="gateway-intro" style="padding:48px 0 24px"><span class="eyebrow">التعلم بالسماع والمشاهدة</span><h1>الوسائط التعليمية</h1><p>استمع إلى المتون الصوتية وشاهد شروحها المرئية.</p></section>
-<section class="settings-panel section" style="background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:24px;margin-bottom:22px"><h2 style="font-family:Amiri,serif;color:var(--green)">سماع المتون (MP3)</h2>
-<div class="audio-library" style="display:grid;gap:16px">
-<article class="audio-matn-card"><div class="audio-art" role="img" aria-label="رسم تعبيري عن ثلاثة الأصول"><svg viewBox="0 0 160 120" aria-hidden="true"><path d="M25 91 80 105 135 91 80 77Z" fill="#b98d45"/><path d="M31 78 80 91 129 78 80 65Z" fill="#153e38" stroke="#d8b66c" stroke-width="3"/><path d="M38 60 80 72 122 60 80 48Z" fill="#8c5c2b" stroke="#e2c27c" stroke-width="3"/><path d="M45 42 80 52 115 42 80 32Z" fill="#174d46" stroke="#d8b66c" stroke-width="3"/><path d="M80 32v40" stroke="#e7cc8b" stroke-width="2"/><path d="M60 52q20-15 40 0" fill="none" stroke="#e7cc8b" stroke-width="2"/></svg></div><div class="audio-matn-info"><h3>ثلاثة الأصول</h3><p>تسجيل صوتي للمتن</p><audio controls preload="metadata"><source src="./audio/0201AlUsulAtThalaath_AbdullahAzZwary.mp3" type="audio/mpeg">متصفحك لا يدعم تشغيل الصوت.</audio></div></article>
-<article class="audio-matn-card"><div class="audio-art" role="img" aria-label="رسم تعبيري عن القواعد الأربع"><svg viewBox="0 0 160 120" aria-hidden="true"><path d="M80 22v72M43 35h74M50 35l-18 39h36L50 35Zm60 0L92 74h36l-18-39Z" fill="none" stroke="#e4c47d" stroke-width="4" stroke-linejoin="round"/><path d="M30 76q20 18 40 0M90 76q20 18 40 0M62 97h36M80 94v-8" fill="none" stroke="#d6ad5e" stroke-width="4" stroke-linecap="round"/><circle cx="80" cy="21" r="6" fill="#e7c77f"/></svg></div><div class="audio-matn-info"><h3>القواعد الأربع</h3><p>تسجيل صوتي للمتن</p><audio controls preload="metadata"><source src="./audio/0202AlQawaidAlArba_AbdullahAzZwary.mp3" type="audio/mpeg">متصفحك لا يدعم تشغيل الصوت.</audio></div></article>
-<article class="audio-matn-card"><div class="audio-art" role="img" aria-label="رسم تعبيري عن نواقض الإسلام"><svg viewBox="0 0 160 120" aria-hidden="true"><path d="M80 15 125 32v31q0 29-45 45Q35 92 35 63V32Z" fill="#174a43" stroke="#dfbd72" stroke-width="4"/><path d="M80 29 112 41v22q0 20-32 34Q48 83 48 63V41Z" fill="none" stroke="#c99e50" stroke-width="2"/><path d="M63 52q17-15 34 0M63 66q17 15 34 0" fill="none" stroke="#e8d39b" stroke-width="3"/><circle cx="80" cy="59" r="7" fill="#d9b76d"/></svg></div><div class="audio-matn-info"><h3>نواقض الإسلام</h3><p>تسجيل صوتي للمتن</p><audio controls preload="metadata"><source src="./audio/0203NawaaqidAlIslaam_AbdullahAzZwary.mp3" type="audio/mpeg">متصفحك لا يدعم تشغيل الصوت.</audio></div></article>
-<article class="audio-matn-card"><div class="audio-art" role="img" aria-label="رسم تعبيري عن الأربعون النووية"><svg viewBox="0 0 160 120" aria-hidden="true"><path d="M25 96V65q0-12 12-12t12 12v31M111 96V65q0-12 12-12t12 12v31" fill="#174a43" stroke="#d8b66c" stroke-width="3"/><path d="M55 96V62q0-25 25-25t25 25v34Z" fill="#1a5149" stroke="#e4c47d" stroke-width="3"/><path d="M70 96V67q0-10 10-10t10 10v29" fill="#0a2928" stroke="#e4c47d" stroke-width="2"/><path d="M80 17v20M74 22h12" stroke="#e4c47d" stroke-width="3"/><path d="M40 102h80" stroke="#d8b66c" stroke-width="4" stroke-linecap="round"/></svg></div><div class="audio-matn-info"><h3>الأربعون النووية</h3><p>تسجيل صوتي للمتن</p><audio controls preload="metadata"><source src="./audio/0204AlArbaunAnNawawiyah_AbdullahAzZwary.mp3" type="audio/mpeg">متصفحك لا يدعم تشغيل الصوت.</audio></div></article>
-</div>
-<hr style="border:0;border-top:1px solid var(--line);margin:22px 0">
-<h3>تشغيل ملف آخر من جهازك</h3><label class="button button-primary" for="audio-file">اختيار ملف صوتي</label><input id="audio-file" type="file" accept="audio/*,.mp3" hidden><p id="audio-name" style="color:var(--muted);font-size:13px">لم يتم اختيار ملف بعد.</p><audio id="audio-player" controls style="width:100%"></audio></section>
-<section class="settings-panel section" style="background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:24px"><h2 style="font-family:Amiri,serif;color:var(--green)">فيديو شرح المتون (MP4)</h2><label class="button button-primary" for="video-file">اختيار ملف فيديو</label><input id="video-file" type="file" accept="video/*,.mp4" hidden><p id="video-name" style="color:var(--muted);font-size:13px">لم يتم اختيار ملف بعد.</p><video id="video-player" controls playsinline style="width:100%;max-height:65vh;background:#111;border-radius:12px"></video><p style="font-size:12px;color:var(--muted)">ملاحظة: هذه النسخة تشغّل الملفات التي تختارها من جهازك؛ لم تتم إضافة مكتبة صوتية أو مرئية جاهزة بعد.</p></section></main>
-<script>const urls={};function bindFile(inputId,playerId,nameId){document.getElementById(inputId).addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];if(!f)return;if(urls[playerId])URL.revokeObjectURL(urls[playerId]);urls[playerId]=URL.createObjectURL(f);const p=document.getElementById(playerId);p.src=urls[playerId];p.load();document.getElementById(nameId).textContent=f.name})}bindFile('audio-file','audio-player','audio-name');bindFile('video-file','video-player','video-name');</script><script src="theme.js" defer></script></body></html>
+<body>
+<header class="topbar">
+<a class="brand" href="./index.html"><span class="brand-mark">رِ</span><span><strong>رِواق المتون</strong><small>الوسائط التعليمية</small></span></a>
+<div class="gateway-theme-actions"><button id="theme-btn" class="button button-outline small" type="button" aria-label="تفعيل الوضع الليلي">☼</button><a class="button button-outline small" href="./index.html">← الرئيسية</a></div>
+</header>
+<main class="media-page">
+<section class="media-hero">
+<svg class="book-emblem" viewBox="0 0 64 48" aria-hidden="true"><path d="M32 11C22 1 9 4 5 7v31c10-5 19-2 27 5 8-7 17-10 27-5V7C55 4 42 1 32 11Z" fill="none" stroke="currentColor" stroke-width="3"/><path d="M32 11v32M9 12c8-2 15 1 20 6M55 12c-8-2-15 1-20 6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+<span class="eyebrow">رِواق المتون • الوسائط التعليمية</span>
+<h1>سماع المتون</h1><p>استمع إلى المتون الصوتية واستزد من علمك</p>
+</section>
+<section class="media-section" aria-labelledby="audio-heading">
+<h2 class="media-section-title" id="audio-heading">سماع المتون (MP3)</h2>
+<div class="audio-list">
+<article class="audio-row">
+<div class="audio-cover" role="img" aria-label="كتب علمية على حامل"><svg viewBox="0 0 180 130"><path d="M22 94 89 113 157 92 91 74Z" fill="#b17b31" stroke="#f0c66b" stroke-width="3"/><path d="M31 76 91 94 148 75 89 58Z" fill="#123d37" stroke="#e8bd60" stroke-width="3"/><path d="M37 56 92 73 143 55 89 39Z" fill="#8d4e25" stroke="#edc46b" stroke-width="3"/><path d="M49 37 91 50 132 36 91 24Z" fill="#154a40" stroke="#eac56f" stroke-width="3"/><path d="M48 37 50 51 91 64 91 50M132 36 130 49 91 64" fill="none" stroke="#d8a94e" stroke-width="2"/><path d="M64 39q27-17 54-1M64 43q27-17 54-1" fill="none" stroke="#f4d98e" stroke-width="2"/><path d="M22 94v8l67 20 68-22v-8" fill="#70431e" stroke="#e8bd60" stroke-width="2"/></svg></div>
+<div class="audio-title"><h3>ثلاثة الأصول</h3><p>الشيخ عبدالله الزواوي</p></div>
+<div class="audio-player"><audio controls preload="metadata"><source src="./audio/0201AlUsulAtThalaath_AbdullahAzZwary.mp3" type="audio/mpeg"></audio></div>
+<a class="download-audio" href="./audio/0201AlUsulAtThalaath_AbdullahAzZwary.mp3" download><svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2ZM19 9h-4V3H9v6H5l7 7 7-7Z"/></svg>تحميل</a>
+</article>
+<article class="audio-row">
+<div class="audio-cover" role="img" aria-label="ميزان يرمز إلى القواعد"><svg viewBox="0 0 180 130"><path d="M90 17v86M47 35h86M90 20l-43 15m43-15 43 15" stroke="#e8c16b" stroke-width="4" fill="none"/><path d="M47 35 26 79h42L47 35Zm86 0-21 44h42l-21-44Z" fill="#c18a3d" fill-opacity=".45" stroke="#f2d48b" stroke-width="3"/><path d="M26 79q21 17 42 0M112 79q21 17 42 0" fill="none" stroke="#f2d48b" stroke-width="3"/><path d="M68 104h44M90 103V90" stroke="#e8c16b" stroke-width="5" stroke-linecap="round"/><circle cx="90" cy="17" r="7" fill="#f1d58f"/></svg></div>
+<div class="audio-title"><h3>القواعد الأربع</h3><p>الشيخ عبدالله الزواوي</p></div>
+<div class="audio-player"><audio controls preload="metadata"><source src="./audio/0202AlQawaidAlArba_AbdullahAzZwary.mp3" type="audio/mpeg"></audio></div>
+<a class="download-audio" href="./audio/0202AlQawaidAlArba_AbdullahAzZwary.mp3" download><svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2ZM19 9h-4V3H9v6H5l7 7 7-7Z"/></svg>تحميل</a>
+</article>
+<article class="audio-row">
+<div class="audio-cover" role="img" aria-label="درع مزخرف يرمز إلى نواقض الإسلام"><svg viewBox="0 0 180 130"><path d="M90 9 143 29v38q-5 35-53 54Q42 102 37 67V29Z" fill="#0b4c43" stroke="#edc46b" stroke-width="4"/><path d="M90 21 132 37v29q-5 27-42 43Q53 93 48 66V37Z" fill="none" stroke="#d9a94e" stroke-width="2"/><path d="M66 53q24-21 48 0M66 69q24 21 48 0" fill="none" stroke="#f4d78e" stroke-width="3"/><text x="90" y="65" text-anchor="middle" font-size="16" fill="#f4d78e" font-family="serif">الله</text><path d="M62 104q28 12 56 0" stroke="#e5bc61" stroke-width="3" fill="none"/></svg></div>
+<div class="audio-title"><h3>نواقض الإسلام</h3><p>الشيخ عبدالله الزواوي</p></div>
+<div class="audio-player"><audio controls preload="metadata"><source src="./audio/0203NawaaqidAlIslaam_AbdullahAzZwary.mp3" type="audio/mpeg"></audio></div>
+<a class="download-audio" href="./audio/0203NawaaqidAlIslaam_AbdullahAzZwary.mp3" download><svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2ZM19 9h-4V3H9v6H5l7 7 7-7Z"/></svg>تحميل</a>
+</article>
+<article class="audio-row">
+<div class="audio-cover" role="img" aria-label="مسجد وقباب ومآذن"><svg viewBox="0 0 180 130"><path d="M15 105V67h17v38M148 105V67h17v38" fill="#164f46" stroke="#e6bd62" stroke-width="2"/><path d="M24 67V39l-6 8 6-25 6 25-6-8M157 67V39l-6 8 6-25 6 25-6-8" fill="#e7c16b"/><path d="M44 105V72q0-33 46-46 46 13 46 46v33Z" fill="#145448" stroke="#f0c66b" stroke-width="3"/><path d="M69 105V75q0-21 21-21t21 21v30" fill="#062f2d" stroke="#edc66d" stroke-width="3"/><path d="M90 26V10m-7 8h14" stroke="#f0c66b" stroke-width="3"/><path d="M10 108h160" stroke="#e6bd62" stroke-width="4" stroke-linecap="round"/></svg></div>
+<div class="audio-title"><h3>الأربعون النووية</h3><p>الشيخ عبدالله الزواوي</p></div>
+<div class="audio-player"><audio controls preload="metadata"><source src="./audio/0204AlArbaunAnNawawiyah_AbdullahAzZwary.mp3" type="audio/mpeg"></audio></div>
+<a class="download-audio" href="./audio/0204AlArbaunAnNawawiyah_AbdullahAzZwary.mp3" download><svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2ZM19 9h-4V3H9v6H5l7 7 7-7Z"/></svg>تحميل</a>
+</article>
+</div></section>
+<div class="media-divider"></div>
+<section class="media-section" aria-labelledby="video-heading">
+<h2 class="media-section-title" id="video-heading">فيديو شرح المتون (MP4)</h2>
+<div class="video-panel"><p>شاهد شروح المتون المرئية</p><div class="video-actions"><label class="video-pick" for="video-file">＋ اختيار ملف فيديو (MP4)</label><input id="video-file" type="file" accept="video/mp4,video/*,.mp4" hidden><span id="video-name">لم يتم اختيار ملف بعد.</span></div><video id="video-player" controls playsinline></video></div>
+</section>
+<footer class="media-footer">رِواق المتون .. طريقك لحفظ متون العلم</footer>
+</main>
+<script>let videoUrl=null;document.getElementById('video-file').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];if(!f)return;if(videoUrl)URL.revokeObjectURL(videoUrl);videoUrl=URL.createObjectURL(f);const p=document.getElementById('video-player');p.src=videoUrl;p.load();document.getElementById('video-name').textContent=f.name});</script>
+<script src="theme.js" defer></script>
+</body></html>
