@@ -1,4 +1,4 @@
-const CACHE = "riwaq-v53";
+const CACHE = "riwaq-v54";
 const CORE_FILES = [
   "./",
   "./index.html",
@@ -62,7 +62,9 @@ self.addEventListener("fetch", event => {
     event.respondWith((async () => {
       try {
         const networkResponse = await fetch(request);
-        if (networkResponse.status === 206) return networkResponse;
+        // بعض خوادم الاستضافة تتجاهل Range وتعيد الملف كاملاً بحالة 200.
+        // نمرر أي استجابة ناجحة كما هي حتى لا نعتمد على نسخة Cache قديمة أو ناقصة.
+        if (networkResponse.ok) return networkResponse;
       } catch {}
 
       const cache = await caches.open(CACHE);
