@@ -18,6 +18,23 @@ body{background-color:#002624!important;background-image:radial-gradient(ellipse
 .video-pick{border-radius:18px!important}
 .video-footer{border-top:1px solid rgba(217,167,68,.45);margin-top:28px}
 
+
+/* Video page shares the exact emerald/gold Riwaq visual identity */
+body{background:#002522!important;background-image:radial-gradient(ellipse at 50% 24%,rgba(7,88,78,.5),transparent 54%),linear-gradient(180deg,#002321,#00322f 55%,#002321)!important}
+.topbar{height:98px!important;min-height:98px!important;padding:0 5.6%!important;background:linear-gradient(180deg,#00201f,#002b28)!important;position:relative!important;border-bottom:1px solid #d9a744!important}
+.topbar:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:linear-gradient(90deg,transparent 0 40%,#dcae4c 46%,#f3cc76 50%,#dcae4c 54%,transparent 60%)}
+.video-page{max-width:1536px!important;padding:0 3.1% 24px!important}
+.video-hero{min-height:151px!important;padding:28px 0 31px!important;background:radial-gradient(ellipse at 50% 100%,rgba(10,105,94,.52),transparent 66%)!important}
+.video-hero h1{font-size:clamp(2.6rem,4vw,3.3rem)!important;color:#edb94e!important}
+.video-hero p{color:#f6f0e5!important}
+.video-library{border:2px solid #e5b54f!important;border-radius:25px!important;background:linear-gradient(105deg,rgba(5,65,59,.98),rgba(1,42,40,.98))!important;box-shadow:inset 0 0 0 1px rgba(255,218,133,.18),0 8px 20px #0004!important}
+.video-item{border:2px solid rgba(229,181,79,.85)!important;border-radius:22px!important;background:linear-gradient(135deg,#07443e,#032b2a)!important}
+.video-item video{border:1px solid rgba(229,181,79,.5)!important;border-radius:15px!important}
+.video-item h2{color:#f1c66a!important}
+.video-pick{border:2px solid #e5b54f!important;color:#f1c66a!important}
+.video-footer{color:#f1c66a!important;border-top:1px solid rgba(225,177,77,.5);margin-top:26px}
+@media(max-width:620px){.topbar{height:76px!important;min-height:76px!important;padding:0 12px!important}.video-page{padding:0 10px 20px!important}}
+
 </style></head><body><header class="topbar"><a class="brand" href="./index.html"><span class="brand-mark">رِ</span><span><strong>رِواق المتون</strong><small>فيديو شرح المتون</small></span></a><div class="gateway-theme-actions"><button id="theme-btn" class="button button-outline small" type="button" aria-label="تفعيل الوضع الليلي">☼</button><a class="button button-outline small" href="./media.html">← الوسائط</a></div></header>
 <main class="video-page"><section class="video-hero"><span style="color:var(--v-light);font-weight:700">رِواق المتون • مكتبة المرئيات</span><h1>فيديو شرح المتون (MP4)</h1><p>شاهد شروح المتون العلمية في مكان واحد</p></section>
 <section class="video-library"><div class="video-tools"><label class="video-pick" for="video-files">＋ إضافة ملفات فيديو (MP4)</label><input id="video-files" type="file" accept="video/mp4,.mp4,video/*" multiple hidden><p>اختر ملفات الفيديو من جهازك لتشغيلها هنا</p></div><div class="video-items" id="video-items"><div class="video-empty" id="video-empty">لم تتم إضافة فيديوهات بعد.</div></div></section><footer class="video-footer">رِواق المتون .. طريقك لحفظ متون العلم</footer></main>
