@@ -27,6 +27,33 @@ body{background:var(--media-bg)!important;color:var(--media-cream)!important}
 .ornament-footer{text-align:center;color:var(--media-light);padding:24px 0 8px;border-top:1px solid rgba(217,167,68,.35);font:1.15rem Amiri,serif;margin-top:28px}.ornament-footer:before{content:"۞";display:block;color:var(--media-gold);font-size:2rem;line-height:1}
 @media(max-width:950px){.audio-row{grid-template-columns:130px minmax(160px,220px) minmax(180px,1fr);gap:12px}.audio-cover{width:125px;height:105px}.download-audio{grid-column:1/-1;justify-self:end;padding:8px 18px}.audio-title{padding-right:14px}}
 @media(max-width:620px){.audio-page{padding:0 12px 24px}.audio-row{grid-template-columns:88px minmax(0,1fr);gap:8px 12px;padding:12px;border-radius:19px}.audio-cover{width:88px;height:82px;grid-row:1}.audio-title{border-left:0;padding:0 8px;grid-column:2}.audio-title h2{font-size:1.2rem}.audio-title p{font-size:.88rem}.audio-player{grid-column:1/-1}.download-audio{grid-column:1/-1;justify-self:stretch}.audio-hero{padding:20px 0}}
+
+/* Reference-inspired ornamental treatment */
+body{background-color:#002624!important;background-image:radial-gradient(ellipse at 50% 20%,rgba(12,92,82,.55),transparent 58%),linear-gradient(180deg,#002322,#00332f 48%,#002624)!important}
+.topbar{min-height:98px!important;position:relative!important;padding-inline:5.5%!important;background-color:#002322!important;background-image:radial-gradient(circle at 0 0,transparent 0 34px,rgba(214,166,69,.22) 35px 37px,transparent 38px),radial-gradient(circle at 100% 0,transparent 0 34px,rgba(214,166,69,.22) 35px 37px,transparent 38px)!important}
+.topbar:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:linear-gradient(90deg,transparent 0 42%,#d9a744 46%,#d9a744 54%,transparent 58%)}
+.audio-hero{padding:16px 0 34px!important;min-height:148px;background:radial-gradient(ellipse at 50% 100%,rgba(13,105,93,.55),transparent 65%),linear-gradient(180deg,rgba(1,35,34,.3),rgba(0,48,45,.1))!important}
+.audio-hero:before{opacity:.48!important;background:radial-gradient(ellipse at 4% 100%,#0b5a52 0,transparent 34%),radial-gradient(ellipse at 96% 100%,#0b5a52 0,transparent 34%),linear-gradient(180deg,transparent,#063c38)!important}
+.audio-hero:after{content:"";position:absolute;z-index:0;left:0;right:0;bottom:0;height:82px;opacity:.38;pointer-events:none;background:linear-gradient(180deg,transparent,#002d2b),radial-gradient(ellipse at 8% 100%,#001b1c 0 14%,transparent 14.5%),radial-gradient(ellipse at 18% 100%,#001b1c 0 22%,transparent 22.5%),radial-gradient(ellipse at 87% 100%,#001b1c 0 22%,transparent 22.5%),radial-gradient(ellipse at 98% 100%,#001b1c 0 16%,transparent 16.5%)}
+.audio-hero h1{font-size:clamp(2.5rem,4vw,3.2rem)!important;text-shadow:0 3px 12px #0008}
+.book-emblem{width:64px!important;height:46px!important;margin-bottom:4px!important;filter:drop-shadow(0 2px 4px #0008)}
+.audio-row{min-height:142px!important;grid-template-columns:190px 245px minmax(220px,1fr) 120px!important;border-radius:25px!important;border-width:2px!important;background:linear-gradient(110deg,rgba(5,57,53,.98),rgba(2,43,42,.98))!important;box-shadow:inset 0 0 0 1px rgba(238,195,99,.15),0 9px 20px #0003!important}
+.audio-row:before{content:"";position:absolute;inset:5px;border:1px solid rgba(220,174,82,.2);border-radius:19px;pointer-events:none}
+.audio-row:after{opacity:.24!important;background:radial-gradient(circle at 0 0,rgba(230,188,99,.35),transparent 22%),radial-gradient(circle at 100% 100%,rgba(230,188,99,.22),transparent 22%)!important}
+.audio-cover{width:170px!important;height:124px!important;isolation:isolate}
+.audio-cover:before{content:"";position:absolute;z-index:-1;inset:2px 10px;background:linear-gradient(145deg,#f1d38c,#9a6c2c 48%,#f5d98e);clip-path:polygon(50% 0,66% 10%,88% 12%,100% 35%,95% 72%,50% 100%,5% 72%,0 35%,12% 12%,34% 10%);filter:drop-shadow(0 5px 6px #0009)}
+.audio-cover:after{content:"";position:absolute;z-index:-1;inset:8px 17px;border:2px solid #805a25;clip-path:polygon(50% 0,66% 10%,88% 12%,100% 35%,95% 72%,50% 100%,5% 72%,0 35%,12% 12%,34% 10%);opacity:.8}
+.audio-cover svg{width:84%!important;height:82%!important;filter:drop-shadow(0 5px 5px #0009)}
+.audio-title{border-left:3px solid #d9a744!important;padding:8px 22px 8px 12px!important}
+.audio-title h2{font-size:1.7rem!important;color:#fff2d7!important}
+.audio-title p{font-size:1.12rem!important;color:#f4e9d3!important}
+.audio-player audio{height:62px!important;border-radius:36px}
+.download-audio{border-radius:19px!important;border-width:2px!important;font-size:1.08rem!important;box-shadow:inset 0 0 0 1px rgba(255,220,139,.12)}
+.ornament-footer{border-top:1px solid rgba(217,167,68,.5)!important;position:relative}
+.ornament-footer:before{content:"۞";font-size:2.3rem!important;text-shadow:0 0 10px #c99b42}
+@media(max-width:950px){.audio-row{grid-template-columns:130px minmax(160px,220px) minmax(180px,1fr)!important}.audio-cover{width:125px!important;height:105px!important}}
+@media(max-width:620px){.audio-row{grid-template-columns:88px minmax(0,1fr)!important}.audio-cover{width:88px!important;height:82px!important}.audio-title h2{font-size:1.25rem!important}.topbar{min-height:76px!important}}
+
 </style></head><body>
 <header class="topbar"><a class="brand" href="./index.html"><span class="brand-mark">رِ</span><span><strong>رِواق المتون</strong><small>سماع المتون</small></span></a><div class="gateway-theme-actions"><button id="theme-btn" class="button button-outline small" type="button" aria-label="تفعيل الوضع الليلي">☼</button><a class="button button-outline small" href="./media.html">← الوسائط</a></div></header>
 <main class="audio-page"><section class="audio-hero"><svg class="book-emblem" viewBox="0 0 64 48" aria-hidden="true"><path d="M32 11C22 1 9 4 5 7v31c10-5 19-2 27 5 8-7 17-10 27-5V7C55 4 42 1 32 11Z" fill="none" stroke="currentColor" stroke-width="3"/><path d="M32 11v32M9 12c8-2 15 1 20 6M55 12c-8-2-15 1-20 6" fill="none" stroke="currentColor" stroke-width="2"/></svg><span class="eyebrow">رِواق المتون • مكتبة الصوتيات</span><h1>سماع المتون</h1><p>استمع إلى المتون الصوتية واستزد من علمك</p></section>
