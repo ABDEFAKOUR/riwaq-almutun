@@ -1,57 +1,6 @@
 <!doctype html>
-<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#032b2a"><title>فيديو شرح المتون | رِواق المتون</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css"><script>(function(){try{var p=JSON.parse(localStorage.getItem("riwaq-prefs")||"{}");document.documentElement.dataset.theme=p.theme||"dark"}catch(e){document.documentElement.dataset.theme="dark"}})();</script>
-<style>
-:root{--v-bg:#032b2a;--v-gold:#d9a744;--v-light:#f0c66b;--v-cream:#fff3d8}
-body{background:var(--v-bg)!important;color:var(--v-cream)!important}.topbar{background:linear-gradient(180deg,#012322,#032b2a)!important;border-bottom:1px solid rgba(217,167,68,.7)!important}.topbar .brand strong,.topbar .brand small{color:var(--v-cream)!important}.topbar .brand-mark{border-color:var(--v-gold)!important;color:var(--v-gold)!important}.gateway-theme-actions .button{border-color:rgba(217,167,68,.65)!important;color:var(--v-cream)!important;background:transparent!important}
-.video-page{max-width:1200px;margin:auto;padding:0 24px 35px}.video-hero{text-align:center;padding:34px 0 28px;background:radial-gradient(ellipse at 50% 100%,rgba(10,103,91,.38),transparent 68%)}.video-hero h1{font:700 clamp(2.2rem,4vw,3.4rem) Amiri,serif;color:var(--v-light);margin:5px}.video-hero p{color:#eee6d5;font-size:1.1rem}.video-library{border:2px solid var(--v-gold);border-radius:24px;padding:24px;background:linear-gradient(120deg,#073e39,#032b2a);box-shadow:0 12px 30px #0004}.video-pick{display:inline-flex;align-items:center;gap:8px;border:2px solid var(--v-gold);border-radius:16px;padding:11px 18px;color:var(--v-light);cursor:pointer;font-weight:800}.video-tools{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}.video-tools p{color:#d4d0c1;margin:0}.video-items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.video-item{border:1px solid rgba(217,167,68,.7);border-radius:18px;padding:14px;background:rgba(0,0,0,.16)}.video-item video{width:100%;max-height:380px;display:block;background:#000;border-radius:12px}.video-item h2{font:700 1.35rem Amiri,serif;color:var(--v-light);margin:12px 0 4px;overflow-wrap:anywhere}.video-item a{color:var(--v-light)}.video-empty{text-align:center;padding:35px 12px;color:#ddd2b9;border:1px dashed rgba(217,167,68,.55);border-radius:16px;grid-column:1/-1}.video-footer{text-align:center;color:var(--v-light);padding:24px 0 8px;font:1.15rem Amiri,serif}@media(max-width:700px){.video-page{padding:0 12px 24px}.video-library{padding:14px}.video-items{grid-template-columns:1fr}}
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#032b2a"><title>فيديو شرح المتون | رِواق المتون</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="media.css"><script>(function(){try{var p=JSON.parse(localStorage.getItem("riwaq-prefs")||"{}");document.documentElement.dataset.theme=p.theme||"dark"}catch(e){document.documentElement.dataset.theme="dark"}})();</script>
 
-/* Matching the MP3 page's dark emerald and gold reference theme */
-body{background-color:#002624!important;background-image:radial-gradient(ellipse at 50% 20%,rgba(12,92,82,.55),transparent 58%),linear-gradient(180deg,#002322,#00332f 48%,#002624)!important}
-.topbar{min-height:98px!important;position:relative!important;padding-inline:5.5%!important;background-color:#002322!important;border-bottom:1px solid rgba(217,167,68,.7)!important}
-.topbar:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:linear-gradient(90deg,transparent 0 42%,#d9a744 46%,#d9a744 54%,transparent 58%)}
-.video-hero{padding:28px 0 34px!important;background:radial-gradient(ellipse at 50% 100%,rgba(13,105,93,.55),transparent 65%)!important}
-.video-hero h1{font-size:clamp(2.5rem,4vw,3.2rem)!important;text-shadow:0 3px 12px #0008}
-.video-library{border:2px solid #d9a744!important;border-radius:25px!important;background:linear-gradient(110deg,rgba(5,57,53,.98),rgba(2,43,42,.98))!important;box-shadow:inset 0 0 0 1px rgba(238,195,99,.15),0 9px 20px #0003!important}
-.video-item{border:1.5px solid rgba(217,167,68,.8)!important;border-radius:20px!important;background:linear-gradient(135deg,#07443e,#032b2a)!important;padding:16px!important}
-.video-item video{border-radius:15px!important;border:1px solid rgba(217,167,68,.35)}
-.video-item h2{font-size:1.5rem!important}
-.video-pick{border-radius:18px!important}
-.video-footer{border-top:1px solid rgba(217,167,68,.45);margin-top:28px}
-
-
-/* Video page shares the exact emerald/gold Riwaq visual identity */
-body{background:#002522!important;background-image:radial-gradient(ellipse at 50% 24%,rgba(7,88,78,.5),transparent 54%),linear-gradient(180deg,#002321,#00322f 55%,#002321)!important}
-.topbar{height:98px!important;min-height:98px!important;padding:0 5.6%!important;background:linear-gradient(180deg,#00201f,#002b28)!important;position:relative!important;border-bottom:1px solid #d9a744!important}
-.topbar:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:linear-gradient(90deg,transparent 0 40%,#dcae4c 46%,#f3cc76 50%,#dcae4c 54%,transparent 60%)}
-.video-page{max-width:1536px!important;padding:0 3.1% 24px!important}
-.video-hero{min-height:151px!important;padding:28px 0 31px!important;background:radial-gradient(ellipse at 50% 100%,rgba(10,105,94,.52),transparent 66%)!important}
-.video-hero h1{font-size:clamp(2.6rem,4vw,3.3rem)!important;color:#edb94e!important}
-.video-hero p{color:#f6f0e5!important}
-.video-library{border:2px solid #e5b54f!important;border-radius:25px!important;background:linear-gradient(105deg,rgba(5,65,59,.98),rgba(1,42,40,.98))!important;box-shadow:inset 0 0 0 1px rgba(255,218,133,.18),0 8px 20px #0004!important}
-.video-item{border:2px solid rgba(229,181,79,.85)!important;border-radius:22px!important;background:linear-gradient(135deg,#07443e,#032b2a)!important}
-.video-item video{border:1px solid rgba(229,181,79,.5)!important;border-radius:15px!important}
-.video-item h2{color:#f1c66a!important}
-.video-pick{border:2px solid #e5b54f!important;color:#f1c66a!important}
-.video-footer{color:#f1c66a!important;border-top:1px solid rgba(225,177,77,.5);margin-top:26px}
-@media(max-width:620px){.topbar{height:76px!important;min-height:76px!important;padding:0 12px!important}.video-page{padding:0 10px 20px!important}}
-
-</style><style>
-/* Shared original Riwaq visual identity for educational media pages */
-:root{--brand-deep:#061d20;--brand-bg:#082326;--brand-panel:#102f32;--brand-gold:#e2b85f;--brand-gold-soft:#f0d28d;--brand-cream:#f4ecd9}
-body{background:radial-gradient(ellipse at 50% 10%,#123b38 0%,#082326 58%,#061d20 100%)!important;color:var(--brand-cream)!important}
-.topbar{background:linear-gradient(180deg,#06191c,#082326)!important;border-bottom:1px solid rgba(226,184,95,.58)!important}
-.brand,.brand strong,.brand small{color:var(--brand-cream)!important}
-.brand-mark{color:var(--brand-gold-soft)!important;border-color:var(--brand-gold)!important;background:linear-gradient(145deg,#123b38,#061d20)!important}
-.media-hub,.audio-page,.video-page{color:var(--brand-cream)!important}
-.hub-hero,.audio-hero,.video-hero{text-align:center!important;background:radial-gradient(ellipse at 50% 0%,rgba(18,105,91,.3),transparent 70%)!important}
-.hub-hero h1,.audio-hero h1,.video-hero h1,.audio-title h2,.video-page h2{color:var(--brand-gold-soft)!important}
-.hub-hero p,.audio-hero p,.video-hero p,.audio-title p{color:#c8d2c9!important}
-.hub-card,.audio-row,.video-library,.video-item,.hub-art{background:linear-gradient(145deg,#123b38,#0b292c)!important;color:var(--brand-cream)!important;border:1px solid rgba(226,184,95,.3)!important;border-radius:20px!important;box-shadow:0 10px 28px rgba(0,0,0,.16)!important}
-.hub-card:hover,.audio-row:hover,.video-item:hover{border-color:var(--brand-gold)!important}
-.hub-link,.download-audio,.video-pick{color:var(--brand-gold-soft)!important;border:1px solid rgba(226,184,95,.65)!important;background:rgba(6,29,32,.55)!important;border-radius:13px!important}
-.audio-player, audio, video{accent-color:var(--brand-gold)}
-.ornament-footer,.video-footer{background:#06191c!important;color:#c8d2c9!important;border-top:1px solid rgba(226,184,95,.3)!important}
-</style>
 </head><body><header class="topbar"><a class="brand" href="./index.html"><span class="brand-mark">رِ</span><span><strong>رِواق المتون</strong><small>فيديو شرح المتون</small></span></a><div class="gateway-theme-actions"><button id="theme-btn" class="button button-outline small" type="button" aria-label="تفعيل الوضع الليلي">☼</button><a class="button button-outline small" href="./media.html">← الوسائط</a></div></header>
 <main class="video-page"><section class="video-hero"><span style="color:var(--v-light);font-weight:700">رِواق المتون • مكتبة المرئيات</span><h1>فيديو شرح المتون (MP4)</h1><p>شاهد شروح المتون العلمية في مكان واحد</p></section>
 <section class="video-library"><div class="video-tools"><label class="video-pick" for="video-files">＋ إضافة ملفات فيديو (MP4)</label><input id="video-files" type="file" accept="video/mp4,.mp4,video/*" multiple hidden><p>اختر ملفات الفيديو من جهازك لتشغيلها هنا</p></div><div class="video-items" id="video-items"><div class="video-empty" id="video-empty">لم تتم إضافة فيديوهات بعد.</div></div></section><footer class="video-footer">رِواق المتون .. طريقك لحفظ متون العلم</footer></main>
