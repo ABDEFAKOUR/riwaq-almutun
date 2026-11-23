@@ -54,6 +54,44 @@ body{background-color:#002624!important;background-image:radial-gradient(ellipse
 @media(max-width:950px){.audio-row{grid-template-columns:130px minmax(160px,220px) minmax(180px,1fr)!important}.audio-cover{width:125px!important;height:105px!important}}
 @media(max-width:620px){.audio-row{grid-template-columns:88px minmax(0,1fr)!important}.audio-cover{width:88px!important;height:82px!important}.audio-title h2{font-size:1.25rem!important}.topbar{min-height:76px!important}}
 
+
+/* Detailed layout matching the supplied Riwaq audio reference */
+:root{--media-gold:#e3b44f;--media-bright:#f2c76c;--media-ink:#002321;--media-panel:#063b38}
+body{background:#002522!important;background-image:radial-gradient(ellipse at 50% 24%,rgba(7,88,78,.5),transparent 54%),linear-gradient(180deg,#002321 0%,#00322f 55%,#002321 100%)!important}
+.topbar{height:98px!important;min-height:98px!important;padding:0 5.6%!important;border-bottom:1px solid rgba(229,181,79,.75)!important;background:linear-gradient(180deg,#00201f,#002b28)!important;position:relative!important}
+.topbar:before,.topbar:after{content:"";position:absolute;top:0;width:125px;height:98px;pointer-events:none;opacity:.58;background:repeating-conic-gradient(from 0deg at 50% 50%,transparent 0deg 9deg,rgba(220,171,69,.55) 9.5deg 10.5deg,transparent 11deg 18deg);mask-image:radial-gradient(ellipse at top,black,transparent 72%)}
+.topbar:before{left:0}.topbar:after{right:0;left:auto;height:2px;width:100%;top:auto;bottom:-1px;opacity:1;background:linear-gradient(90deg,transparent 0 40%,#dcae4c 46%,#f3cc76 50%,#dcae4c 54%,transparent 60%);mask-image:none}
+.topbar .brand{gap:13px!important}.topbar .brand-mark{width:58px!important;height:68px!important;border:2px solid var(--media-gold)!important;border-radius:17px 17px 22px 22px!important;font-size:0!important;position:relative!important;background:linear-gradient(145deg,#073d38,#001f1e)!important;box-shadow:0 0 0 2px rgba(226,180,79,.14),inset 0 0 14px #d9a74422}
+.topbar .brand-mark:before{content:"♧";font-family:serif;font-size:42px;line-height:1;color:#efc66d;position:absolute;inset:7px 0 0;text-align:center}
+.topbar .brand-mark:after{content:"";position:absolute;inset:7px;border:1px solid rgba(240,197,105,.55);border-radius:13px 13px 17px 17px}
+.audio-page{max-width:1536px!important;padding:0 3.1% 24px!important}
+.audio-hero{min-height:151px!important;padding:18px 0 31px!important;overflow:hidden;background:radial-gradient(ellipse at 50% 100%,rgba(10,105,94,.52),transparent 66%)!important}
+.audio-hero:before{opacity:.5!important;background:linear-gradient(180deg,transparent 30%,#06423d 100%),radial-gradient(ellipse at 4% 100%,#0b655b 0,transparent 35%),radial-gradient(ellipse at 96% 100%,#0b655b 0,transparent 35%)!important}
+.audio-hero:after{content:"";position:absolute;bottom:0;left:0;right:0;height:95px;opacity:.62;pointer-events:none;background:linear-gradient(180deg,transparent,#002b29 92%),radial-gradient(ellipse at 4% 100%,#001c1b 0 12%,transparent 12.5%),radial-gradient(ellipse at 12% 100%,#001c1b 0 20%,transparent 20.5%),radial-gradient(ellipse at 21% 100%,#001c1b 0 13%,transparent 13.5%),radial-gradient(ellipse at 79% 100%,#001c1b 0 13%,transparent 13.5%),radial-gradient(ellipse at 89% 100%,#001c1b 0 20%,transparent 20.5%),radial-gradient(ellipse at 97% 100%,#001c1b 0 12%,transparent 12.5%)}
+.audio-hero .book-emblem{width:67px!important;height:48px!important;color:#f0bf59!important;filter:drop-shadow(0 0 6px #e5b44d77);margin-bottom:1px!important}
+.audio-hero .eyebrow{display:none}
+.audio-hero h1{font-size:clamp(2.6rem,4vw,3.3rem)!important;color:#edb94e!important;letter-spacing:.02em;text-shadow:0 3px 12px #0009;margin:0!important}
+.audio-hero p{font-size:1.28rem!important;color:#f6f0e5!important;margin-top:5px!important}
+.audio-list{gap:17px!important}
+.audio-row{min-height:143px!important;grid-template-columns:190px 245px minmax(240px,1fr) 128px!important;gap:16px!important;padding:12px 17px!important;border:2px solid #e5b54f!important;border-radius:25px!important;background:linear-gradient(105deg,rgba(5,65,59,.98),rgba(1,42,40,.98))!important;box-shadow:inset 0 0 0 1px rgba(255,218,133,.18),0 8px 20px rgba(0,0,0,.27)!important}
+.audio-row:before{content:"";position:absolute;inset:5px;border:1px solid rgba(235,190,93,.35);border-radius:19px;pointer-events:none;background:radial-gradient(ellipse at 0 0,rgba(225,178,81,.13),transparent 28%),radial-gradient(ellipse at 100% 100%,rgba(225,178,81,.12),transparent 28%)}
+.audio-row:after{opacity:.18!important;background:linear-gradient(135deg,transparent 55%,#0c7769)!important}
+.audio-cover{width:174px!important;height:126px!important}
+.audio-cover:before{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(145deg,#ffe09a 0%,#bd8534 28%,#f6d27c 50%,#8d5b23 72%,#f4d27b 100%);clip-path:polygon(50% 0,62% 8%,77% 12%,89% 25%,98% 43%,94% 72%,75% 88%,50% 100%,25% 88%,6% 72%,2% 43%,11% 25%,23% 12%,38% 8%);filter:drop-shadow(0 5px 7px #0009)}
+.audio-cover:after{content:"";position:absolute;z-index:-1;inset:7px 9px;border:2px solid #77501e;clip-path:polygon(50% 0,62% 8%,77% 12%,89% 25%,98% 43%,94% 72%,75% 88%,50% 100%,25% 88%,6% 72%,2% 43%,11% 25%,23% 12%,38% 8%);opacity:.95}
+.audio-cover svg{width:83%!important;height:80%!important;filter:drop-shadow(0 4px 4px #0009)}
+.audio-title{min-height:83px!important;border-left:3px solid #e4b24d!important;padding:7px 20px 7px 12px!important;display:flex;flex-direction:column;justify-content:center}
+.audio-title h2{font-size:1.68rem!important;color:#fff1d2!important;margin:0 0 5px!important;white-space:nowrap}
+.audio-title p{font-size:1.08rem!important;color:#fff1d9!important}
+.audio-player audio{height:62px!important;border-radius:40px!important;filter:drop-shadow(0 4px 5px #0003)}
+.download-audio{font-size:1.13rem!important;padding:13px 10px!important;border-radius:21px!important;border:2px solid #e6b34c!important;color:#f4c35c!important;background:linear-gradient(180deg,rgba(0,33,31,.8),rgba(4,51,46,.85))!important;box-shadow:inset 0 0 0 1px rgba(255,224,147,.18),0 3px 8px #0003!important}
+.download-audio svg{width:23px!important;height:23px!important}
+.ornament-footer{margin-top:26px!important;padding:17px 0 8px!important;border-top:1px solid rgba(225,177,77,.5)!important;position:relative}
+.ornament-footer:before{content:"♟";font-size:2.2rem!important;color:#e5b44d!important;text-shadow:0 0 9px #e5b44d88}
+.ornament-footer:after{content:"";position:absolute;top:-2px;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent 0 43%,#e5b44d 49%,#e5b44d 51%,transparent 57%)}
+@media(max-width:950px){.audio-row{grid-template-columns:135px minmax(160px,220px) minmax(180px,1fr)!important}.audio-cover{width:130px!important;height:108px!important}.download-audio{grid-column:1/-1;justify-self:end}.audio-title h2{font-size:1.4rem!important}}
+@media(max-width:620px){.topbar{height:76px!important;min-height:76px!important;padding:0 12px!important}.topbar .brand-mark{width:44px!important;height:50px!important}.topbar .brand-mark:before{font-size:32px}.audio-page{padding:0 10px 20px!important}.audio-hero{min-height:135px!important}.audio-row{grid-template-columns:88px minmax(0,1fr)!important;gap:9px 10px!important;padding:11px!important;min-height:0!important}.audio-cover{width:88px!important;height:82px!important}.audio-title{border-left:0!important;padding:0 8px!important;min-height:0!important}.audio-title h2{font-size:1.2rem!important;white-space:normal}.audio-title p{font-size:.88rem!important}.audio-player{grid-column:1/-1}.audio-player audio{height:52px!important}.download-audio{grid-column:1/-1;justify-self:stretch}.audio-hero p{font-size:1rem!important}}
+
 </style></head><body>
 <header class="topbar"><a class="brand" href="./index.html"><span class="brand-mark">رِ</span><span><strong>رِواق المتون</strong><small>سماع المتون</small></span></a><div class="gateway-theme-actions"><button id="theme-btn" class="button button-outline small" type="button" aria-label="تفعيل الوضع الليلي">☼</button><a class="button button-outline small" href="./media.html">← الوسائط</a></div></header>
 <main class="audio-page"><section class="audio-hero"><svg class="book-emblem" viewBox="0 0 64 48" aria-hidden="true"><path d="M32 11C22 1 9 4 5 7v31c10-5 19-2 27 5 8-7 17-10 27-5V7C55 4 42 1 32 11Z" fill="none" stroke="currentColor" stroke-width="3"/><path d="M32 11v32M9 12c8-2 15 1 20 6M55 12c-8-2-15 1-20 6" fill="none" stroke="currentColor" stroke-width="2"/></svg><span class="eyebrow">رِواق المتون • مكتبة الصوتيات</span><h1>سماع المتون</h1><p>استمع إلى المتون الصوتية واستزد من علمك</p></section>
