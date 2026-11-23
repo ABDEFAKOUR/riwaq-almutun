@@ -14,6 +14,7 @@ const CORE_FILES = [
   "./istidhar.html",
   "./istidhar.js",
   "./style.css",
+  "./media.css",
   "./theme.js",
   "./app.js",
   "./menu.js",
