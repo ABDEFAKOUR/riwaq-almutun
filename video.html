@@ -35,7 +35,24 @@ body{background:#002522!important;background-image:radial-gradient(ellipse at 50
 .video-footer{color:#f1c66a!important;border-top:1px solid rgba(225,177,77,.5);margin-top:26px}
 @media(max-width:620px){.topbar{height:76px!important;min-height:76px!important;padding:0 12px!important}.video-page{padding:0 10px 20px!important}}
 
-</style></head><body><header class="topbar"><a class="brand" href="./index.html"><span class="brand-mark">رِ</span><span><strong>رِواق المتون</strong><small>فيديو شرح المتون</small></span></a><div class="gateway-theme-actions"><button id="theme-btn" class="button button-outline small" type="button" aria-label="تفعيل الوضع الليلي">☼</button><a class="button button-outline small" href="./media.html">← الوسائط</a></div></header>
+</style><style>
+/* Shared original Riwaq visual identity for educational media pages */
+:root{--brand-deep:#061d20;--brand-bg:#082326;--brand-panel:#102f32;--brand-gold:#e2b85f;--brand-gold-soft:#f0d28d;--brand-cream:#f4ecd9}
+body{background:radial-gradient(ellipse at 50% 10%,#123b38 0%,#082326 58%,#061d20 100%)!important;color:var(--brand-cream)!important}
+.topbar{background:linear-gradient(180deg,#06191c,#082326)!important;border-bottom:1px solid rgba(226,184,95,.58)!important}
+.brand,.brand strong,.brand small{color:var(--brand-cream)!important}
+.brand-mark{color:var(--brand-gold-soft)!important;border-color:var(--brand-gold)!important;background:linear-gradient(145deg,#123b38,#061d20)!important}
+.media-hub,.audio-page,.video-page{color:var(--brand-cream)!important}
+.hub-hero,.audio-hero,.video-hero{text-align:center!important;background:radial-gradient(ellipse at 50% 0%,rgba(18,105,91,.3),transparent 70%)!important}
+.hub-hero h1,.audio-hero h1,.video-hero h1,.audio-title h2,.video-page h2{color:var(--brand-gold-soft)!important}
+.hub-hero p,.audio-hero p,.video-hero p,.audio-title p{color:#c8d2c9!important}
+.hub-card,.audio-row,.video-library,.video-item,.hub-art{background:linear-gradient(145deg,#123b38,#0b292c)!important;color:var(--brand-cream)!important;border:1px solid rgba(226,184,95,.3)!important;border-radius:20px!important;box-shadow:0 10px 28px rgba(0,0,0,.16)!important}
+.hub-card:hover,.audio-row:hover,.video-item:hover{border-color:var(--brand-gold)!important}
+.hub-link,.download-audio,.video-pick{color:var(--brand-gold-soft)!important;border:1px solid rgba(226,184,95,.65)!important;background:rgba(6,29,32,.55)!important;border-radius:13px!important}
+.audio-player, audio, video{accent-color:var(--brand-gold)}
+.ornament-footer,.video-footer{background:#06191c!important;color:#c8d2c9!important;border-top:1px solid rgba(226,184,95,.3)!important}
+</style>
+</head><body><header class="topbar"><a class="brand" href="./index.html"><span class="brand-mark">رِ</span><span><strong>رِواق المتون</strong><small>فيديو شرح المتون</small></span></a><div class="gateway-theme-actions"><button id="theme-btn" class="button button-outline small" type="button" aria-label="تفعيل الوضع الليلي">☼</button><a class="button button-outline small" href="./media.html">← الوسائط</a></div></header>
 <main class="video-page"><section class="video-hero"><span style="color:var(--v-light);font-weight:700">رِواق المتون • مكتبة المرئيات</span><h1>فيديو شرح المتون (MP4)</h1><p>شاهد شروح المتون العلمية في مكان واحد</p></section>
 <section class="video-library"><div class="video-tools"><label class="video-pick" for="video-files">＋ إضافة ملفات فيديو (MP4)</label><input id="video-files" type="file" accept="video/mp4,.mp4,video/*" multiple hidden><p>اختر ملفات الفيديو من جهازك لتشغيلها هنا</p></div><div class="video-items" id="video-items"><div class="video-empty" id="video-empty">لم تتم إضافة فيديوهات بعد.</div></div></section><footer class="video-footer">رِواق المتون .. طريقك لحفظ متون العلم</footer></main>
 <script>
