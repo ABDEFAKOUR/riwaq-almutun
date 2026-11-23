@@ -1,13 +1,15 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#173d32"><title>الوسائط التعليمية | رِواق المتون</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css"><script>(function(){try{var p=JSON.parse(localStorage.getItem("riwaq-prefs")||"{}");document.documentElement.dataset.theme=p.theme||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}catch(e){document.documentElement.dataset.theme="light"}})();</script><style>
-.audio-matn-card{display:grid;grid-template-columns:170px minmax(0,1fr);align-items:center;gap:22px;padding:18px;border:1px solid var(--line);border-radius:16px;background:var(--surface,rgba(20,70,62,.18))}
-.audio-art{height:132px;display:grid;place-items:center;border-radius:13px;background:radial-gradient(circle at 50% 40%,rgba(194,155,82,.2),rgba(8,39,37,.7));border:1px solid rgba(194,155,82,.55)}
-.audio-art svg{width:145px;height:110px;filter:drop-shadow(0 6px 9px rgba(0,0,0,.25))}
-.audio-matn-info h3{margin:0 0 4px;color:var(--green);font-family:Amiri,serif;font-size:1.35rem}
-.audio-matn-info p{margin:0 0 12px;color:var(--muted);font-size:.9rem}
+.audio-library{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.audio-matn-card{display:flex;flex-direction:column;gap:0;overflow:hidden;border:1px solid var(--line);border-radius:18px;background:var(--surface,rgba(20,70,62,.18));box-shadow:0 8px 22px rgba(0,0,0,.10)}
+.audio-art{height:190px;display:grid;place-items:center;border-bottom:1px solid rgba(194,155,82,.55);background:radial-gradient(circle at 50% 38%,rgba(194,155,82,.24),rgba(8,39,37,.92))}
+.audio-art svg{width:190px;height:150px;filter:drop-shadow(0 8px 12px rgba(0,0,0,.28))}
+.audio-matn-info{width:100%;box-sizing:border-box;padding:18px}
+.audio-matn-info h3{margin:0 0 5px;color:var(--green);font-family:Amiri,serif;font-size:1.4rem}
+.audio-matn-info p{margin:0 0 14px;color:var(--muted);font-size:.9rem}
 .audio-matn-info audio{display:block;width:100%}
-@media(max-width:620px){.audio-matn-card{grid-template-columns:1fr;gap:12px}.audio-art{height:115px}.audio-art svg{height:100px}}
+@media(max-width:700px){.audio-library{grid-template-columns:1fr;gap:15px}.audio-art{height:170px}.audio-art svg{height:140px}}
 </style></head>
 <body><header class="topbar"><a class="brand" href="./index.html"><span class="brand-mark">رِ</span><span><strong>رِواق المتون</strong><small>الوسائط التعليمية</small></span></a><div class="gateway-theme-actions"><button id="theme-btn" class="button button-outline small" type="button" aria-label="تفعيل الوضع الليلي">◐</button><a class="button button-outline small" href="./index.html">الرئيسية ←</a></div></header>
 <main class="container"><section class="gateway-intro" style="padding:48px 0 24px"><span class="eyebrow">التعلم بالسماع والمشاهدة</span><h1>الوسائط التعليمية</h1><p>استمع إلى المتون الصوتية وشاهد شروحها المرئية.</p></section>
