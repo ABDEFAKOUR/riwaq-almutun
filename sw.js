@@ -1,4 +1,4 @@
-const CACHE = "riwaq-v52";
+const CACHE = "riwaq-v53";
 const CORE_FILES = [
   "./",
   "./index.html",
@@ -55,6 +55,40 @@ self.addEventListener("fetch", event => {
   if (request.method !== "GET") return;
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
+
+  // ملفات الصوت والفيديو قد تُطلب بنطاق bytes (HTTP Range).
+  // لا نُرجع نسخة 200 كاملة لطلب Range؛ فهذا قد يمنع مشغل المتصفح من تشغيلها.
+  if (request.headers.has("range")) {
+    event.respondWith((async () => {
+      try {
+        const networkResponse = await fetch(request);
+        if (networkResponse.status === 206) return networkResponse;
+      } catch {}
+
+      const cache = await caches.open(CACHE);
+      const fullResponse = await cache.match(url.href);
+      if (!fullResponse) return fetch(request);
+
+      const bytes = await fullResponse.arrayBuffer();
+      const range = request.headers.get("range").match(/bytes=(\\d*)-(\\d*)/);
+      if (!range) return new Response(bytes, { status: 200, headers: fullResponse.headers });
+
+      const total = bytes.byteLength;
+      let start = range[1] ? Number(range[1]) : 0;
+      let end = range[2] ? Number(range[2]) : total - 1;
+      if (!range[1] && range[2]) start = Math.max(0, total - Number(range[2]));
+      end = Math.min(end, total - 1);
+      if (start >= total || start > end) {
+        return new Response(null, { status: 416, headers: { "Content-Range": `bytes */${total}` } });
+      }
+      const headers = new Headers(fullResponse.headers);
+      headers.set("Accept-Ranges", "bytes");
+      headers.set("Content-Range", `bytes ${start}-${end}/${total}`);
+      headers.set("Content-Length", String(end - start + 1));
+      return new Response(bytes.slice(start, end + 1), { status: 206, headers });
+    })());
+    return;
+  }
 
   if (request.mode === "navigate") {
     event.respondWith((async () => {
