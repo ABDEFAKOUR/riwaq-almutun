@@ -70,7 +70,7 @@ self.addEventListener("fetch", event => {
       if (!fullResponse) return fetch(request);
 
       const bytes = await fullResponse.arrayBuffer();
-      const range = request.headers.get("range").match(/bytes=(\\d*)-(\\d*)/);
+      const range = request.headers.get("range").match(/bytes=(\d*)-(\d*)/);
       if (!range) return new Response(bytes, { status: 200, headers: fullResponse.headers });
 
       const total = bytes.byteLength;
