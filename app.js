@@ -480,11 +480,11 @@ function go(step) {
 }
 
 /* ---------- التفضيلات: حجم الخط والوضع الليلي ---------- */
-const prefs = Object.assign({ fs: 1, theme: "" }, J(PREFS, {}));
+const prefs = Object.assign({ fs: 1, theme: "dark" }, J(PREFS, {}));
 function applyPrefs() {
   const r = document.documentElement;
   r.style.setProperty("--fs", prefs.fs);
-  r.dataset.theme = prefs.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  r.dataset.theme = prefs.theme || "dark";
   S(PREFS, prefs);
 }
 
