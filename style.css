@@ -862,3 +862,13 @@ footer,.gateway-footer{border-top:1px solid var(--line)}
 @media(max-width:760px){
   [data-theme="dark"] .topbar{background:#061d20!important}
 }
+
+/* Poetry layout: each bayt displays sadr then ajuz */
+.matn-text.poetry-text{white-space:normal;line-height:1.9;max-width:900px;}
+.poetry-verse{display:flex;flex-direction:column;align-items:center;gap:0;margin:0 auto 15px;padding:0 0 12px;border-bottom:1px solid rgba(200,169,107,.28);}
+.poetry-verse:last-child{border-bottom:0;margin-bottom:0;padding-bottom:0;}
+.poetry-sadr,.poetry-ajuz{display:block;width:100%;}
+.poetry-sadr{font-weight:700;}
+.poetry-ajuz{font-weight:500;}
+.poetry-ajuz.concealed{filter:blur(8px);user-select:none;}
+@media(max-width:600px){.matn-text.poetry-text{font-size:23px;line-height:1.85}.poetry-verse{margin-bottom:12px;padding-bottom:10px}}
