@@ -440,11 +440,25 @@ function renderStudyItem() {
   $("item-reference").textContent = item.reference || "";
   $("item-status").textContent = statusOf(readProgress()[pk(activeMatn.id, item.id)]);
   const sp = splitItem(item);
-  if (sp && !revealed) {      // اختبار: البداية ظاهرة والباقي مخفي
+  if (Array.isArray(item.verses) && item.verses.length) {
+    t.classList.add("poetry-text");
+    t.classList.remove("concealed");
+    t.innerHTML = item.verses.map(verse =>
+      '<div class="poetry-verse"><span class="poetry-sadr">' +
+      escapeHTML(verse.number + ' ' + verse.sadr) +
+      '</span><span class="poetry-ajuz' + (revealed ? '' : ' concealed') + '">' +
+      escapeHTML(verse.ajuz) + '</span></div>'
+    ).join("");
+  } else if (sp && !revealed) {
+    t.classList.remove("poetry-text");
     t.innerHTML = `${escapeHTML(sp[0])} <span class="concealed">${escapeHTML(sp[1])}</span>`;
     t.classList.remove("concealed");
-  } else { t.textContent = item.text; t.classList.toggle("concealed", !revealed); }
-  $("reveal-btn").textContent = revealed ? (sp ? "اختبر حفظي" : "إخفاء النص") : "إظهار النص";
+  } else {
+    t.classList.remove("poetry-text");
+    t.textContent = item.text;
+    t.classList.toggle("concealed", !revealed);
+  }
+  $("reveal-btn").textContent = revealed ? (item.verses?.length || sp ? "اختبر حفظي" : "إخفاء النص") : "إظهار النص";
   $("item-meaning").textContent = item.note || "لا توجد ملاحظة مضافة لهذا المقطع بعد.";
   $("item-meaning").classList.toggle("hidden", !meaningVisible);
   $("meaning-btn").textContent = meaningVisible ? "إخفاء الملاحظة" : "ملاحظة / شرح";
