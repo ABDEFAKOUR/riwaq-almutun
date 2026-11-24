@@ -682,7 +682,7 @@ body:not(.recall-page) .book b{color:#173d32}
 .gateway-logo{width:88px;height:88px;object-fit:contain;margin:0 auto 14px;display:block}
 .gateway-intro h1{font-family:Amiri,serif;color:var(--green);font-size:38px;margin:8px 0}
 .gateway-intro p{color:var(--muted);margin:0}
-.gateway-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.gateway-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
 .gateway-card{min-height:250px;padding:26px 23px;background:var(--paper);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:flex-start;text-decoration:none;color:var(--ink);transition:transform .2s,border-color .2s}
 .gateway-card:hover{transform:translateY(-4px);border-color:var(--gold)}
 .gateway-card-icon{width:54px;height:54px;border-radius:16px;background:#edf2eb;color:var(--green);display:grid;place-items:center;font-size:27px;margin-bottom:18px}
@@ -880,3 +880,7 @@ footer,.gateway-footer{border-top:1px solid var(--line)}
 
 /* Preserve tab spacing in matn source text */
 .matn-text{white-space:pre-wrap;tab-size:4;}
+
+
+/* الأقسام الأربعة في مستوى واحد على الشاشات الواسعة */
+@media(min-width:761px) and (max-width:980px){.gateway-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
