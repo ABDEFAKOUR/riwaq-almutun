@@ -1,4 +1,4 @@
-const CACHE = "riwaq-v59";
+const CACHE = "riwaq-v60";
 const CORE_FILES = [
   "./",
   "./index.html",
