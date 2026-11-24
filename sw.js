@@ -1,4 +1,4 @@
-const CACHE = "riwaq-v73";
+const CACHE = "riwaq-v74";
 const CORE_FILES = [
   "./",
   "./index.html",
@@ -31,7 +31,8 @@ const CORE_FILES = [
   "./audio/0302ShurutAsSalaah_AbdullahAzZwary.mp3",
   "./audio/0403AlAajurrumiyyah_AbdullahAzZwary.mp3",
   "./audio/0501AlWaraqat_AbdullahAzZwary.mp3",
-  "./audio/0502UnwanAlHikm_AbdullahAzZwary.mp3"
+  "./audio/0502UnwanAlHikm_AbdullahAzZwary.mp3",
+  "./audio/0503ArRahbiyah_AbdullahAzZwary.mp3",
 ];
 
 self.addEventListener("install", event => {
