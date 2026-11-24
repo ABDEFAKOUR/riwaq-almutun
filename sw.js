@@ -59,38 +59,44 @@ self.addEventListener("fetch", event => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
-  // ملفات الصوت والفيديو قد تُطلب بنطاق bytes (HTTP Range).
-  // لا نُرجع نسخة 200 كاملة لطلب Range؛ فهذا قد يمنع مشغل المتصفح من تشغيلها.
+  // ملفات الصوت والفيديو: دعم Range حتى عندما يعيد الخادم الملف كاملاً بحالة 200.
   if (request.headers.has("range")) {
     event.respondWith((async () => {
+      const rangeHeader = request.headers.get("range");
+      const makePartial = async response => {
+        const bytes = await response.arrayBuffer();
+        const total = bytes.byteLength;
+        const match = rangeHeader.match(/bytes=(\\d*)-(\\d*)/);
+        if (!match) return new Response(bytes, { status: 200, headers: response.headers });
+        let start = match[1] ? Number(match[1]) : 0;
+        let end = match[2] ? Number(match[2]) : total - 1;
+        if (!match[1] && match[2]) start = Math.max(0, total - Number(match[2]));
+        end = Math.min(end, total - 1);
+        if (start >= total || start > end) {
+          return new Response(null, { status: 416, headers: { "Content-Range": `bytes */${total}` } });
+        }
+        const headers = new Headers(response.headers);
+        headers.set("Accept-Ranges", "bytes");
+        headers.set("Content-Range", `bytes ${start}-${end}/${total}`);
+        headers.set("Content-Length", String(end - start + 1));
+        return new Response(bytes.slice(start, end + 1), { status: 206, headers });
+      };
+
       try {
         const networkResponse = await fetch(request);
-        // بعض خوادم الاستضافة تتجاهل Range وتعيد الملف كاملاً بحالة 200.
-        // نمرر أي استجابة ناجحة كما هي حتى لا نعتمد على نسخة Cache قديمة أو ناقصة.
+        if (networkResponse.status === 206) return networkResponse;
+        if (networkResponse.status === 200) {
+          const cache = await caches.open(CACHE);
+          await cache.put(url.href, networkResponse.clone());
+          return await makePartial(networkResponse);
+        }
         if (networkResponse.ok) return networkResponse;
       } catch {}
 
       const cache = await caches.open(CACHE);
       const fullResponse = await cache.match(url.href);
-      if (!fullResponse) return fetch(request);
-
-      const bytes = await fullResponse.arrayBuffer();
-      const range = request.headers.get("range").match(/bytes=(\d*)-(\d*)/);
-      if (!range) return new Response(bytes, { status: 200, headers: fullResponse.headers });
-
-      const total = bytes.byteLength;
-      let start = range[1] ? Number(range[1]) : 0;
-      let end = range[2] ? Number(range[2]) : total - 1;
-      if (!range[1] && range[2]) start = Math.max(0, total - Number(range[2]));
-      end = Math.min(end, total - 1);
-      if (start >= total || start > end) {
-        return new Response(null, { status: 416, headers: { "Content-Range": `bytes */${total}` } });
-      }
-      const headers = new Headers(fullResponse.headers);
-      headers.set("Accept-Ranges", "bytes");
-      headers.set("Content-Range", `bytes ${start}-${end}/${total}`);
-      headers.set("Content-Length", String(end - start + 1));
-      return new Response(bytes.slice(start, end + 1), { status: 206, headers });
+      if (fullResponse) return await makePartial(fullResponse);
+      return fetch(request);
     })());
     return;
   }
