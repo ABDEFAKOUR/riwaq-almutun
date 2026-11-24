@@ -874,3 +874,6 @@ footer,.gateway-footer{border-top:1px solid var(--line)}
 .poetry-ajuz{font-weight:500;}
 .poetry-ajuz.concealed{filter:blur(8px);user-select:none;}
 @media(max-width:600px){.matn-text.poetry-text{font-size:23px;line-height:1.85}.poetry-verse{margin-bottom:10px;padding-bottom:8px}}
+
+/* Ensure legacy cached poetry separators never show */
+.poetry-separator{display:none!important;}
