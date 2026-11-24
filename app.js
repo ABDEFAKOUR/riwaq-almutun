@@ -446,7 +446,7 @@ function renderStudyItem() {
     t.innerHTML = item.verses.map(verse =>
       '<div class="poetry-verse"><span class="poetry-sadr">' +
       escapeHTML(verse.number + ' ' + verse.sadr) +
-      '</span><span class="poetry-ajuz' + (revealed ? '' : ' concealed') + '">' +
+      '</span><span class="poetry-separator"> ... </span><span class="poetry-ajuz' + (revealed ? '' : ' concealed') + '">' +
       escapeHTML(verse.ajuz) + '</span></div>'
     ).join("");
   } else if (sp && !revealed) {
