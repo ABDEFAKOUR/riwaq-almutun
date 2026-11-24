@@ -451,11 +451,17 @@ function renderStudyItem() {
     ).join("");
   } else if (sp && !revealed) {
     t.classList.remove("poetry-text");
-    t.innerHTML = `${escapeHTML(sp[0])} <span class="concealed">${escapeHTML(sp[1])}</span>`;
+    const lineFormat = value => activeMatn.id === "ajurrumiyya"
+      ? value.replace(/\\s*([؛.])\\s*/g, "$1\\n").trim()
+      : value;
+    t.innerHTML = `${escapeHTML(lineFormat(sp[0]))} <span class="concealed">${escapeHTML(lineFormat(sp[1]))}</span>`;
     t.classList.remove("concealed");
   } else {
     t.classList.remove("poetry-text");
-    t.textContent = item.text;
+    const displayText = activeMatn.id === "ajurrumiyya"
+      ? item.text.replace(/\\s*([؛.])\\s*/g, "$1\\n").trim()
+      : item.text;
+    t.textContent = displayText;
     t.classList.toggle("concealed", !revealed);
   }
   $("reveal-btn").textContent = revealed ? (item.verses?.length || sp ? "اختبر حفظي" : "إخفاء النص") : "إظهار النص";
