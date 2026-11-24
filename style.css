@@ -877,3 +877,6 @@ footer,.gateway-footer{border-top:1px solid var(--line)}
 
 /* Ensure legacy cached poetry separators never show */
 .poetry-separator{display:none!important;}
+
+/* Preserve tab spacing in matn source text */
+.matn-text{white-space:pre-wrap;tab-size:4;}
