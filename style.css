@@ -865,10 +865,11 @@ footer,.gateway-footer{border-top:1px solid var(--line)}
 
 /* Poetry layout: each bayt displays sadr then ajuz */
 .matn-text.poetry-text{white-space:normal;line-height:1.9;max-width:900px;}
-.poetry-verse{display:flex;flex-direction:column;align-items:center;gap:0;margin:0 auto 15px;padding:0 0 12px;border-bottom:1px solid rgba(200,169,107,.28);}
+.poetry-verse{display:block;margin:0 auto 12px;padding:0 0 10px;border-bottom:1px solid rgba(200,169,107,.28);text-align:center;}
 .poetry-verse:last-child{border-bottom:0;margin-bottom:0;padding-bottom:0;}
-.poetry-sadr,.poetry-ajuz{display:block;width:100%;}
+.poetry-sadr,.poetry-separator,.poetry-ajuz{display:inline;}
 .poetry-sadr{font-weight:700;}
+.poetry-separator{padding:0 5px;white-space:nowrap;}
 .poetry-ajuz{font-weight:500;}
 .poetry-ajuz.concealed{filter:blur(8px);user-select:none;}
-@media(max-width:600px){.matn-text.poetry-text{font-size:23px;line-height:1.85}.poetry-verse{margin-bottom:12px;padding-bottom:10px}}
+@media(max-width:600px){.matn-text.poetry-text{font-size:23px;line-height:1.85}.poetry-verse{margin-bottom:10px;padding-bottom:8px}}
