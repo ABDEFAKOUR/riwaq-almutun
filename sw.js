@@ -1,4 +1,4 @@
-const CACHE = "riwaq-v61";
+const CACHE = "riwaq-v62";
 const CORE_FILES = [
   "./",
   "./index.html",
@@ -66,7 +66,7 @@ self.addEventListener("fetch", event => {
       const makePartial = async response => {
         const bytes = await response.arrayBuffer();
         const total = bytes.byteLength;
-        const match = rangeHeader.match(/bytes=(\\d*)-(\\d*)/);
+        const match = rangeHeader.match(/bytes=(\d*)-(\d*)/);
         if (!match) return new Response(bytes, { status: 200, headers: response.headers });
         let start = match[1] ? Number(match[1]) : 0;
         let end = match[2] ? Number(match[2]) : total - 1;
