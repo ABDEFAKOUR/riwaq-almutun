@@ -1,4 +1,4 @@
-const CACHE = "riwaq-v69";
+const CACHE = "riwaq-v70";
 const CORE_FILES = [
   "./",
   "./index.html",
@@ -79,6 +79,11 @@ self.addEventListener("fetch", event => {
           return new Response(null, { status: 416, headers: { "Content-Range": `bytes */${total}` } });
         }
         const headers = new Headers(response.headers);
+        // عند تحويل استجابة 200 إلى 206 يجب حذف ترويسات الترميز/الطول الأصلية؛
+        // لأن arrayBuffer يحتوي البايتات المفكوكة وقد تختلف عن طول الاستجابة الأصلية.
+        headers.delete("Content-Encoding");
+        headers.delete("Content-Length");
+        headers.delete("Transfer-Encoding");
         headers.set("Accept-Ranges", "bytes");
         headers.set("Content-Range", `bytes ${start}-${end}/${total}`);
         headers.set("Content-Length", String(end - start + 1));
