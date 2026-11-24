@@ -437,7 +437,7 @@ function renderStudyItem() {
   const item = activeMatn.items[activeIndex], t = $("item-text");
   const last = J(LAST, {}); last[activeMatn.id] = activeIndex; S(LAST, last);
   $("item-counter").textContent = `المقطع ${activeIndex + 1} من ${activeMatn.items.length}`;
-  $("item-reference").textContent = item.reference || "";
+  $("item-reference").textContent = item.section ? `${item.section} — ${item.reference || ""}` : (item.reference || "");
   $("item-status").textContent = statusOf(readProgress()[pk(activeMatn.id, item.id)]);
   const sp = splitItem(item);
   if (Array.isArray(item.verses) && item.verses.length) {
