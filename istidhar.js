@@ -62,7 +62,7 @@
   }
 
   function render(spoken, interim) {
-    const result=align(matn.items.map(item=>item.text).join(" "),spoken);
+    const result=align(matn.items.map(item=>item.text || (item.verses || []).map(verse => verse.sadr + " " + verse.ajuz).join(" ")).join(" "),spoken);
     const confirmedCount=String(spoken||"").trim().split(/\s+/).filter(Boolean).length;
     const interimWords=String(interim||"").trim().split(/\s+/).filter(Boolean);
     const html=result.words.map((item,index)=>{
@@ -143,11 +143,25 @@
       if(!response.ok)throw new Error("تعذر تحميل المكتبة");
       const library=await response.json();matn=library.find(item=>item.id===matnId);
       if(!matn)throw new Error("المتن غير موجود");
+      const totalItems=matn.items.length;
+      const isAvailable=item=>{
+        const text=typeof item.text==="string"?item.text.trim():"";
+        const verses=Array.isArray(item.verses)&&item.verses.some(v=>v&&typeof v.sadr==="string"&&v.sadr.trim()&&typeof v.ajuz==="string"&&v.ajuz.trim());
+        if(!text&&!verses)return false;
+        if(item.reference==="موضع تجريبي")return false;
+        return !/^(لم يُضف نص هذا (?:المتن|الحديث) بعد\.?|أضف النص من نسختك المعتمدة\.?|نص غير متوفر\.?)$/u.test(text);
+      };
+      matn.items=matn.items.filter(isAvailable);
       $("recall-title").textContent=matn.title+" — الاستظهار الكامل";
       $("recall-subtitle").textContent="استظهر المتن كاملاً بصوتك؛ سيظهر كلامك وحده دون عرض النص الأصلي.";
       document.title="استظهار "+matn.title+" | رِواق المتون";
-      if(matn.contentStatus==="partial"){
-        $("recall-warning").textContent="تنبيه: هذا المتن موسوم بأنه غير مكتمل في المكتبة؛ ستتم المقارنة مع المقاطع المتاحة فقط.";
+      if(!matn.items.length){
+        $("recall-start").disabled=true;
+        $("recall-status").textContent="نص هذا المتن غير متاح للحفظ بعد. سيظهر هنا عند اكتمال إضافته ومراجعته.";
+        return;
+      }
+      if(matn.contentStatus==="partial"||matn.items.length<totalItems){
+        $("recall-warning").textContent="تنبيه: المتاح حالياً "+matn.items.length+" من "+totalItems+" مقطعاً فقط؛ ستتم المقارنة مع النصوص المتاحة دون البطاقات الفارغة.";
         $("recall-warning").classList.remove("hidden");
       }
     }catch(error){$("recall-title").textContent="تعذر فتح المتن";$("recall-status").textContent=error.message;}
