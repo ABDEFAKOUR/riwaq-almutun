@@ -236,7 +236,7 @@ function renderProgressList(type) {
         (type === "mastered" && mastered) ||
         (type === "review" && due) ||
         (type === "recent" && recent);
-      if (include) rows.push({ matn, item, index, state });
+      if (include) rows.push({ matn, item, index: item.sourceIndex ?? index, state });
     });
   }
   const titles = {
