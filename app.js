@@ -13,6 +13,23 @@ const resetItemView = () => { revealed = true; meaningVisible = false; similarVi
 const statusOf = (c) => !c ? "جديد" : c.due <= Date.now() ? "للمراجعة" : c.int >= 6 ? "متقَن" : "قيد الحفظ";
 const escapeHTML = (v) => String(v).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
+const isAvailableItem = item => {
+  const text = typeof item?.text === "string" ? item.text.trim() : "";
+  const verses = Array.isArray(item?.verses) && item.verses.some(v =>
+    v && typeof v.sadr === "string" && v.sadr.trim() &&
+    typeof v.ajuz === "string" && v.ajuz.trim()
+  );
+  if (!text && !verses) return false;
+  if (item.reference === "موضع تجريبي") return false;
+  if (/^(لم يُضف نص هذا (?:المتن|الحديث) بعد\.?|أضف النص من نسختك المعتمدة\.?|نص غير متوفر\.?|هيكل .*؛ أضف النص من نسختك المعتمدة\.?)$/u.test(text)) return false;
+  return true;
+};
+const availableItems = matn => (matn?.items || [])
+  .map((item, sourceIndex) => ({ ...item, sourceIndex }))
+  .filter(isAvailableItem);
+const itemContent = item => item?.text?.trim() ||
+  (Array.isArray(item?.verses) ? item.verses.map(v => [v.sadr, v.ajuz].filter(Boolean).join(" ")).join(" ") : "");
+
 /* ---------- التقدم (SM-2) ---------- */
 function readProgress() {
   const p = J(KEY, null);
@@ -53,7 +70,7 @@ function grade(q) {
 }
 function updateStats() {
   const progress = readProgress(), now = Date.now();
-  const items = library.flatMap(matn => matn.items.map(item => progress[pk(matn.id, item.id)] || null));
+  const items = library.flatMap(matn => availableItems(matn).map(item => progress[pk(matn.id, item.id)] || null));
   $("new-count").textContent = items.filter(c => !c).length;
   $("learning-count").textContent = items.filter(c => c && c.due > now && c.int < 6).length;
   $("saved-count").textContent = items.filter(c => c && c.due > now && c.int >= 6).length;
@@ -97,7 +114,7 @@ function updateWeeklyReport(items = null, now = Date.now()) {
     return '<div class="weekly-day" title="' + escapeHTML(label) + ': ' + day.count + ' مقاطع"><span class="weekly-bar-value">' + day.count + '</span><div class="weekly-bar-track"><span style="height:' + height + '%"></span></div><small>' + escapeHTML(label) + '</small></div>';
   }).join("");
   const progress = readProgress();
-  const states = items || library.flatMap(matn => matn.items.map(item => progress[pk(matn.id, item.id)] || null));
+  const states = items || library.flatMap(matn => availableItems(matn).map(item => progress[pk(matn.id, item.id)] || null));
   $("weekly-mastered").textContent = String(states.filter(state => state && state.due > now && state.int >= 6).length);
   $("weekly-learning").textContent = String(states.filter(state => state && state.due > now && state.int < 6).length);
   $("weekly-review").textContent = String(states.filter(state => state && state.due <= now).length);
@@ -149,7 +166,7 @@ function updateDailyPlan(items = null, now = Date.now()) {
   const goal = dailyGoal();
   const dayStart = new Date(new Date(now).getFullYear(), new Date(now).getMonth(), new Date(now).getDate()).getTime();
   const progress = readProgress();
-  const states = items || library.flatMap(matn => matn.items.map(item => progress[pk(matn.id, item.id)] || null));
+  const states = items || library.flatMap(matn => availableItems(matn).map(item => progress[pk(matn.id, item.id)] || null));
   const completed = states.filter(state => state && Number.isFinite(state.last) && state.last >= dayStart && state.last <= now).length;
   const percent = Math.min(100, Math.round((completed / goal) * 100));
   goalInput.value = String(goal); completedEl.textContent = String(completed); goalEl.textContent = String(goal);
@@ -163,9 +180,9 @@ function updateDailyPlan(items = null, now = Date.now()) {
 /* ---------- لوحة المراجعة الذكية ---------- */
 function updateSmartDashboard(items = null, now = Date.now()) {
   const progress = readProgress();
-  const states = items || library.flatMap(matn => matn.items.map(item => progress[pk(matn.id, item.id)] || null));
+  const states = items || library.flatMap(matn => availableItems(matn).map(item => progress[pk(matn.id, item.id)] || null));
   const overdue = [];
-  for (const matn of library) matn.items.forEach((item, index) => {
+  for (const matn of library) availableItems(matn).forEach((item, index) => {
     const state = progress[pk(matn.id, item.id)];
     if (state && state.due <= now) overdue.push({ matn, item, index, state });
   });
@@ -184,12 +201,12 @@ function updateSmartDashboard(items = null, now = Date.now()) {
 
   const masteryList = $("matn-mastery-list");
   if (masteryList) masteryList.innerHTML = library.map(matn => {
-    const total = matn.items.length;
-    const learned = matn.items.filter(item => {
+    const validItems = availableItems(matn), total = validItems.length;
+    const learned = validItems.filter(item => {
       const state = progress[pk(matn.id, item.id)];
       return !!state && state.int >= 6;
     }).length;
-    const due = matn.items.filter(item => {
+    const due = validItems.filter(item => {
       const state = progress[pk(matn.id, item.id)];
       return !!state && state.due <= now;
     }).length;
@@ -224,7 +241,7 @@ function renderProgressList(type) {
   if (!panel || !list) return;
   const now = Date.now(), progress = readProgress(), rows = [];
   for (const matn of library) {
-    matn.items.forEach((item, index) => {
+    availableItems(matn).forEach((item, index) => {
       const state = progress[pk(matn.id, item.id)] || null;
       const due = !!state && state.due <= now;
       const mastered = !!state && !due && state.int >= 6;
@@ -277,9 +294,9 @@ function renderProgressList(type) {
 /* ---------- جلسة الحفظ ---------- */
 function startSession() {
   const now = Date.now(), progress = readProgress(), due = [], fresh = [];
-  for (const matn of library) matn.items.forEach((item, index) => {
+  for (const matn of library) availableItems(matn).forEach((item, index) => {
     const state = progress[pk(matn.id, item.id)] || null;
-    const entry = { matnId: matn.id, index, due: state?.due || 0 };
+    const entry = { matnId: matn.id, index: item.sourceIndex, due: state?.due || 0 };
     if (state && state.due <= now) due.push(entry);
     else if (!state) fresh.push(entry);
   });
@@ -301,7 +318,9 @@ function renderSessionItem() {
   $("session-progress").textContent = `المقطع ${sessionIndex + 1} من ${sessionQueue.length}`;
   $("session-progress-bar").style.width = `${((sessionIndex + 1) / sessionQueue.length) * 100}%`;
   openMatn(entry.matnId);
-  activeIndex = entry.index; resetItemView(); renderStudyItem();
+  activeIndex = activeMatn.items.findIndex(item => item.sourceIndex === entry.index);
+  if (activeIndex < 0) { finishSession(false); return; }
+  resetItemView(); renderStudyItem();
 }
 function finishSession(completed = false) {
   sessionActive = false; sessionQueue = []; sessionIndex = 0;
@@ -377,37 +396,46 @@ function renderLibrary() {
     `${m.title} ${m.subject} ${m.description}`.toLowerCase().includes(q));
   if (!results.length) { $("matn-grid").innerHTML = '<div class="empty-state">لا توجد نتائج مطابقة. جرّب كلمة أخرى.</div>'; return; }
   $("matn-grid").innerHTML = results.map(m => {
-    const done = m.items.filter(i => (progress[pk(m.id, i.id)] || {}).int >= 6).length;
-    return `<article class="matn-card matn-card-recall" data-recall="${escapeHTML(m.id)}" tabindex="0" role="link" aria-label="استظهار متن ${escapeHTML(m.title)}">
-      <span class="tag">${escapeHTML(m.subject)}</span>${m.contentStatus === "partial" ? '<span class="content-status">المتن غير مكتمل</span>' : ""}
+    const validItems = availableItems(m);
+    const done = validItems.filter(i => (progress[pk(m.id, i.id)] || {}).int >= 6).length;
+    const partial = m.contentStatus === "partial" || validItems.length < m.items.length;
+    const disabled = validItems.length === 0;
+    return `<article class="matn-card matn-card-recall" ${disabled ? "" : `data-recall="${escapeHTML(m.id)}" tabindex="0" role="link" aria-label="استظهار متن ${escapeHTML(m.title)}"`}>
+      <span class="tag">${escapeHTML(m.subject)}</span>${partial ? '<span class="content-status">المحتوى قيد الإعداد</span>' : ""}
       <h3>${escapeHTML(m.title)}</h3><p>${escapeHTML(m.description)}</p>
-      <div class="card-bottom"><span>${m.items.length} مقاطع · ${done} متقنة</span>
-      <button data-open="${escapeHTML(m.id)}" type="button">ابدأ الدراسة ←</button></div></article>`;
+      <div class="card-bottom"><span>${validItems.length} مقاطع متاحة · ${done} متقنة</span>
+      <button data-open="${escapeHTML(m.id)}" type="button" ${disabled ? "disabled" : ""}>${disabled ? "قريباً" : "ابدأ الدراسة ←"}</button></div></article>`;
   }).join("");
   $("matn-grid").querySelectorAll("[data-recall]").forEach(card => {
     const openRecall = () => { window.location.href = `./istidhar.html?matn=${encodeURIComponent(card.dataset.recall)}`; };
-    card.addEventListener("click", event => {
-      if (event.target.closest("button")) return;
-      openRecall();
-    });
+    card.addEventListener("click", event => { if (event.target.closest("button")) return; openRecall(); });
     card.addEventListener("keydown", event => {
-      if ((event.key === "Enter" || event.key === " ") && event.target === card) {
-        event.preventDefault(); openRecall();
-      }
+      if ((event.key === "Enter" || event.key === " ") && event.target === card) { event.preventDefault(); openRecall(); }
     });
   });
   $("matn-grid").querySelectorAll("[data-open]").forEach(b => b.addEventListener("click", event => {
     event.stopPropagation();
+    if (!availableItems(library.find(m => m.id === b.dataset.open)).length) return;
     window.location.href = `./study.html?matn=${encodeURIComponent(b.dataset.open)}`;
   }));
 }
 
 /* ---------- الدراسة ---------- */
 function openMatn(id) {
-  activeMatn = library.find(i => i.id === id);
-  if (!activeMatn) return;
+  const sourceMatn = library.find(i => i.id === id);
+  if (!sourceMatn) return;
+  const sourceItems = availableItems(sourceMatn);
+  if (!sourceItems.length) {
+    activeMatn = null;
+    const panel = $("study-panel");
+    if (panel) { panel.classList.remove("hidden"); panel.innerHTML = '<p class="empty-state">نص هذا المتن غير متاح للحفظ بعد. سيظهر هنا عند اكتمال إضافته ومراجعته.</p><a class="button button-outline" href="./index.html#library">العودة إلى المكتبة</a>'; }
+    return;
+  }
+  activeMatn = { ...sourceMatn, items: sourceItems };
   const requestedItem = location.pathname.endsWith("/study.html") ? new URLSearchParams(location.search).get("item") : null;
-  const startIndex = requestedItem === null ? (J(LAST, {})[id] || 0) : Math.max(0, Number(requestedItem) || 0);
+  const wantedSourceIndex = requestedItem !== null ? Number(requestedItem) : J(LAST, {})[id];
+  const foundIndex = activeMatn.items.findIndex(item => item.sourceIndex === wantedSourceIndex);
+  const startIndex = foundIndex >= 0 ? foundIndex : 0;
   activeIndex = Math.min(startIndex, activeMatn.items.length - 1);
   resetItemView();
   const sel = $("item-jump");
@@ -416,7 +444,7 @@ function openMatn(id) {
   $("study-title").textContent = activeMatn.title;
   $("study-subject").textContent = activeMatn.subject;
   const warning = $("study-warning");
-  if (warning) { warning.textContent = activeMatn.contentStatus === "partial" ? "تنبيه: هذا المتن غير مكتمل في المكتبة حالياً؛ المقاطع المتاحة فقط هي المعروضة، فلا تعتمد هذه النسخة على أنها النص الكامل." : ""; warning.classList.toggle("hidden", activeMatn.contentStatus !== "partial"); }
+  if (warning) { warning.textContent = (activeMatn.contentStatus === "partial" || activeMatn.items.length < sourceMatn.items.length) ? "تنبيه: هذا المتن غير مكتمل في المكتبة حالياً؛ المقاطع المتاحة فقط هي المعروضة، فلا تعتمد هذه النسخة على أنها النص الكامل." : ""; warning.classList.toggle("hidden", !(activeMatn.contentStatus === "partial" || activeMatn.items.length < sourceMatn.items.length)); }
   renderStudyItem();
   $("study-panel").scrollIntoView({ behavior: "smooth", block: "start" });
 }
@@ -435,7 +463,7 @@ function splitItem(item) {
 function renderStudyItem() {
   if (!activeMatn) return;
   const item = activeMatn.items[activeIndex], t = $("item-text");
-  const last = J(LAST, {}); last[activeMatn.id] = activeIndex; S(LAST, last);
+  const last = J(LAST, {}); last[activeMatn.id] = activeMatn.items[activeIndex].sourceIndex ?? activeIndex; S(LAST, last);
   $("item-counter").textContent = `المقطع ${activeIndex + 1} من ${activeMatn.items.length}`;
   $("item-reference").textContent = item.section ? `${item.section} — ${item.reference || ""}` : (item.reference || "");
   $("item-status").textContent = statusOf(readProgress()[pk(activeMatn.id, item.id)]);
@@ -569,7 +597,7 @@ function playRecitationAlert(){
 function renderLiveRecitation(spoken,finalText,complete=false){
   const transcript=$("recitation-transcript"),original=$("recitation-original");
   if(!activeMatn||!transcript||!original)return {issues:[]};
-  const aligned=alignLiveRecitation(activeMatn.items[activeIndex].text,spoken,complete);
+  const aligned=alignLiveRecitation(itemContent(activeMatn.items[activeIndex]),spoken,complete);
   const finalCount=String(finalText||"").trim().split(/\s+/).filter(Boolean).length;
   transcript.innerHTML="<strong>ما نطقتَ:</strong> "+aligned.spoken.map((x,k)=>{
     const cls=k>=finalCount?"recitation-interim":x.state==="correct"?"recitation-word-correct":"recitation-word-wrong";
@@ -584,7 +612,7 @@ function renderLiveRecitation(spoken,finalText,complete=false){
 }
 function alertConfirmedRecitationErrors(finalText){
   if(!activeMatn||!String(finalText||"").trim())return;
-  const aligned=alignLiveRecitation(activeMatn.items[activeIndex].text,finalText);
+  const aligned=alignLiveRecitation(itemContent(activeMatn.items[activeIndex]),finalText);
   let fresh=false;
   for(const x of aligned.issues){
     const key=[x.type,x.expectedIndex,x.spokenIndex,x.expected,x.spoken].join("|");
@@ -599,7 +627,7 @@ function compareRecitation(expected,spoken){
 function showRecitationComparison(spoken){
   const feedback=$("recitation-feedback");if(!activeMatn||!feedback)return;
   if(!spoken.trim()){feedback.classList.remove("hidden");feedback.innerHTML="<strong>لم نلتقط كلاماً واضحاً.</strong><p>جرّب مرة أخرى وتحدث بصوت واضح.</p>";return;}
-  const result=compareRecitation(activeMatn.items[activeIndex].text,spoken),errors=result.issues;
+  const result=compareRecitation(itemContent(activeMatn.items[activeIndex]),spoken),errors=result.issues;
   const accuracy=result.total?Math.max(0,Math.round((1-errors.length/result.total)*100)):100;
   const details=errors.length?errors.slice(0,30).map(x=>{
     if(x.type==="missing")return '<li><span class="recitation-missing">ناقص</span> الكلمة الصحيحة: <strong>'+escapeHTML(x.expected)+"</strong></li>";
@@ -674,7 +702,7 @@ function startRecitation(){
     lastInterimText=interim.trim();
     if(lastInterimText&&activeMatn){
       const finalCount=confirmedText.split(/\s+/).filter(Boolean).length;
-      const aligned=alignLiveRecitation(activeMatn.items[activeIndex].text,all);
+      const aligned=alignLiveRecitation(itemContent(activeMatn.items[activeIndex]),all);
       const pendingIssues=aligned.issues.filter(x=>x.type!=="missing"&&x.spokenIndex>=finalCount);
       if(pendingIssues.length){
         const candidate=lastInterimText;
