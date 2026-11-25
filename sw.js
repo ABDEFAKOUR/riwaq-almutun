@@ -1,4 +1,24 @@
-const CACHE = "riwaq-v80";
+const CACHE = "riwaq-v81";
+const pendingMediaCache = new Map();
+
+function cacheFullMedia(url) {
+  if (pendingMediaCache.has(url)) return pendingMediaCache.get(url);
+  const task = (async () => {
+    try {
+      const response = await fetch(url, { cache: "no-store" });
+      if (!response.ok || response.status !== 200) return;
+      const cache = await caches.open(CACHE);
+      await cache.put(url, response.clone());
+    } catch (error) {
+      // التخزين دون اتصال ميزة إضافية؛ لا نوقف تشغيل الصوت إذا تعذر التخزين.
+      console.warn("تعذر تخزين الوسيط للتشغيل دون اتصال:", url, error);
+    } finally {
+      pendingMediaCache.delete(url);
+    }
+  })();
+  pendingMediaCache.set(url, task);
+  return task;
+}
 const CORE_FILES = [
   "./",
   "./index.html",
@@ -20,19 +40,6 @@ const CORE_FILES = [
   "./mutun.json",
   "./manifest.webmanifest",
   "./icon.svg",
-  "./audio/0201AlUsulAtThalaath_AbdullahAzZwary.mp3",
-  "./audio/0202AlQawaidAlArba_AbdullahAzZwary.mp3",
-  "./audio/0203NawaaqidAlIslaam_AbdullahAzZwary.mp3",
-  "./audio/0204AlArbaunAnNawawiyah_AbdullahAzZwary.mp3",
-  "./audio/0301ThufatUlAtfaal_AbdullahAzZwary.mp3",
-  "./audio/0402AlIlbiri_AbdullahRowzy.mp3",
-  "./audio/0401AlBayqooni_AbdullahRowzy.mp3",
-  "./audio/0302ShurutAsSalaah_AbdullahAzZwary.mp3",
-  "./audio/0403AlAajurrumiyyah_AbdullahAzZwary.mp3",
-  "./audio/0501AlWaraqat_AbdullahAzZwary.mp3",
-  "./audio/0502UnwanAlHikm_AbdullahAzZwary.mp3",
-  "./audio/0503ArRahbiyah_AbdullahAzZwary.mp3",
-  "./audio/0504AlAqidahAtTahawiyah_AbdullahAzZwary.mp3",
 ];
 
 self.addEventListener("install", event => {
@@ -63,8 +70,10 @@ self.addEventListener("fetch", event => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
-  // ملفات الصوت والفيديو: دعم Range حتى عندما يعيد الخادم الملف كاملاً بحالة 200.
+  // ملفات الصوت والفيديو: دعم Range وتخزين نسخة كاملة تدريجياً بعد أول تشغيل.
   if (request.headers.has("range")) {
+    // لا نحمل 88MB من الصوتيات أثناء تثبيت التطبيق؛ نخزن الملف الذي يستعمله الطالب فقط.
+    event.waitUntil(cacheFullMedia(url.href));
     event.respondWith((async () => {
       const rangeHeader = request.headers.get("range");
       const makePartial = async response => {
