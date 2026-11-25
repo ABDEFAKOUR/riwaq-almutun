@@ -13,4 +13,4 @@ window.addEventListener("beforeunload",()=>urls.forEach(URL.revokeObjectURL.bind
 <script>
 const urls=[];document.getElementById("video-files").addEventListener("change",e=>{const box=document.getElementById("video-items");const empty=document.getElementById("video-empty");if(empty)empty.remove();for(const file of e.target.files||[]){const url=URL.createObjectURL(file);urls.push(url);const card=document.createElement("article");card.className="video-item";const player=document.createElement("video");player.controls=true;player.playsInline=true;player.src=url;const title=document.createElement("h2");title.textContent=file.name;const link=document.createElement("a");link.href=url;link.download=file.name;link.textContent="تحميل الفيديو";card.append(player,title,link);box.append(card)}e.target.value=""});
 window.addEventListener("beforeunload",()=>urls.forEach(URL.revokeObjectURL.bind(URL)));
-</script><script src="theme.js" defer></script></body></html>
+</script></body></html>
