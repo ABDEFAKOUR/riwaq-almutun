@@ -884,3 +884,8 @@ footer,.gateway-footer{border-top:1px solid var(--line)}
 
 /* الأقسام الأربعة في مستوى واحد على الشاشات الواسعة */
 @media(min-width:761px) and (max-width:980px){.gateway-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+/* حالة إدخال نصوص المتون في المكتبة */
+.content-status-complete{border-color:#7aa88a;color:#24583a;background:#edf8f0}
+[data-theme=dark] .content-status-complete{border-color:#477b5c;color:#c1e8cc;background:#172b20}
