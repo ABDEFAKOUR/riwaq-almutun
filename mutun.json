@@ -710,9 +710,9 @@
     "editionSource": {
       "title": "متون طالب العلم — المستوى الثاني، نسخة الحفظ",
       "author": "الشيخ د. عبد المحسن بن محمد القاسم",
-      "url": "https://a-alqasim.com/pdf-view/books/mutoon/0200Mutoon.pdf",
-      "page": "https://a-alqasim.com/books/0200mutoon/",
-      "coverage": "الأربعون النووية مع زيادة ابن رجب"
+      "page": "https://a-alqasim.com/books-cats/mutoon/",
+      "coverage": "الأربعون النووية مع زيادة ابن رجب",
+      "note": "يراجع ضمن المستوى الثاني؛ لم تُثبت هنا وصلة PDF المباشرة الخاصة به."
     }
   },
   {
@@ -2331,7 +2331,6 @@
     "editionSource": {
       "title": "متون طالب العلم — المستوى الرابع، نسخة الحفظ",
       "author": "الشيخ د. عبد المحسن بن محمد القاسم",
-      "edition": "طبعة ١٤٤٦هـ / ٢٠٢٥م",
       "url": "https://files.a-alqasim.com/books/mutoon/0400Mutoon.pdf",
       "page": "https://a-alqasim.com/books/0400mutoon/",
       "includes": [
@@ -3825,7 +3824,6 @@
     "editionSource": {
       "title": "متون طالب العلم — المستوى الرابع، نسخة الحفظ",
       "author": "الشيخ د. عبد المحسن بن محمد القاسم",
-      "edition": "طبعة ١٤٤٦هـ / ٢٠٢٥م",
       "url": "https://files.a-alqasim.com/books/mutoon/0400Mutoon.pdf",
       "page": "https://a-alqasim.com/books/0400mutoon/",
       "includes": [
@@ -4081,7 +4079,6 @@
     "editionSource": {
       "title": "متون طالب العلم — المستوى الرابع، نسخة الحفظ",
       "author": "الشيخ د. عبد المحسن بن محمد القاسم",
-      "edition": "طبعة ١٤٤٦هـ / ٢٠٢٥م",
       "url": "https://files.a-alqasim.com/books/mutoon/0400Mutoon.pdf",
       "page": "https://a-alqasim.com/books/0400mutoon/",
       "includes": [
@@ -4232,7 +4229,6 @@
     "editionSource": {
       "title": "متون طالب العلم — المستوى الرابع، نسخة الحفظ",
       "author": "الشيخ د. عبد المحسن بن محمد القاسم",
-      "edition": "طبعة ١٤٤٦هـ / ٢٠٢٥م",
       "url": "https://files.a-alqasim.com/books/mutoon/0400Mutoon.pdf",
       "page": "https://a-alqasim.com/books/0400mutoon/",
       "includes": [
