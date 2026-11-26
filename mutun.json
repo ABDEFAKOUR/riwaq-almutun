@@ -80,7 +80,8 @@
       }
     ],
     "similar": [],
-    "contentStatus": "complete"
+    "contentStatus": "complete",
+    "level": 2
   },
   {
     "id": "al-qawaid-al-arba",
@@ -169,7 +170,8 @@
       }
     ],
     "similar": [],
-    "contentStatus": "complete"
+    "contentStatus": "complete",
+    "level": 2
   },
   {
     "id": "al-usul-al-thalatha",
@@ -278,7 +280,8 @@
       }
     ],
     "similar": [],
-    "contentStatus": "complete"
+    "contentStatus": "complete",
+    "level": 2
   },
   {
     "id": "nawawi-40",
@@ -589,7 +592,8 @@
       }
     ],
     "similar": [],
-    "contentStatus": "partial"
+    "contentStatus": "partial",
+    "level": 2
   },
   {
     "id": "tuhfat-al-atfal",
@@ -977,7 +981,8 @@
       }
     ],
     "similar": [],
-    "contentStatus": "complete"
+    "contentStatus": "complete",
+    "level": 3
   },
   {
     "id": "shurut-al-salah",
@@ -1024,7 +1029,8 @@
       }
     ],
     "similar": [],
-    "contentStatus": "complete"
+    "contentStatus": "complete",
+    "level": 3
   },
   {
     "id": "kitab-al-tawhid",
@@ -1437,7 +1443,8 @@
       }
     ],
     "similar": [],
-    "contentStatus": "complete"
+    "contentStatus": "complete",
+    "level": 3
   },
   {
     "id": "bayquniyya",
@@ -1890,7 +1897,8 @@
       }
     ],
     "similar": [],
-    "contentStatus": "complete"
+    "contentStatus": "complete",
+    "level": 4
   },
   {
     "id": "elbiri",
@@ -3370,7 +3378,8 @@
       }
     ],
     "similar": [],
-    "contentStatus": "complete"
+    "contentStatus": "complete",
+    "level": 4
   },
   {
     "id": "ajurrumiyya",
@@ -3579,7 +3588,8 @@
       }
     ],
     "similar": [],
-    "contentStatus": "complete"
+    "contentStatus": "complete",
+    "level": 4
   },
   {
     "id": "wasitiyya",
@@ -3698,7 +3708,8 @@
       }
     ],
     "similar": [],
-    "contentStatus": "partial"
+    "contentStatus": "partial",
+    "level": 4
   },
   {
     "id": "waraqat",
@@ -3757,7 +3768,8 @@
       }
     ],
     "similar": [],
-    "contentStatus": "partial"
+    "contentStatus": "partial",
+    "level": 5
   },
   {
     "id": "unwan-al-hukm",
@@ -3774,7 +3786,8 @@
       }
     ],
     "similar": [],
-    "contentStatus": "partial"
+    "contentStatus": "partial",
+    "level": 5
   },
   {
     "id": "rahbiyya",
@@ -3791,7 +3804,8 @@
       }
     ],
     "similar": [],
-    "contentStatus": "partial"
+    "contentStatus": "partial",
+    "level": 5
   },
   {
     "id": "tahawiyya",
@@ -3808,6 +3822,7 @@
       }
     ],
     "similar": [],
-    "contentStatus": "partial"
+    "contentStatus": "partial",
+    "level": 5
   }
 ]
