@@ -401,7 +401,7 @@ function renderLibrary() {
     const partial = m.contentStatus === "partial" || validItems.length < m.items.length;
     const disabled = validItems.length === 0;
     return `<article class="matn-card matn-card-recall" ${disabled ? "" : `data-recall="${escapeHTML(m.id)}" tabindex="0" role="link" aria-label="استظهار متن ${escapeHTML(m.title)}"`}>
-      <span class="tag">${escapeHTML(m.subject)}</span>${partial ? '<span class="content-status">المحتوى قيد الإعداد</span>' : ""}
+      <span class="tag">${escapeHTML(m.subject)}</span>${partial ? '<span class="content-status">قيد المراجعة</span>' : m.contentStatus === "complete" ? '<span class="content-status content-status-complete">اكتمل إدخال النص</span>' : '<span class="content-status">قيد الإضافة</span>'}
       <h3>${escapeHTML(m.title)}</h3><p>${escapeHTML(m.description)}</p>
       <div class="card-bottom"><span>${validItems.length} مقاطع متاحة · ${done} متقنة</span>
       <button data-open="${escapeHTML(m.id)}" type="button" ${disabled ? "disabled" : ""}>${disabled ? "قريباً" : "ابدأ الدراسة ←"}</button></div></article>`;
