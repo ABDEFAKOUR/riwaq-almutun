@@ -15,7 +15,13 @@
     ],
     "similar": [],
     "contentStatus": "partial",
-    "level": 1
+    "level": 1,
+    "editionSource": {
+      "title": "متون طالب العلم — المستوى الأول، نسخة الحفظ",
+      "author": "الشيخ د. عبد المحسن بن محمد القاسم",
+      "page": "https://a-alqasim.com/books-cats/mutoon/",
+      "note": "يلزم تحديد ملف PDF الخاص بالمستوى الأول من فهرس الموقع قبل إدخال النص."
+    }
   },
   {
     "id": "nawaqid-al-islam",
@@ -700,7 +706,14 @@
     ],
     "similar": [],
     "contentStatus": "partial",
-    "level": 2
+    "level": 2,
+    "editionSource": {
+      "title": "متون طالب العلم — المستوى الثاني، نسخة الحفظ",
+      "author": "الشيخ د. عبد المحسن بن محمد القاسم",
+      "url": "https://a-alqasim.com/pdf-view/books/mutoon/0200Mutoon.pdf",
+      "page": "https://a-alqasim.com/books/0200mutoon/",
+      "coverage": "الأربعون النووية مع زيادة ابن رجب"
+    }
   },
   {
     "id": "tuhfat-al-atfal",
@@ -2314,7 +2327,20 @@
     ],
     "similar": [],
     "contentStatus": "partial",
-    "level": 4
+    "level": 4,
+    "editionSource": {
+      "title": "متون طالب العلم — المستوى الرابع، نسخة الحفظ",
+      "author": "الشيخ د. عبد المحسن بن محمد القاسم",
+      "edition": "طبعة ١٤٤٦هـ / ٢٠٢٥م",
+      "url": "https://files.a-alqasim.com/books/mutoon/0400Mutoon.pdf",
+      "page": "https://a-alqasim.com/books/0400mutoon/",
+      "includes": [
+        "منظومة البيقوني",
+        "قصيدة أبي إسحاق الإلبيري",
+        "المقدمة الآجرومية",
+        "العقيدة الواسطية"
+      ]
+    }
   },
   {
     "id": "elbiri",
@@ -3795,7 +3821,20 @@
     ],
     "similar": [],
     "contentStatus": "partial",
-    "level": 4
+    "level": 4,
+    "editionSource": {
+      "title": "متون طالب العلم — المستوى الرابع، نسخة الحفظ",
+      "author": "الشيخ د. عبد المحسن بن محمد القاسم",
+      "edition": "طبعة ١٤٤٦هـ / ٢٠٢٥م",
+      "url": "https://files.a-alqasim.com/books/mutoon/0400Mutoon.pdf",
+      "page": "https://a-alqasim.com/books/0400mutoon/",
+      "includes": [
+        "منظومة البيقوني",
+        "قصيدة أبي إسحاق الإلبيري",
+        "المقدمة الآجرومية",
+        "العقيدة الواسطية"
+      ]
+    }
   },
   {
     "id": "ajurrumiyya",
@@ -4038,14 +4077,27 @@
     ],
     "similar": [],
     "contentStatus": "partial",
-    "level": 4
+    "level": 4,
+    "editionSource": {
+      "title": "متون طالب العلم — المستوى الرابع، نسخة الحفظ",
+      "author": "الشيخ د. عبد المحسن بن محمد القاسم",
+      "edition": "طبعة ١٤٤٦هـ / ٢٠٢٥م",
+      "url": "https://files.a-alqasim.com/books/mutoon/0400Mutoon.pdf",
+      "page": "https://a-alqasim.com/books/0400mutoon/",
+      "includes": [
+        "منظومة البيقوني",
+        "قصيدة أبي إسحاق الإلبيري",
+        "المقدمة الآجرومية",
+        "العقيدة الواسطية"
+      ]
+    }
   },
   {
     "id": "wasitiyya",
     "title": "العقيدة الواسطية",
     "subject": "العقيدة",
     "author": "ابن تيمية",
-    "description": "الموجود حالياً تلخيص لمباحث العقيدة الواسطية، وليس نص المتن الأصلي؛ لا يُعتمد للحفظ حتى استبداله بالنص الأصلي ومقابلته على مصدر موثوق. النص مدخل، لكن لم تكتمل مقابلته حرفياً مع نسخة الحفظ الرسمية؛ قيد المراجعة.",
+    "description": "الموجود حالياً تلخيص لمباحث العقيدة الواسطية، وليس نص المتن الأصلي؛ لا يُعتمد للحفظ حتى استبداله بالنص الأصلي ومقابلته على مصدر موثوق. النص مدخل، لكن لم تكتمل مقابلته حرفياً مع نسخة الحفظ الرسمية؛ قيد المراجعة. المصدر المعتمد لتفريغ النص الأصلي: نسخة الحفظ الرسمية للشيخ عبد المحسن القاسم، والموجود حاليًا في التطبيق تلخيص لا يُعتمد للحفظ.",
     "items": [
       {
         "id": "wasitiyya-1",
@@ -4176,14 +4228,27 @@
     ],
     "similar": [],
     "contentStatus": "partial",
-    "level": 4
+    "level": 4,
+    "editionSource": {
+      "title": "متون طالب العلم — المستوى الرابع، نسخة الحفظ",
+      "author": "الشيخ د. عبد المحسن بن محمد القاسم",
+      "edition": "طبعة ١٤٤٦هـ / ٢٠٢٥م",
+      "url": "https://files.a-alqasim.com/books/mutoon/0400Mutoon.pdf",
+      "page": "https://a-alqasim.com/books/0400mutoon/",
+      "includes": [
+        "منظومة البيقوني",
+        "قصيدة أبي إسحاق الإلبيري",
+        "المقدمة الآجرومية",
+        "العقيدة الواسطية"
+      ]
+    }
   },
   {
     "id": "waraqat",
     "title": "الورقات",
     "subject": "أصول الفقه",
     "author": "الجويني",
-    "description": "الموجود حالياً تلخيص لمباحث الورقات، وليس نص المتن الأصلي؛ لا يُعتمد للحفظ حتى استبداله بالنص الأصلي ومقابلته على مصدر موثوق. النص مدخل، لكن لم تكتمل مقابلته حرفياً مع نسخة الحفظ الرسمية؛ قيد المراجعة.",
+    "description": "الموجود حالياً تلخيص لمباحث الورقات، وليس نص المتن الأصلي؛ لا يُعتمد للحفظ حتى استبداله بالنص الأصلي ومقابلته على مصدر موثوق. النص مدخل، لكن لم تكتمل مقابلته حرفياً مع نسخة الحفظ الرسمية؛ قيد المراجعة. المصدر المعتمد لتفريغ النص الأصلي: نسخة الحفظ الرسمية للشيخ عبد المحسن القاسم، والموجود حاليًا في التطبيق تلخيص لا يُعتمد للحفظ.",
     "items": [
       {
         "id": "waraqat-1",
@@ -4244,7 +4309,19 @@
     ],
     "similar": [],
     "contentStatus": "partial",
-    "level": 5
+    "level": 5,
+    "editionSource": {
+      "title": "متون طالب العلم — المستوى الخامس، نسخة الحفظ",
+      "author": "الشيخ د. عبد المحسن بن محمد القاسم",
+      "url": "https://a-alqasim.com/pdf-view/books/mutoon/0500Mutoon.pdf",
+      "page": "https://a-alqasim.com/books/0500mutoon/",
+      "includes": [
+        "الورقات",
+        "عنوان الحكم",
+        "الرحبية",
+        "العقيدة الطحاوية"
+      ]
+    }
   },
   {
     "id": "unwan-al-hukm",
@@ -4262,7 +4339,19 @@
     ],
     "similar": [],
     "contentStatus": "partial",
-    "level": 5
+    "level": 5,
+    "editionSource": {
+      "title": "متون طالب العلم — المستوى الخامس، نسخة الحفظ",
+      "author": "الشيخ د. عبد المحسن بن محمد القاسم",
+      "url": "https://a-alqasim.com/pdf-view/books/mutoon/0500Mutoon.pdf",
+      "page": "https://a-alqasim.com/books/0500mutoon/",
+      "includes": [
+        "الورقات",
+        "عنوان الحكم",
+        "الرحبية",
+        "العقيدة الطحاوية"
+      ]
+    }
   },
   {
     "id": "rahbiyya",
@@ -4280,7 +4369,19 @@
     ],
     "similar": [],
     "contentStatus": "partial",
-    "level": 5
+    "level": 5,
+    "editionSource": {
+      "title": "متون طالب العلم — المستوى الخامس، نسخة الحفظ",
+      "author": "الشيخ د. عبد المحسن بن محمد القاسم",
+      "url": "https://a-alqasim.com/pdf-view/books/mutoon/0500Mutoon.pdf",
+      "page": "https://a-alqasim.com/books/0500mutoon/",
+      "includes": [
+        "الورقات",
+        "عنوان الحكم",
+        "الرحبية",
+        "العقيدة الطحاوية"
+      ]
+    }
   },
   {
     "id": "tahawiyya",
@@ -4298,6 +4399,18 @@
     ],
     "similar": [],
     "contentStatus": "partial",
-    "level": 5
+    "level": 5,
+    "editionSource": {
+      "title": "متون طالب العلم — المستوى الخامس، نسخة الحفظ",
+      "author": "الشيخ د. عبد المحسن بن محمد القاسم",
+      "url": "https://a-alqasim.com/pdf-view/books/mutoon/0500Mutoon.pdf",
+      "page": "https://a-alqasim.com/books/0500mutoon/",
+      "includes": [
+        "الورقات",
+        "عنوان الحكم",
+        "الرحبية",
+        "العقيدة الطحاوية"
+      ]
+    }
   }
 ]
