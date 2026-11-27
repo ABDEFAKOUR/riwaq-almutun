@@ -3,7 +3,7 @@
   const $ = id => document.getElementById(id);
   const params = new URLSearchParams(location.search);
   const matnId = params.get("matn");
-  let matn = null, recognition = null, active = false, sessionId = 0;
+  let matn = null, active = false, sessionId = 0;
   let audioContext = null, alerted = new Set();
 
   function normalize(value) {
@@ -65,7 +65,7 @@
     const result=align(matn.items.map(item=>item.text || (item.verses || []).map(verse => verse.sadr + " " + verse.ajuz).join(" ")).join(" "),spoken);
     const confirmedCount=String(spoken||"").trim().split(/\s+/).filter(Boolean).length;
     const interimWords=String(interim||"").trim().split(/\s+/).filter(Boolean);
-    const html=result.words.map((item,index)=>{
+    const html=result.words.map(item=>{
       const cls=item.state==="correct"?"recall-word-correct":"recall-word-wrong";
       return '<span class="'+cls+'">'+escapeHTML(item.word)+'</span>';
     });
@@ -165,7 +165,7 @@
   $("recall-stop").addEventListener("click",stop);
   $("recall-clear").addEventListener("click",()=>{
     if(active)stop();
-    sessionId++;active=false;recognition=null;alerted.clear();
+    sessionId++;active=false;alerted.clear();
     $("recall-transcript").innerHTML='<span class="recall-placeholder">سيظهر هنا كلامك كما تنطق به، كلمة بكلمة…</span>';
     $("recall-word-count").textContent="0 كلمة";$("recall-status").textContent="تم مسح التفريغ. اضغط «ابدأ الاستظهار» للبدء من جديد.";
     $("recall-start").disabled=false;$("recall-stop").disabled=true;
