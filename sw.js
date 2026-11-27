@@ -1,4 +1,4 @@
-const CACHE = "riwaq-v87";
+const CACHE = "riwaq-v88";
 const pendingMediaCache = new Map();
 
 function cacheFullMedia(url) {
