@@ -61,7 +61,7 @@ self.onmessage = event => {
         // decoder_input_ids are included in the returned sequence; remove the
         // prompt tokens so the comparison receives only what the model heard.
         const sequences = output?.sequences || output;
-        const generated = sequences[0].slice(ids.length);
+        const generated = sequences[0].slice([ids.length, null]).tolist();
         const text = (await tokenizer.decode(generated, { skip_special_tokens: true })).trim();
         self.postMessage({ type: "transcript", id: data.id, text, prompted: Boolean(context) });
       } catch (error) {
