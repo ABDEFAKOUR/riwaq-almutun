@@ -25,3 +25,11 @@ jobs:
 
     - name: Validate mutun.json
       run: node -e "JSON.parse(require('fs').readFileSync('mutun.json','utf8')); console.log('mutun.json OK')"
+
+    - name: Check JavaScript syntax
+      run: |
+        node --input-type=module --check < app.js
+        node --input-type=module --check < istidhar.js
+        node --input-type=module --check < local-recitation.js
+        node --input-type=module --check < recitation-worker.js
+        node --input-type=module --check < sw.js
