@@ -12,8 +12,7 @@ function makePrompt(contextText) {
   const context = String(contextText || "").replace(/\s+/g, " ").trim().slice(0, 700);
   // Whisper multilingual decoder prefix: Arabic transcription, no timestamps,
   // followed by a short previous-text prompt for domain vocabulary.
-  const prefix = "<|startoftranscript|><|ar|><|transcribe|><|notimestamps|>";
-  const prompt = context ? prefix + "<|startofprev|> " + context : prefix;
+  const prompt = context ? "<|startofprev|> " + context : "";
   return { context, ids: tokenizer.encode(prompt, { add_special_tokens: false }) };
 }
 
@@ -55,7 +54,9 @@ self.onmessage = event => {
         const { context, ids } = makePrompt(data.contextText);
         const output = await model.generate({
           inputs: input.input_features,
-          decoder_input_ids: ids,
+          decoder_input_ids: [ids],
+          language: "arabic",
+          task: "transcribe",
           max_new_tokens: 128
         });
         // decoder_input_ids are included in the returned sequence; remove the
