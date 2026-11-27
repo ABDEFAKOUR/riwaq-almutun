@@ -72,7 +72,7 @@ self.addEventListener("fetch", event => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) {
     // Cache the pinned runtime and model assets after first setup, so local ASR can start offline.
-    if (url.hostname === "cdn.jsdelivr.net" || url.hostname === "huggingface.co" || url.hostname.endsWith(".huggingface.co")) {
+    if (url.hostname === "cdn.jsdelivr.net" || url.hostname === "huggingface.co" || url.hostname.endsWith(".huggingface.co") || url.hostname.endsWith(".hf.co")) {
       event.respondWith((async () => {
         const cache = await caches.open("riwaq-asr-assets-v1");
         const cached = await cache.match(request);
