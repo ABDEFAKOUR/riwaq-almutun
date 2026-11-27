@@ -20,6 +20,7 @@
   <button id="menu-toggle" class="menu-toggle" type="button" aria-label="فتح القائمة" aria-controls="app-menu" aria-expanded="false"><span aria-hidden="true">☰</span></button></header><button id="menu-backdrop" class="menu-backdrop" type="button" aria-label="إغلاق القائمة" hidden></button><aside id="app-menu" class="app-menu" aria-label="القائمة الرئيسية" aria-hidden="true" hidden><div class="app-menu-head"><div class="app-menu-brand"><img class="menu-logo" src="./icon.svg" alt="شعار رِواق المتون"><div><strong>رِواق المتون</strong><small>تنقّل بين صفحات التطبيق</small></div></div><button id="menu-close" class="menu-close" type="button" aria-label="إغلاق القائمة">×</button></div><nav class="app-menu-links" aria-label="صفحات التطبيق"><a href="./index.html" data-menu-link><span aria-hidden="true">⌂</span> الرئيسية</a><a href="./hifd.html#library" data-menu-link><span aria-hidden="true">▤</span> مكتبة المتون</a><a href="./hifd.html#library" data-menu-link><span aria-hidden="true">🎙</span> الاستظهار والتسميع</a><a href="./review.html" data-menu-link><span aria-hidden="true">↻</span> المراجعة</a><a href="./progress.html" data-menu-link><span aria-hidden="true">▥</span> التقدم في الحفظ</a><a href="./progress.html#overdue-alert" data-menu-link><span aria-hidden="true">⚠</span> المراجعات المتأخرة</a><a href="./progress.html#matn-mastery" data-menu-link><span aria-hidden="true">◉</span> إتقان المتون</a><a href="./progress.html#daily-log" data-menu-link><span aria-hidden="true">▦</span> السجل اليومي</a><a href="./reading.html" data-menu-link><span aria-hidden="true">▤</span> قراءة المتون PDF</a><a href="./audio.html" data-menu-link><span aria-hidden="true">♫</span> سماع المتون MP3</a><a href="./video.html" data-menu-link><span aria-hidden="true">▶</span> فيديو شرح المتون</a><a href="./settings.html" data-menu-link><span aria-hidden="true">⚙</span> الإعدادات</a></nav><p class="app-menu-foot">رِواق المتون · رفيقك في حفظ العلم</p></aside>
   <main class="gateway-main">
     <section class="gateway-intro">
+      <p id="recitation-setup-status" class="gateway-setup-status" role="status" aria-live="polite">سيتم تجهيز محرك التسميع العربي تلقائياً عند أول فتح مع اتصال الإنترنت.</p>
       <img class="gateway-logo" src="./icon.svg" alt="شعار رِواق المتون">
       <span class="eyebrow">مكتبتك العلمية المتكاملة</span>
       <h1>ماذا تريد أن تفعل اليوم؟</h1>
@@ -54,5 +55,6 @@
   </main>
   <footer class="gateway-footer"><strong>رِواق المتون</strong><span>صُنع لخدمة طالب العلم</span></footer>
   <script src="theme.js" defer></script>
+<script src="local-recitation.js" defer></script>
 <script src="menu.js" defer></script><script>if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(console.error));</script></body>
 </html>
