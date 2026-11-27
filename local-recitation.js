@@ -50,9 +50,13 @@
       const error = new Error(data.message || "تعذر تجهيز محرك التعرف الصوتي.");
       callbacks.onInitError?.(error); return;
     }
+    if (data.type === "transcript-partial") {
+      callbacks.onPartialText?.(String(data.text || ""), data.id);
+      return;
+    }
     if (data.type === "transcript") {
       pending = Math.max(0, pending - 1);
-      if (data.text) callbacks.onText?.(data.text.trim());
+      if (data.text) callbacks.onText?.(data.text.trim(), data.id);
       finishIfIdle(); return;
     }
     if (data.type === "transcribe-error") {
