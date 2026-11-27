@@ -113,5 +113,49 @@
     if (remaining && remaining.length >= 8000) sendAudio(remaining);
     finishIfIdle();
   }
+  function updateSetupUI(message, readyState = false) {
+    ["recitation-setup-status","recitation-status","recall-status"].forEach(id => {
+      const node = document.getElementById(id);
+      if (node) node.textContent = message;
+    });
+    ["recitation-prepare","recall-prepare"].forEach(id => {
+      const button = document.getElementById(id);
+      if (button) {
+        button.disabled = false;
+        button.textContent = readyState ? "المحرك جاهز ✓" : "إعادة تجهيز التسميع";
+      }
+    });
+    ["recitation-start","recall-start"].forEach(id => {
+      const button = document.getElementById(id);
+      if (button) button.disabled = !readyState;
+    });
+  }
+
+  function autoPrepareOnFirstOpen() {
+    if (window.__riwaqAsrAutoStarted) return;
+    window.__riwaqAsrAutoStarted = true;
+    updateSetupUI("يتم تجهيز التسميع الصوتي العربي تلقائياً لأول مرة. يلزم الاتصال بالإنترنت حتى يكتمل تنزيل المحرك والنموذج؛ اترك التطبيق مفتوحاً.");
+    prepare(progress => {
+      if (progress?.status === "progress" && Number.isFinite(progress.progress)) {
+        updateSetupUI("تجهيز التسميع الصوتي: تنزيل النموذج " + Math.round(progress.progress) + "٪ — اترك التطبيق مفتوحاً.");
+      } else if (progress?.file) {
+        updateSetupUI("تجهيز التسميع الصوتي: " + progress.file);
+      }
+    }).then(() => {
+      updateSetupUI("اكتمل تجهيز محرك التسميع العربي. يمكنك الآن استعمال التسميع دون إنترنت.", true);
+      window.dispatchEvent(new CustomEvent("riwaq:local-recitation-ready"));
+    }).catch(error => {
+      updateSetupUI("لم يكتمل تجهيز التسميع تلقائياً: " + error.message + ". اتصل بالإنترنت واضغط «إعادة تجهيز التسميع».");
+    });
+  }
+
   window.RiwaqLocalRecitation = { prepare, start, stop, isReady: () => ready };
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", autoPrepareOnFirstOpen, { once: true });
+  } else {
+    autoPrepareOnFirstOpen();
+  }
+  window.addEventListener("online", () => {
+    if (!ready && !loading) autoPrepareOnFirstOpen();
+  });
 })();
