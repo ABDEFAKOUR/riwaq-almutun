@@ -39,7 +39,7 @@
     if (!audio || audio.length < 8000) return;
     const id = ++jobId, copy = audio.buffer.slice(audio.byteOffset, audio.byteOffset + audio.byteLength);
     pending++;
-    worker.postMessage({ type: "transcribe", id, audio: copy }, [copy]);
+    worker.postMessage({ type: "transcribe", id, audio: copy, contextText: typeof callbacks.getContext === "function" ? String(callbacks.getContext() || "") : "" }, [copy]);
     status("processing");
   }
   function handleWorkerMessage(event) {
