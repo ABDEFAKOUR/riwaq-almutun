@@ -114,7 +114,7 @@
         await window.RiwaqLocalRecitation.start({
           getContext:()=>{
             const vocabulary=matn.items.map(item=>item.text || (item.verses || []).map(verse => verse.sadr + " " + verse.ajuz).join(" ")).join(" ")
-              .normalize("NFD").replace(/[\\u064B-\\u065F\\u0670\\u0640]/g,"").split(/\\s+/)
+              .normalize("NFD").replace(/[\u064B-\u065F\u0670\u0640]/g,"").split(/\s+/)
               .filter(word=>word.length>=5);
             return [matn.title,...Array.from(new Set(vocabulary)).slice(0,12)].join(" ").slice(0,260);
           },
