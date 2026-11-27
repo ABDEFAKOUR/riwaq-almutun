@@ -1,7 +1,7 @@
 (() => {
   "use strict";
   const WORKER_URL = "./recitation-worker.js";
-  const CHUNK_SECONDS = 5;
+  const CHUNK_SECONDS = 3;
   let worker = null, ready = false, loading = null, active = false;
   let callbacks = {}, stream = null, context = null, source = null, processor = null, mute = null;
   let frames = [], frameCount = 0, pending = 0, stopping = false, sampleRate = 0, jobId = 0;
