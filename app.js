@@ -637,128 +637,71 @@ function showRecitationComparison(spoken){
   feedback.classList.remove("hidden");
   feedback.innerHTML='<div class="recitation-score"><strong>'+accuracy+'%</strong><span>'+(errors.length?"مراجعة مواضع الاختلاف":"مطابقة الكلمات ممتازة")+'</span></div><ul>'+details+'</ul><p class="recitation-caution">هذه مقارنة آلية للكلمات وليست حكماً نهائياً على صحة الأداء أو التجويد؛ قد يخطئ التعرف الصوتي.</p>';
 }
+function prepareLocalRecitation() {
+  const button=$("recitation-prepare"), status=$("recitation-status");
+  if(button){button.disabled=true;button.textContent="جارٍ تجهيز المحرك…";}
+  window.RiwaqLocalRecitation.prepare(progress=>{
+    if(!status)return;
+    if(progress?.status==="progress"&&Number.isFinite(progress.progress)) status.textContent="تنزيل النموذج المحلي: "+Math.round(progress.progress)+"٪";
+    else if(progress?.file) status.textContent="تجهيز ملف النموذج: "+progress.file;
+    else status.textContent="يتم تجهيز محرك التعرف العربي محلياً…";
+  }).then(()=>{
+    if(status)status.textContent="المحرك المحلي جاهز. يمكنك التسميع دون اتصال بعد اكتمال هذا التجهيز.";
+    if(button){button.disabled=false;button.textContent="المحرك جاهز ✓";}
+    $("recitation-start").disabled=false;
+  }).catch(error=>{
+    if(status)status.textContent="تعذر تجهيز المحرك: "+error.message+" — تحقق من الاتصال ثم أعد المحاولة.";
+    if(button){button.disabled=false;button.textContent="إعادة تجهيز المحرك";}
+  });
+}
 function startRecitation(){
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   const status=$("recitation-status"),transcript=$("recitation-transcript"),start=$("recitation-start"),stop=$("recitation-stop");
-  if(!SR){status.textContent="متصفحك لا يدعم التعرف الصوتي. جرّب Google Chrome.";return;}
   if(recitationActive)return;
-
-  // كل ضغطة تبدأ جلسة مستقلة؛ تجاهل أي أحداث متأخرة من جلسة سابقة.
-  const sessionId=++recitationSessionId;
-  const isCurrentSession=()=>sessionId===recitationSessionId;
-  const recognition=new SR();
-  recitationRecognition=recognition;
-  recitationAlerted=new Set();
-  let finalText="",liveAlertTimer=null,lastInterimText="";
-
-  // امسح واجهة الجلسة السابقة فور الضغط، لا تنتظر حدث onstart.
-  transcript.dataset.finalText="";
-  transcript.textContent="أستمع إليك…";
-  $("recitation-original").textContent="";
-  $("recitation-feedback").classList.add("hidden");
-  status.textContent="جارٍ بدء التسميع…";
-  recitationActive=true;
-  start.disabled=true;
-  stop.disabled=false;
-
-  try{
-    const AC=window.AudioContext||window.webkitAudioContext;
-    if(AC){
-      if(!recitationAudioContext)recitationAudioContext=new AC();
-      if(recitationAudioContext.state==="suspended")recitationAudioContext.resume();
-    }
-  }catch{}
-
-  recognition.lang="ar-SA";
-  recognition.continuous=true;
-  recognition.interimResults=true;
-  recognition.maxAlternatives=1;
-
-  recognition.onstart=()=>{
-    if(!isCurrentSession())return;
-    revealed=false;
-    renderStudyItem();
-    start.disabled=true;
-    stop.disabled=false;
-    status.textContent="أستمع إليك الآن… استظهر المقطع بوضوح.";
+  if(!window.RiwaqLocalRecitation){status.textContent="محرك التسميع المحلي غير محمّل. حدّث الصفحة وحاول مجدداً.";return;}
+  const begin=()=>{
+    const sessionId=++recitationSessionId;
+    const isCurrent=()=>sessionId===recitationSessionId;
+    let finalText="";
+    recitationAlerted=new Set();recitationActive=true;
+    transcript.dataset.finalText="";transcript.textContent="أستمع إليك…";
+    $("recitation-original").textContent="";$("recitation-feedback").classList.add("hidden");
+    start.disabled=true;stop.disabled=false;
+    window.RiwaqLocalRecitation.start({
+      onText:chunk=>{
+        if(!isCurrent()||!chunk)return;
+        finalText+=(finalText?" ":"")+chunk;
+        transcript.dataset.finalText=finalText;
+        renderLiveRecitation(finalText,finalText);
+        alertConfirmedRecitationErrors(finalText);
+      },
+      onStatus:value=>{
+        if(!isCurrent())return;
+        if(value==="listening")status.textContent="أستمع إليك الآن عبر المحرك المحلي…";
+        else if(value==="processing")status.textContent="يحلل المحرك المحلي المقطع الصوتي…";
+        else if(value==="ended"){
+          recitationActive=false;start.disabled=false;stop.disabled=true;
+          const spoken=finalText.trim();
+          status.textContent=spoken?"انتهى التسميع المحلي. راجع الكلمات الملوّنة والتصحيح أدناه.":"انتهى التسجيل دون التقاط كلام واضح.";
+          if(spoken){renderLiveRecitation(spoken,spoken,true);showRecitationComparison(spoken);}
+        }
+      },
+      onError:error=>{if(isCurrent())status.textContent="تعذر تحليل الصوت محلياً: "+error.message;},
+      onInitError:error=>{if(isCurrent()){recitationActive=false;start.disabled=false;stop.disabled=true;status.textContent="تعذر تشغيل المحرك المحلي: "+error.message;}}
+    }).catch(error=>{
+      if(!isCurrent())return;
+      recitationActive=false;start.disabled=false;stop.disabled=true;
+      status.textContent="تعذر بدء الميكروفون: "+error.message;
+    });
   };
-
-  recognition.onresult=event=>{
-    if(!isCurrentSession())return;
-    finalText="";
-    let interim="";
-    for(let i=0;i<event.results.length;i++){
-      const t=event.results[i][0].transcript;
-      if(event.results[i].isFinal)finalText+=t+" ";
-      else interim+=t;
-    }
-    const all=(finalText+interim).trim(),confirmedText=finalText.trim();
-    transcript.dataset.finalText=confirmedText;
-
-    renderLiveRecitation(all,confirmedText);
-    alertConfirmedRecitationErrors(confirmedText);
-
-    if(liveAlertTimer)clearTimeout(liveAlertTimer);
-    lastInterimText=interim.trim();
-    if(lastInterimText&&activeMatn){
-      const finalCount=confirmedText.split(/\s+/).filter(Boolean).length;
-      const aligned=alignLiveRecitation(itemContent(activeMatn.items[activeIndex]),all);
-      const pendingIssues=aligned.issues.filter(x=>x.type!=="missing"&&x.spokenIndex>=finalCount);
-      if(pendingIssues.length){
-        const candidate=lastInterimText;
-        liveAlertTimer=setTimeout(()=>{
-          if(!isCurrentSession()||!recitationActive||lastInterimText!==candidate)return;
-          let fresh=false;
-          for(const x of pendingIssues){
-            const key=[x.type,x.expectedIndex,x.spokenIndex,x.expected,x.spoken].join("|");
-            if(!recitationAlerted.has(key)){recitationAlerted.add(key);fresh=true;}
-          }
-          if(fresh){
-            playRecitationAlert();
-            status.textContent="تنبيه: اختلاف محتمل في القراءة. راجع الكلمة الحمراء والتصحيح الأخضر.";
-          }
-        },350);
-      }
-    }
-    if(!recitationAlerted.size)status.textContent="أستمع إليك… الأخضر مطابق، والأحمر يحتاج مراجعة.";
-  };
-
-  recognition.onerror=event=>{
-    if(!isCurrentSession())return;
-    status.textContent=event.error==="not-allowed"?"لم تسمح باستعمال الميكروفون. فعّل الإذن من إعدادات المتصفح.":event.error==="no-speech"?"لم نسمع صوتاً. تحدث بوضوح قرب الميكروفون.":"وقع مشكل أثناء التعرف الصوتي: "+event.error;
-  };
-
-  recognition.onend=()=>{
-    if(!isCurrentSession())return;
-    if(liveAlertTimer)clearTimeout(liveAlertTimer);
-    recitationActive=false;
-    if(recitationRecognition===recognition)recitationRecognition=null;
-    start.disabled=false;
-    stop.disabled=true;
-    const spoken=(transcript.dataset.finalText||finalText).trim();
-    status.textContent=spoken?"انتهى التسميع. راجع الكلمات الملوّنة والتصحيح أدناه.":"انتهى التسميع دون التقاط نص واضح.";
-    if(spoken){
-      renderLiveRecitation(spoken,spoken,true);
-      showRecitationComparison(spoken);
-    }
-  };
-
-  try{
-    recognition.start();
-  }catch(e){
-    if(isCurrentSession()){
-      recitationActive=false;
-      recitationRecognition=null;
-      start.disabled=false;
-      stop.disabled=true;
-      status.textContent="تعذر بدء الميكروفون. تحقق من إذن المتصفح وحاول مجدداً.";
-    }
+  if(window.RiwaqLocalRecitation.isReady())begin();
+  else{
+    status.textContent="يتم تجهيز نموذج Whisper العربي محلياً. يلزم تنزيله مرة واحدة أولاً…";
+    window.RiwaqLocalRecitation.prepare(progress=>{
+      if(progress?.status==="progress"&&Number.isFinite(progress.progress))status.textContent="تنزيل النموذج المحلي: "+Math.round(progress.progress)+"٪";
+    }).then(begin).catch(error=>{status.textContent="تعذر تجهيز النموذج: "+error.message;});
   }
 }
-function stopRecitation(){
-  if(recitationRecognition&&recitationActive)recitationRecognition.stop();
-}
-
+function stopRecitation(){window.RiwaqLocalRecitation?.stop();}
 /* ---------- الأحداث ---------- */
 on("daily-goal-input", "change", e => {
   const value = Math.min(50, Math.max(1, Math.round(Number(e.target.value) || 5)));
@@ -787,6 +730,7 @@ on("progress-list", "click", e => {
   const id = button.dataset.progressMatn, index = Number(button.dataset.progressIndex);
   window.location.href = `./study.html?matn=${encodeURIComponent(id)}&item=${index}`;
 });
+on("recitation-prepare", "click", prepareLocalRecitation);
 on("recitation-start", "click", startRecitation);
 on("recitation-stop", "click", stopRecitation);
 on("reveal-btn", "click", () => { revealed = !revealed; renderStudyItem(); });
