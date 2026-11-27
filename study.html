@@ -158,14 +158,14 @@
           <span class="recitation-mic" aria-hidden="true">🎙️</span>
         </div>
         <div class="recitation-actions">
-          <button id="recitation-start" class="button button-primary" type="button">ابدأ التسميع</button>
+          <button id="recitation-prepare" class="button button-outline" type="button">تجهيز التسميع دون إنترنت</button><button id="recitation-start" class="button button-primary" type="button" disabled>ابدأ التسميع</button>
           <button id="recitation-stop" class="button button-outline" type="button" disabled>إيقاف التسميع</button>
         </div>
         <p id="recitation-status" class="recitation-status" role="status">اضغط «ابدأ التسميع» واسمح باستعمال الميكروفون.</p>
         <div id="recitation-transcript" class="recitation-transcript" aria-live="polite">سيظهر هنا الكلام الذي تتعرف عليه المنظومة.</div>
         <div id="recitation-original" class="recitation-original" aria-live="polite"></div>
         <div id="recitation-feedback" class="recitation-feedback hidden" aria-live="polite"></div>
-        <p class="recitation-note">يتطلب التعرف الصوتي اتصالاً بالإنترنت ومتصفحاً يدعم الإملاء الصوتي. الأخضر للكلمة الصحيحة، والأحمر للكلمة المختلفة. قد يخطئ التعرف الصوتي أحياناً.</p>
+        <p class="recitation-note">جهّز المحرك مرة واحدة مع الإنترنت لتنزيل النموذج العربي. بعد اكتمال التجهيز يُعالج الصوت داخل جهازك ويمكن التسميع دون إنترنت. الأخضر للكلمة المطابقة، والأحمر للاختلاف المحتمل؛ وقد يخطئ النموذج أحياناً.</p>
       </section>
       <div class="study-controls">
         <button id="previous-btn" class="button button-ghost" type="button">السابق</button>
@@ -195,6 +195,7 @@
 
   <footer><strong>رِواق المتون</strong><span>نسخة أولية تجريبية · المحتوى قابل للمراجعة والإضافة</span><span>صُنع لخدمة طالب العلم</span></footer>
   <script src="menu.js" defer></script>
+  <script src="local-recitation.js" defer></script>
   <script src="app.js" defer></script>
 </body>
 </html>
