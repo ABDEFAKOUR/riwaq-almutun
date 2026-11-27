@@ -1,22 +1,116 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#173d32"><title>قراءة المتون | رِواق المتون</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css"><script>(function(){try{var p=JSON.parse(localStorage.getItem("riwaq-prefs")||"{}");document.documentElement.dataset.theme=p.theme||"dark"}catch(e){document.documentElement.dataset.theme="dark"}})();</script></head>
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#173d32">
+<title>مكتبة قراءة المتون | رِواق المتون</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css">
+<script>(function(){try{var p=JSON.parse(localStorage.getItem("riwaq-prefs")||"{}");document.documentElement.dataset.theme=p.theme||"dark"}catch(e){document.documentElement.dataset.theme="dark"}})();</script>
+<style>
+.reading-main{width:min(1060px,92%);margin:0 auto;padding:34px 0 64px}
+.reading-hero{position:relative;overflow:hidden;padding:34px clamp(20px,5vw,54px);border-radius:24px;background:linear-gradient(125deg,#123d34,#1d5948);color:#fff;margin-bottom:24px}
+.reading-hero:after{content:"";position:absolute;width:260px;height:260px;border:1px solid rgba(232,197,124,.25);border-radius:50%;left:-70px;top:-120px;box-shadow:0 0 0 24px rgba(232,197,124,.035),0 0 0 48px rgba(232,197,124,.025)}
+.reading-hero .eyebrow{color:#e5c77e}.reading-hero h1{font:700 clamp(30px,5vw,43px) Amiri,serif;margin:7px 0}.reading-hero p{color:#e0e9e3;margin:0;max-width:620px;font-size:14px}
+.reading-summary{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.summary-pill{padding:6px 12px;border:1px solid rgba(232,197,124,.4);border-radius:30px;color:#f2dfb3;font-size:11px}
+.library-toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:24px 0}
+.library-search{flex:1 1 250px;display:flex;align-items:center;gap:10px;padding:11px 15px;background:var(--paper);border:1px solid var(--line);border-radius:13px}
+.library-search input{width:100%;border:0;outline:0;background:transparent;color:var(--ink);font:inherit;font-size:13px}
+.level-filters{display:flex;gap:7px;flex-wrap:wrap}.level-filter{border:1px solid var(--line);border-radius:30px;background:var(--paper);color:var(--muted);padding:8px 15px;font:600 12px inherit;cursor:pointer}.level-filter.active{background:var(--green);border-color:var(--green);color:#fff}
+.level-section{margin:30px 0 38px}.level-heading{display:flex;align-items:center;gap:15px;margin-bottom:15px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.level-mark{width:54px;height:54px;flex:none;display:grid;place-items:center;border:1px solid var(--gold);border-radius:16px;color:var(--gold);font:700 22px Amiri,serif;background:var(--paper)}
+.level-heading .eyebrow{font-size:10px}.level-heading h2{font:700 27px Amiri,serif;color:var(--green);margin:0}.level-heading p{font-size:12px;color:var(--muted);margin:0}.level-count{margin-right:auto;white-space:nowrap;padding:5px 11px;border-radius:30px;background:rgba(200,169,107,.13);color:var(--green2);font-size:11px}
+.reading-books{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.reading-book{display:flex;align-items:center;gap:14px;text-align:right;width:100%;min-height:88px;padding:14px 16px;border:1px solid var(--line);border-radius:16px;background:var(--paper);color:var(--ink);font:inherit;cursor:pointer;transition:.18s;box-shadow:var(--shadow)}
+.reading-book:hover,.reading-book.selected{border-color:var(--gold);transform:translateY(-2px)}
+.book-number{width:42px;height:42px;flex:none;display:grid;place-items:center;border-radius:12px;background:rgba(200,169,107,.16);color:var(--green2);font:700 18px Amiri,serif}
+.book-info{display:grid;gap:3px;min-width:0}.book-info strong{font:700 19px Amiri,serif;color:var(--green)}.book-info small{font-size:10px;color:var(--muted)}
+.book-open{margin-right:auto;white-space:nowrap;font-size:11px;color:var(--green2);font-weight:700}.book-open b{font-size:16px}
+.reader-panel{margin:30px 0 0;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:var(--paper);box-shadow:var(--shadow)}
+.reader-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:16px 20px;border-bottom:1px solid var(--line)}
+.reader-head-copy{flex:1;min-width:180px}.reader-head-copy small{font-size:10px;color:var(--muted)}.reader-head-copy h2{font:700 22px Amiri,serif;color:var(--green);margin:0}
+.reader-actions{display:flex;gap:8px;flex-wrap:wrap}.reader-action{display:inline-flex;align-items:center;justify-content:center;padding:8px 12px;border-radius:10px;border:1px solid var(--gold);text-decoration:none;color:var(--green);font-size:11px;font-weight:700}
+.reader-placeholder{min-height:300px;display:grid;place-items:center;text-align:center;padding:30px;color:var(--muted)}.reader-placeholder .placeholder-icon{font-size:38px;color:var(--gold)}.reader-placeholder strong{display:block;font:700 20px Amiri,serif;color:var(--green)}
+.pdf-frame{display:block;width:100%;height:min(78vh,850px);min-height:480px;border:0;background:#e8e6df}
+.local-pdf{margin:22px 0 0;padding:18px 20px;border:1px dashed var(--line);border-radius:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}.local-pdf p{margin:0;color:var(--muted);font-size:12px;flex:1}.local-pdf label{cursor:pointer}
+.no-results{display:none;padding:22px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}
+[data-theme=dark] .level-heading h2,[data-theme=dark] .book-info strong,[data-theme=dark] .reader-head-copy h2,[data-theme=dark] .reader-placeholder strong{color:var(--brand-gold-soft)}
+[data-theme=dark] .level-count,[data-theme=dark] .book-number{color:var(--brand-gold-soft);background:rgba(226,184,95,.12)}
+[data-theme=dark] .level-filter.active{background:#245b49;border-color:#245b49}
+[data-theme=dark] .reading-book,[data-theme=dark] .reader-panel,[data-theme=dark] .local-pdf{background:linear-gradient(145deg,var(--brand-panel),#0b292c);border-color:rgba(226,184,95,.25)}
+[data-theme=dark] .book-open,[data-theme=dark] .reader-action{color:var(--brand-gold-soft)}
+@media(max-width:650px){.reading-main{width:calc(100% - 26px);padding-top:22px}.reading-books{grid-template-columns:1fr}.level-heading{gap:10px}.level-mark{width:46px;height:46px}.level-heading h2{font-size:23px}.level-count{font-size:10px;padding:4px 8px}.reading-book{min-height:78px}.reader-head{padding:14px}.pdf-frame{height:68vh;min-height:380px}}
+</style></head>
 <body><header class="topbar"><a class="brand" href="./index.html"><span class="brand-mark">رِ</span><span><strong>رِواق المتون</strong><small>قراءة المتون</small></span></a><button id="menu-toggle" class="menu-toggle" type="button" aria-label="فتح القائمة" aria-controls="app-menu" aria-expanded="false"><span aria-hidden="true">☰</span></button><div class="gateway-theme-actions"><button id="theme-btn" class="button button-outline small" type="button" aria-label="تفعيل الوضع الليلي">◐</button><a class="button button-outline small" href="./index.html">الرئيسية ←</a></div></header><button id="menu-backdrop" class="menu-backdrop" type="button" aria-label="إغلاق القائمة" hidden></button><aside id="app-menu" class="app-menu" aria-label="القائمة الرئيسية" aria-hidden="true" hidden><div class="app-menu-head"><div class="app-menu-brand"><img class="menu-logo" src="./icon.svg" alt="شعار رِواق المتون"><div><strong>رِواق المتون</strong><small>تنقّل بين صفحات التطبيق</small></div></div><button id="menu-close" class="menu-close" type="button" aria-label="إغلاق القائمة">×</button></div><nav class="app-menu-links" aria-label="صفحات التطبيق"><a href="./index.html" data-menu-link><span aria-hidden="true">⌂</span> الرئيسية</a><a href="./hifd.html#library" data-menu-link><span aria-hidden="true">▤</span> مكتبة المتون</a><a href="./hifd.html#library" data-menu-link><span aria-hidden="true">🎙</span> الاستظهار والتسميع</a><a href="./review.html" data-menu-link><span aria-hidden="true">↻</span> المراجعة</a><a href="./progress.html" data-menu-link><span aria-hidden="true">▥</span> التقدم في الحفظ</a><a href="./progress.html#overdue-alert" data-menu-link><span aria-hidden="true">⚠</span> المراجعات المتأخرة</a><a href="./progress.html#matn-mastery" data-menu-link><span aria-hidden="true">◉</span> إتقان المتون</a><a href="./progress.html#daily-log" data-menu-link><span aria-hidden="true">▦</span> السجل اليومي</a><a href="./reading.html" data-menu-link><span aria-hidden="true">▤</span> قراءة المتون PDF</a><a href="./audio.html" data-menu-link><span aria-hidden="true">♫</span> سماع المتون MP3</a><a href="./video.html" data-menu-link><span aria-hidden="true">▶</span> فيديو شرح المتون</a><a href="./settings.html" data-menu-link><span aria-hidden="true">⚙</span> الإعدادات</a></nav><p class="app-menu-foot">رِواق المتون · رفيقك في حفظ العلم</p></aside>
-<main class="container"><section class="gateway-intro" style="padding:48px 0 24px"><span class="eyebrow">المكتبة المقروءة</span><h1>قراءة المتون (PDF)</h1><p>اختر المتن لفتح نسخته PDF مباشرة داخل التطبيق.</p></section>
-<section class="settings-panel section" style="background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:24px">
-<h2>المستوى الثاني</h2><div class="media-grid">
-<a class="media-card" href="./pdfs/ثلاثة-الأصول.pdf" target="_blank" rel="noopener"><strong>ثلاثة الأصول</strong><span>فتح ملف PDF ←</span></a>
-<a class="media-card" href="./pdfs/القواعد-الأربع.pdf" target="_blank" rel="noopener"><strong>القواعد الأربع</strong><span>فتح ملف PDF ←</span></a>
-<a class="media-card" href="./pdfs/نواقض-الإسلام.pdf" target="_blank" rel="noopener"><strong>نواقض الإسلام</strong><span>فتح ملف PDF ←</span></a>
-<a class="media-card" href="./pdfs/الأربعون-النووية.pdf" target="_blank" rel="noopener"><strong>الأربعون النووية</strong><span>فتح ملف PDF ←</span></a>
-</div>
-<h2 style="margin-top:28px">المستوى الرابع</h2><div class="media-grid">
-<a class="media-card" href="./pdfs/01_البيقونية.pdf" target="_blank" rel="noopener"><strong>البيقونية</strong><span>فتح ملف PDF ←</span></a>
-<a class="media-card" href="./pdfs/02_قصيدة_الإلبيري.pdf" target="_blank" rel="noopener"><strong>قصيدة الإلبيري</strong><span>فتح ملف PDF ←</span></a>
-<a class="media-card" href="./pdfs/03_المقدمة_الآجرومية.pdf" target="_blank" rel="noopener"><strong>المقدمة الآجرومية</strong><span>فتح ملف PDF ←</span></a>
-<a class="media-card" href="./pdfs/04_العقيدة_الواسطية.pdf" target="_blank" rel="noopener"><strong>العقيدة الواسطية</strong><span>فتح ملف PDF ←</span></a>
-</div>
-<p style="font-size:12px;color:var(--muted);margin-top:20px">هذه هي ملفات PDF الموجودة حالياً في مكتبة التطبيق. يمكن إضافة ملفات المستويات الأخرى لاحقاً.</p>
-<hr style="border-color:var(--line);margin:24px 0">
-<h2>فتح ملف من جهازك</h2><label class="button button-primary" for="pdf-file">اختيار ملف PDF</label><input id="pdf-file" type="file" accept="application/pdf,.pdf" hidden><p id="pdf-name" style="color:var(--muted);font-size:13px">لم يتم اختيار ملف بعد.</p><div id="pdf-viewer" style="height:60vh;min-height:360px;background:#eee;border-radius:12px;overflow:hidden"><p style="padding:24px;text-align:center;color:#555">سيظهر ملف PDF هنا بعد اختياره.</p></div></section></main>
-<script>let currentUrl=null;document.getElementById('pdf-file').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];if(!f)return;if(currentUrl)URL.revokeObjectURL(currentUrl);currentUrl=URL.createObjectURL(f);document.getElementById('pdf-name').textContent=f.name;const frame=document.createElement('iframe');frame.src=currentUrl;frame.title='قارئ PDF';frame.style='width:100%;height:100%;border:0';const box=document.getElementById('pdf-viewer');box.replaceChildren(frame)});</script><script src="theme.js" defer></script><script src="menu.js" defer></script><script>if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(console.error));</script></body></html>
+<main class="reading-main">
+<section class="reading-hero"><span class="eyebrow">رِواق المتون · المكتبة المقروءة</span><h1>مكتبة قراءة المتون</h1><p>تصفّح المتون بحسب مستوياتها، واختر المتن لقراءته في القارئ الداخلي دون مغادرة صفحة المكتبة.</p><div class="reading-summary"><span class="summary-pill">مستويان متاحان حالياً</span><span class="summary-pill">8 متون بصيغة PDF</span><span class="summary-pill">قارئ داخلي</span></div></section>
+<div class="library-toolbar"><label class="library-search"><span aria-hidden="true">⌕</span><input id="book-search" type="search" placeholder="ابحث عن متن باسمه..." autocomplete="off"></label><div class="level-filters" role="group" aria-label="تصفية المستويات"><button class="level-filter active" type="button" data-filter="all">جميع المستويات</button><button class="level-filter" type="button" data-filter="2">المستوى الثاني</button><button class="level-filter" type="button" data-filter="4">المستوى الرابع</button></div></div>
+<section class="level-section" id="level-2" data-level-section="2">
+ <div class="level-heading"><div class="level-mark">02</div><div><span class="eyebrow">المكتبة العلمية</span><h2>المستوى الثاني</h2><p>متون التوحيد والحديث</p></div><span class="level-count">4 متون</span></div>
+ <div class="reading-books"><button class="reading-book" type="button" data-pdf="pdfs/%D8%AB%D9%84%D8%A7%D8%AB%D8%A9-%D8%A7%D9%84%D8%A7%D9%94%D8%B5%D9%88%D9%84.pdf" data-title="ثلاثة الأصول" data-level="2">
+ <span class="book-number">01</span><span class="book-info"><strong>ثلاثة الأصول</strong><small>المستوى 2 · PDF · 0.93 MB</small></span><span class="book-open">اقرأ المتن <b>←</b></span></button>
+<button class="reading-book" type="button" data-pdf="pdfs/%D8%A7%D9%84%D9%82%D9%88%D8%A7%D8%B9%D8%AF-%D8%A7%D9%84%D8%A7%D9%94%D8%B1%D8%A8%D8%B9.pdf" data-title="القواعد الأربع" data-level="2">
+ <span class="book-number">02</span><span class="book-info"><strong>القواعد الأربع</strong><small>المستوى 2 · PDF · 0.66 MB</small></span><span class="book-open">اقرأ المتن <b>←</b></span></button>
+<button class="reading-book" type="button" data-pdf="pdfs/%D9%86%D9%88%D8%A7%D9%82%D8%B6-%D8%A7%D9%84%D8%A7%D9%95%D8%B3%D9%84%D8%A7%D9%85.pdf" data-title="نواقض الإسلام" data-level="2">
+ <span class="book-number">03</span><span class="book-info"><strong>نواقض الإسلام</strong><small>المستوى 2 · PDF · 0.46 MB</small></span><span class="book-open">اقرأ المتن <b>←</b></span></button>
+<button class="reading-book" type="button" data-pdf="pdfs/%D8%A7%D9%84%D8%A7%D9%94%D8%B1%D8%A8%D8%B9%D9%88%D9%86-%D8%A7%D9%84%D9%86%D9%88%D9%88%D9%8A%D8%A9.pdf" data-title="الأربعون النووية" data-level="2">
+ <span class="book-number">04</span><span class="book-info"><strong>الأربعون النووية</strong><small>المستوى 2 · PDF · 0.67 MB</small></span><span class="book-open">اقرأ المتن <b>←</b></span></button></div></section>
+<section class="level-section" id="level-4" data-level-section="4">
+ <div class="level-heading"><div class="level-mark">04</div><div><span class="eyebrow">المكتبة العلمية</span><h2>المستوى الرابع</h2><p>متون الحديث واللغة والعقيدة</p></div><span class="level-count">4 متون</span></div>
+ <div class="reading-books"><button class="reading-book" type="button" data-pdf="pdfs/01_%D8%A7%D9%84%D8%A8%D9%8A%D9%82%D9%88%D9%86%D9%8A%D8%A9.pdf" data-title="المنظومة البيقونية" data-level="4">
+ <span class="book-number">01</span><span class="book-info"><strong>المنظومة البيقونية</strong><small>المستوى 4 · PDF · 0.24 MB</small></span><span class="book-open">اقرأ المتن <b>←</b></span></button>
+<button class="reading-book" type="button" data-pdf="pdfs/02_%D9%82%D8%B5%D9%8A%D8%AF%D8%A9_%D8%A7%D9%84%D8%A7%D9%95%D9%84%D8%A8%D9%8A%D8%B1%D9%8A.pdf" data-title="قصيدة الإلبيري" data-level="4">
+ <span class="book-number">02</span><span class="book-info"><strong>قصيدة الإلبيري</strong><small>المستوى 4 · PDF · 0.31 MB</small></span><span class="book-open">اقرأ المتن <b>←</b></span></button>
+<button class="reading-book" type="button" data-pdf="pdfs/03_%D8%A7%D9%84%D9%85%D9%82%D8%AF%D9%85%D8%A9_%D8%A7%D9%84%D8%A7%D9%93%D8%AC%D8%B1%D9%88%D9%85%D9%8A%D8%A9.pdf" data-title="المقدمة الآجرومية" data-level="4">
+ <span class="book-number">03</span><span class="book-info"><strong>المقدمة الآجرومية</strong><small>المستوى 4 · PDF · 0.35 MB</small></span><span class="book-open">اقرأ المتن <b>←</b></span></button>
+<button class="reading-book" type="button" data-pdf="pdfs/04_%D8%A7%D9%84%D8%B9%D9%82%D9%8A%D8%AF%D8%A9_%D8%A7%D9%84%D9%88%D8%A7%D8%B3%D8%B7%D9%8A%D8%A9.pdf" data-title="العقيدة الواسطية" data-level="4">
+ <span class="book-number">04</span><span class="book-info"><strong>العقيدة الواسطية</strong><small>المستوى 4 · PDF · 1.11 MB</small></span><span class="book-open">اقرأ المتن <b>←</b></span></button></div></section>
+<div class="no-results" id="no-results">لا توجد متون تطابق البحث.</div>
+<section class="reader-panel" id="reader-panel" aria-label="قارئ المتون"><div class="reader-head"><div class="reader-head-copy"><small id="reader-meta">قارئ PDF الداخلي</small><h2 id="reader-title">اختر متناً من المكتبة</h2></div><div class="reader-actions"><a class="reader-action" id="open-new" href="#" target="_blank" rel="noopener" hidden>فتح في نافذة جديدة ↗</a><a class="reader-action" id="download-pdf" href="#" download hidden>تحميل PDF ↓</a></div></div><div id="reader-content" class="reader-placeholder"><div><div class="placeholder-icon">▤</div><strong>ابدأ باختيار أحد المتون</strong><span>سيظهر ملفه هنا مباشرة.</span></div></div></section>
+<section class="local-pdf"><p>عندك ملف PDF آخر في جهازك؟ تقدر تفتحو هنا مؤقتاً دون إضافته إلى المكتبة.</p><label class="button button-outline" for="local-pdf-file">اختيار ملف من الجهاز</label><input id="local-pdf-file" type="file" accept="application/pdf,.pdf" hidden></section>
+</main>
+<script>
+(function(){
+ const cards=[...document.querySelectorAll('.reading-book')], sections=[...document.querySelectorAll('[data-level-section]')];
+ const search=document.getElementById('book-search'), filters=[...document.querySelectorAll('[data-filter]')];
+ const noResults=document.getElementById('no-results'), reader=document.getElementById('reader-content');
+ const title=document.getElementById('reader-title'), meta=document.getElementById('reader-meta');
+ const open=document.getElementById('open-new'), download=document.getElementById('download-pdf');
+ let activeFilter='all',localUrl=null;
+ function selectBook(card){
+  cards.forEach(c=>c.classList.toggle('selected',c===card));
+  const src='./'+card.dataset.pdf, name=card.dataset.title, level=card.dataset.level;
+  title.textContent=name;meta.textContent='المستوى '+level+' · قارئ PDF الداخلي';
+  open.href=src;open.hidden=false;download.href=src;download.hidden=false;
+  const frame=document.createElement('iframe');frame.className='pdf-frame';frame.src=src;frame.title='قراءة '+name;
+  reader.className='';reader.replaceChildren(frame);
+  document.getElementById('reader-panel').scrollIntoView({behavior:'smooth',block:'start'});
+ }
+ function filterBooks(){
+  const q=search.value.trim().toLocaleLowerCase('ar');
+  let visible=0;
+  sections.forEach(section=>{
+   let sectionVisible=0;
+   cards.filter(c=>c.closest('section')===section).forEach(card=>{
+    const matchLevel=activeFilter==='all'||card.dataset.level===activeFilter;
+    const matchText=card.dataset.title.toLocaleLowerCase('ar').includes(q);
+    const show=matchLevel&&matchText;card.hidden=!show;if(show){visible++;sectionVisible++;}
+   });
+   section.hidden=sectionVisible===0;
+  });
+  noResults.style.display=visible?'none':'block';
+ }
+ filters.forEach(btn=>btn.addEventListener('click',()=>{activeFilter=btn.dataset.filter;filters.forEach(b=>b.classList.toggle('active',b===btn));filterBooks()}));
+ search.addEventListener('input',filterBooks);
+ cards.forEach(card=>card.addEventListener('click',()=>selectBook(card)));
+ document.getElementById('local-pdf-file').addEventListener('change',e=>{
+  const file=e.target.files&&e.target.files[0];if(!file)return;
+  if(localUrl)URL.revokeObjectURL(localUrl);localUrl=URL.createObjectURL(file);
+  title.textContent=file.name;meta.textContent='ملف محلي · لا يُضاف إلى مكتبة المشروع';
+  open.href=localUrl;open.hidden=false;download.href=localUrl;download.download=file.name;download.hidden=false;
+  const frame=document.createElement('iframe');frame.className='pdf-frame';frame.src=localUrl;frame.title='قارئ PDF';
+  reader.className='';reader.replaceChildren(frame);document.getElementById('reader-panel').scrollIntoView({behavior:'smooth',block:'start'});e.target.value='';
+ });
+ window.addEventListener('beforeunload',()=>{if(localUrl)URL.revokeObjectURL(localUrl)});
+ filterBooks();
+})();
+</script>
+<script src="theme.js" defer></script><script src="menu.js" defer></script><script>if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(console.error));</script>
+</body></html>
