@@ -667,6 +667,7 @@ function startRecitation(){
     $("recitation-original").textContent="";$("recitation-feedback").classList.add("hidden");
     start.disabled=true;stop.disabled=false;
     window.RiwaqLocalRecitation.start({
+      getContext:()=>itemContent(activeMatn.items[activeIndex]).slice(0, 700),
       onText:chunk=>{
         if(!isCurrent()||!chunk)return;
         finalText+=(finalText?" ":"")+chunk;
