@@ -82,50 +82,73 @@
     return String(value).replace(/[&<>"']/g, char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
   }
 
-  function stop() {
-    if(recognition && active) recognition.stop();
+  function prepareLocalEngine() {
+    const button=$("recall-prepare"),status=$("recall-status");
+    if(button){button.disabled=true;button.textContent="جارٍ تجهيز المحرك…";}
+    window.RiwaqLocalRecitation.prepare(progress=>{
+      if(progress?.status==="progress"&&Number.isFinite(progress.progress))status.textContent="تنزيل النموذج المحلي: "+Math.round(progress.progress)+"٪";
+      else if(progress?.file)status.textContent="تجهيز ملف النموذج: "+progress.file;
+      else status.textContent="يتم تجهيز محرك التعرف العربي محلياً…";
+    }).then(()=>{
+      status.textContent="المحرك المحلي جاهز. يمكنك الاستظهار دون اتصال بعد اكتمال التجهيز.";
+      if(button){button.disabled=false;button.textContent="المحرك جاهز ✓";}
+      $("recall-start").disabled=false;
+    }).catch(error=>{
+      status.textContent="تعذر تجهيز المحرك: "+error.message+" — تحقق من الاتصال ثم أعد المحاولة.";
+      if(button){button.disabled=false;button.textContent="إعادة تجهيز المحرك";}
+    });
   }
-
-  function start() {
-    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-    if(!SR){$("recall-status").textContent="متصفحك لا يدعم التعرف الصوتي. استعمل Google Chrome.";return;}
+  function stop() { window.RiwaqLocalRecitation?.stop(); }
+  async function start() {
     if(active)return;
-    const id=++sessionId, current=()=>id===sessionId;
-    const rec=new SR(); recognition=rec; alerted=new Set(); active=true;
+    if(!window.RiwaqLocalRecitation){$("recall-status").textContent="محرك التسميع المحلي غير محمّل. حدّث الصفحة وحاول مجدداً.";return;}
+    const id=++sessionId,current=()=>id===sessionId;
     let finalText="";
+    active=true;alerted=new Set();
     $("recall-transcript").innerHTML='<span class="recall-placeholder">أستمع إليك…</span>';
     $("recall-word-count").textContent="0 كلمة";
-    $("recall-status").textContent="جارٍ تشغيل الميكروفون…";
-    $("recall-start").disabled=true; $("recall-stop").disabled=false;
-    try {
-      const AC=window.AudioContext||window.webkitAudioContext;
-      if(AC){if(!audioContext)audioContext=new AC();if(audioContext.state==="suspended")audioContext.resume();}
-    } catch {}
-    rec.lang="ar-SA"; rec.continuous=true; rec.interimResults=true; rec.maxAlternatives=1;
-    rec.onstart=()=>{if(current())$("recall-status").textContent="أستمع إليك الآن… استظهر المتن بصوت واضح."};
-    rec.onresult=event=>{
-      if(!current())return;
-      finalText="";let interim="";
-      for(let i=0;i<event.results.length;i++){
-        const phrase=event.results[i][0].transcript;
-        if(event.results[i].isFinal)finalText+=phrase+" ";else interim+=phrase;
+    $("recall-status").textContent="جارٍ تشغيل الميكروفون المحلي…";
+    $("recall-start").disabled=true;$("recall-stop").disabled=false;
+    const begin=async()=>{
+      try{
+        await window.RiwaqLocalRecitation.start({
+          onText:chunk=>{
+            if(!current()||!chunk)return;
+            finalText+=(finalText?" ":"")+chunk;
+            render(finalText,"");
+          },
+          onStatus:value=>{
+            if(!current())return;
+            if(value==="listening")$("recall-status").textContent="أستمع إليك الآن عبر المحرك المحلي…";
+            else if(value==="processing")$("recall-status").textContent="يحلل المحرك المحلي المقطع الصوتي…";
+            else if(value==="ended"){
+              active=false;$("recall-start").disabled=false;$("recall-stop").disabled=true;
+              $("recall-status").textContent=finalText.trim()?"انتهى الاستظهار المحلي. راجع الكلمات الملوّنة.":"انتهى التسجيل دون التقاط كلام واضح.";
+            }
+          },
+          onError:error=>{if(current())$("recall-status").textContent="تعذر تحليل الصوت محلياً: "+error.message;},
+          onInitError:error=>{if(current()){active=false;$("recall-start").disabled=false;$("recall-stop").disabled=true;$("recall-status").textContent="تعذر تشغيل المحرك المحلي: "+error.message;}}
+        });
+      }catch(error){
+        if(!current())return;
+        active=false;$("recall-start").disabled=false;$("recall-stop").disabled=true;
+        $("recall-status").textContent="تعذر بدء الميكروفون: "+error.message;
       }
-      render(finalText.trim(),interim.trim());
-      if(!alerted.size)$("recall-status").textContent="مستمر في الاستماع…";
     };
-    rec.onerror=event=>{
-      if(!current())return;
-      $("recall-status").textContent=event.error==="not-allowed"?"لم تسمح باستعمال الميكروفون. فعّل الإذن من إعدادات المتصفح.":event.error==="no-speech"?"لم نسمع صوتاً. تحدث بوضوح قرب الميكروفون.":"وقع مشكل أثناء التعرف الصوتي: "+event.error;
-    };
-    rec.onend=()=>{
-      if(!current())return;
-      active=false; if(recognition===rec)recognition=null;
-      $("recall-start").disabled=false; $("recall-stop").disabled=true;
-      $("recall-status").textContent=finalText.trim()?"توقف الاستماع. يمكنك متابعة النتيجة أو بدء جلسة جديدة.":"انتهى الاستماع دون التقاط كلام واضح.";
-    };
-    try{rec.start();}catch(error){active=false;$("recall-start").disabled=false;$("recall-stop").disabled=true;$("recall-status").textContent="تعذر تشغيل الميكروفون. حاول مرة أخرى.";}
+    if(window.RiwaqLocalRecitation.isReady())begin();
+    else{
+      $("recall-status").textContent="يتم تجهيز نموذج Whisper العربي محلياً. يلزم تنزيله مرة واحدة أولاً…";
+      window.RiwaqLocalRecitation.prepare(progress=>{
+        if(progress?.status==="progress"&&Number.isFinite(progress.progress))$("recall-status").textContent="تنزيل النموذج المحلي: "+Math.round(progress.progress)+"٪";
+      }).then(begin).catch(error=>{
+        if(!current())return;
+        active=false;$("recall-start").disabled=false;$("recall-stop").disabled=true;
+        $("recall-status").textContent="تعذر تجهيز النموذج: "+error.message;
+      });
+    }
   }
 
+  $("recall-prepare").addEventListener("click",prepareLocalEngine);
   $("recall-start").addEventListener("click",start);
   $("recall-stop").addEventListener("click",stop);
   $("recall-clear").addEventListener("click",()=>{
