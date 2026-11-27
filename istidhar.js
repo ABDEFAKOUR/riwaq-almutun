@@ -103,7 +103,7 @@
     if(active)return;
     if(!window.RiwaqLocalRecitation){$("recall-status").textContent="محرك التسميع المحلي غير محمّل. حدّث الصفحة وحاول مجدداً.";return;}
     const id=++sessionId,current=()=>id===sessionId;
-    let finalText="";
+    let finalText="",interimText="";
     active=true;alerted=new Set();
     $("recall-transcript").innerHTML='<span class="recall-placeholder">أستمع إليك…</span>';
     $("recall-word-count").textContent="0 كلمة";
@@ -118,9 +118,15 @@
               .filter(word=>word.length>=5);
             return [matn.title,...Array.from(new Set(vocabulary)).slice(0,12)].join(" ").slice(0,260);
           },
+          onPartialText:chunk=>{
+            if(!current())return;
+            interimText=String(chunk||"");
+            render(finalText,interimText);
+          },
           onText:chunk=>{
             if(!current()||!chunk)return;
             finalText+=(finalText?" ":"")+chunk;
+            interimText="";
             render(finalText,"");
           },
           onStatus:value=>{
