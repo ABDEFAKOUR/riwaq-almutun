@@ -667,7 +667,10 @@ function startRecitation(){
     $("recitation-original").textContent="";$("recitation-feedback").classList.add("hidden");
     start.disabled=true;stop.disabled=false;
     window.RiwaqLocalRecitation.start({
-      getContext:()=>itemContent(activeMatn.items[activeIndex]).slice(0, 700),
+      getContext:()=>{
+        const words=normalizeRecitationText(itemContent(activeMatn.items[activeIndex])).split(" ").filter(word=>word.length>=5);
+        return [activeMatn.title,...Array.from(new Set(words)).slice(0,10)].join(" ").slice(0,240);
+      },
       onText:chunk=>{
         if(!isCurrent()||!chunk)return;
         finalText+=(finalText?" ":"")+chunk;
