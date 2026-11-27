@@ -1,4 +1,4 @@
-const CACHE = "riwaq-v81";
+const CACHE = "riwaq-v82";
 const pendingMediaCache = new Map();
 
 function cacheFullMedia(url) {
@@ -40,6 +40,14 @@ const CORE_FILES = [
   "./mutun.json",
   "./manifest.webmanifest",
   "./icon.svg",
+  "./pdfs/ثلاثة-الأصول.pdf",
+  "./pdfs/القواعد-الأربع.pdf",
+  "./pdfs/نواقض-الإسلام.pdf",
+  "./pdfs/الأربعون-النووية.pdf",
+  "./pdfs/01_البيقونية.pdf",
+  "./pdfs/02_قصيدة_الإلبيري.pdf",
+  "./pdfs/03_المقدمة_الآجرومية.pdf",
+  "./pdfs/04_العقيدة_الواسطية.pdf",
 ];
 
 self.addEventListener("install", event => {
