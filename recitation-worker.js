@@ -1,4 +1,4 @@
-import { AutoProcessor, AutoTokenizer, WhisperForConditionalGeneration, env } from "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1/+esm";
+import { AutoProcessor, AutoTokenizer, WhisperForConditionalGeneration, WhisperTextStreamer, env } from "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1/+esm";
 
 const MODEL_ID = "Xenova/whisper-tiny";
 let model = null, processor = null, tokenizer = null;
@@ -53,10 +53,20 @@ self.onmessage = event => {
         const audio = new Float32Array(data.audio);
         const input = await processor(audio);
         const { context, ids } = makePrompt(data.contextText);
+        let streamedText = "";
+        const streamer = new WhisperTextStreamer(tokenizer, {
+          skip_prompt: true,
+          skip_special_tokens: true,
+          callback_function: piece => {
+            streamedText += piece;
+            self.postMessage({ type: "transcript-partial", id: data.id, text: streamedText });
+          }
+        });
         const output = await model.generate({
           inputs: input.input_features,
           decoder_input_ids: ids,
-          max_new_tokens: 128
+          max_new_tokens: 128,
+          streamer
         });
         // decoder_input_ids are included in the returned sequence; remove the
         // prompt tokens so the comparison receives only what the model heard.
