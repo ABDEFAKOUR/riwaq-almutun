@@ -112,6 +112,11 @@
     const begin=async()=>{
       try{
         await window.RiwaqLocalRecitation.start({
+          getContext:()=>{
+            const expected=matn.items.map(item=>item.text || (item.verses || []).map(verse => verse.sadr + " " + verse.ajuz).join(" ")).join(" ").split(/\\s+/).filter(Boolean);
+            const spokenCount=finalText.trim().split(/\\s+/).filter(Boolean).length;
+            return expected.slice(spokenCount, spokenCount + 110).join(" ").slice(0, 700);
+          },
           onText:chunk=>{
             if(!current()||!chunk)return;
             finalText+=(finalText?" ":"")+chunk;
