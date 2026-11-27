@@ -9,7 +9,7 @@ env.allowRemoteModels = true;
 if (env.backends?.onnx?.wasm) env.backends.onnx.wasm.numThreads = 1;
 
 function makePrompt(contextText) {
-  const context = String(contextText || "").replace(/\\s+/g, " ").trim().slice(0, 700);
+  const context = String(contextText || "").replace(/\s+/g, " ").trim().slice(0, 700);
   // Whisper multilingual decoder prefix: Arabic transcription, no timestamps,
   // followed by a short previous-text prompt for domain vocabulary.
   const prefix = "<|startoftranscript|><|ar|><|transcribe|><|notimestamps|>";
