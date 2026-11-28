@@ -889,3 +889,22 @@ footer,.gateway-footer{border-top:1px solid var(--line)}
 /* حالة إدخال نصوص المتون في المكتبة */
 .content-status-complete{border-color:#7aa88a;color:#24583a;background:#edf8f0}
 [data-theme=dark] .content-status-complete{border-color:#477b5c;color:#c1e8cc;background:#172b20}
+
+
+/* مكتبة شروح المتون بالفيديو */
+.video-page{width:min(1120px,90%);margin:0 auto;padding:34px 0 54px}
+.video-hero{text-align:center;margin:0 auto 28px}
+.video-hero h1{font:700 38px Amiri,serif;color:var(--green);margin:8px 0}
+.video-hero p{color:var(--muted);margin:0}
+.video-library{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.video-empty{grid-column:1/-1;text-align:center;padding:42px 24px;border:1px dashed var(--line);border-radius:18px;background:var(--paper)}
+.video-empty h2{font:700 25px Amiri,serif;color:var(--green);margin:0 0 8px}
+.video-empty p{color:var(--muted);margin:0 auto;max-width:620px}
+.video-card{overflow:hidden;border:1px solid var(--line);border-radius:18px;background:var(--paper);box-shadow:var(--shadow)}
+.video-card video{display:block;width:100%;max-height:420px;background:#071f25}
+.video-card-body{padding:16px}
+.video-card-body h2{font:700 22px Amiri,serif;color:var(--green);margin:0 0 4px}
+.video-card-body p{color:var(--muted);margin:0 0 10px;font-size:13px}
+[data-theme="dark"] .video-hero h1,[data-theme="dark"] .video-empty h2,[data-theme="dark"] .video-card-body h2{color:#8fcfb2}
+[data-theme="dark"] .video-empty,[data-theme="dark"] .video-card{background:var(--paper);border-color:rgba(226,184,95,.3)}
+@media(max-width:760px){.video-page{width:calc(100% - 28px);padding:26px 0 38px}.video-library{grid-template-columns:1fr}.video-hero h1{font-size:31px}}

@@ -1,5 +1,6 @@
 (() => {
   "use strict";
+  if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(console.error));
   const $ = id => document.getElementById(id);
   const params = new URLSearchParams(location.search);
   const matnId = params.get("matn");

@@ -45,6 +45,17 @@
   document.addEventListener("keydown", event => {
     if (event.key === "Escape" && toggle.getAttribute("aria-expanded") === "true") closeMenu();
   });
+  // رابط قسم الفيديو يضاف مركزياً إلى القائمة المشتركة.
+  if (!menu.querySelector('a[href="./video.html"]')) {
+    const link = document.createElement("a");
+    link.href = "./video.html";
+    link.dataset.menuLink = "";
+    link.innerHTML = '<span aria-hidden="true">▶</span> شرح المتون بالفيديو';
+    const settingsLink = menu.querySelector('a[href="./settings.html"]');
+    const nav = menu.querySelector(".app-menu-links");
+    if (nav) nav.insertBefore(link, settingsLink || null);
+  }
+
   menu.querySelectorAll("[data-menu-link]").forEach(link => {
     link.addEventListener("click", closeMenu);
   });

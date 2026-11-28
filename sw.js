@@ -1,4 +1,4 @@
-const CACHE = "riwaq-v97";
+const CACHE = "riwaq-v98";
 const pendingMediaCache = new Map();
 
 function cacheFullMedia(url) {
@@ -25,6 +25,9 @@ const CORE_FILES = [
   "./hifd.html",
   "./reading.html",
   "./audio.html",
+  "./video.html",
+  "./video.js",
+  "./videos.json",
   "./study.html",
   "./review.html",
   "./progress.html",
