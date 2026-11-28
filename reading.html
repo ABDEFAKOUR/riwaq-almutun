@@ -158,7 +158,7 @@
  let activeFilter='all',localUrl=null;
  function selectBook(card){
   cards.forEach(c=>c.classList.toggle('selected',c===card));
-  const src='./'+card.dataset.pdf, name=card.dataset.title, level=card.dataset.level;
+  const src=new URL(card.dataset.pdf, document.baseURI).href, name=card.dataset.title, level=card.dataset.level;
   title.textContent=name;meta.textContent=(level==='extra'?'متون إضافية':'المستوى '+level)+' · قارئ PDF الداخلي';
   open.href=src;open.hidden=false;download.href=src;download.hidden=false;
   const frame=document.createElement('iframe');frame.className='pdf-frame';frame.src=src;frame.title='قراءة '+name;
