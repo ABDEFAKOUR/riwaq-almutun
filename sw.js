@@ -1,4 +1,4 @@
-const CACHE = "riwaq-v95";
+const CACHE = "riwaq-v96";
 const pendingMediaCache = new Map();
 
 function cacheFullMedia(url) {
@@ -86,8 +86,12 @@ self.addEventListener("fetch", event => {
     return;
   }
 
-  // ملفات الصوت والفيديو: دعم Range وتخزين نسخة كاملة تدريجياً بعد أول تشغيل.
+  // اترك طلبات PDF ذات Range للمتصفح مباشرة؛ عارض PDF في Chrome
+  // يعتمد على طلبات النطاق، ومعالجتها هنا قد تمنع ظهور جميع الكتب.
+  // نستخدم معالج Range المخصص للصوت والفيديو فقط.
   if (request.headers.has("range")) {
+    const isMediaFile = /\.(mp3|m4a|ogg|wav|mp4|webm|m4v|aac|flac)$/i.test(url.pathname);
+    if (!isMediaFile) return;
     // لا نحمل 88MB من الصوتيات أثناء تثبيت التطبيق؛ نخزن الملف الذي يستعمله الطالب فقط.
     event.waitUntil(cacheFullMedia(url.href));
     event.respondWith((async () => {
