@@ -1,4 +1,4 @@
-const CACHE = "riwaq-v96";
+const CACHE = "riwaq-v97";
 const pendingMediaCache = new Map();
 
 function cacheFullMedia(url) {
@@ -69,6 +69,9 @@ self.addEventListener("fetch", event => {
   const request = event.request;
   if (request.method !== "GET") return;
   const url = new URL(request.url);
+  // Let Chrome PDF viewer handle all PDF and byte-range requests directly.
+  if (/\.pdf$/i.test(url.pathname)) return;
+
   if (url.origin !== self.location.origin) {
     // Cache the pinned runtime and model assets after first setup, so local ASR can start offline.
     if (url.hostname === "cdn.jsdelivr.net" || url.hostname === "huggingface.co" || url.hostname.endsWith(".huggingface.co") || url.hostname.endsWith(".hf.co")) {
